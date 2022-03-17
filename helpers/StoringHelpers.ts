@@ -16,7 +16,7 @@ export const buildAndStoreObject = async <T extends unknown>(
         if(onSuccess) {
             onSuccess();
         }
-    } catch(error) {
+    } catch(error: any) {
         NotificationManager.error(error.message, errorText);
     } finally {
         if(onFinally) {
@@ -33,7 +33,7 @@ export const storeObject = async <T extends unknown>(
 ) => {
     try {
         await apiClient.instance!.put(apiPath, {}, item);
-    } catch(error) {
+    } catch(error: any) {
         NotificationManager.error(error.message, errorText);
     } finally {
         if(onFinally) {

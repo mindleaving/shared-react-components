@@ -15,7 +15,7 @@ export const deleteObject = async (
         if(onSuccess) {
             onSuccess();
         }
-    } catch(error) {
+    } catch(error: any) {
         NotificationManager.error(error.message, errorText);
     } finally {
         if(onFinally) {
