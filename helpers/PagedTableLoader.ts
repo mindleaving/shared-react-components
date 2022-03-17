@@ -43,7 +43,7 @@ export default class PagedTableLoader<T> {
                     apiMethodPath += 'search';
                 }
             }
-            const response = await apiClient.get(apiMethodPath, params);
+            const response = await apiClient.instance!.get(apiMethodPath, params);
             const items = await response.json() as T[];
             this.callback(items);
         } catch(error: any) {

@@ -36,14 +36,14 @@ export class Globalizer {
 export const defaultGlobalizer: { instance?: Globalizer } = {}
 
 export function setLanguage(languageId: string): void {
-    defaultGlobalizer.instance.preferedLanguage = languageId;
+    defaultGlobalizer.instance!.preferedLanguage = languageId;
 }
 export function getPreferedLanguage(): string {
-    return defaultGlobalizer.instance.preferedLanguage;
+    return defaultGlobalizer.instance!.preferedLanguage;
 }
 export function getFallbackLanguage(): string {
-    return defaultGlobalizer.instance.defaultLanguage;
+    return defaultGlobalizer.instance!.defaultLanguage;
 }
 export function resolveText(resourceId: string): string {
-    return defaultGlobalizer.instance.resolveText(resourceId);
+    return defaultGlobalizer.instance!.resolveText(resourceId);
 }
