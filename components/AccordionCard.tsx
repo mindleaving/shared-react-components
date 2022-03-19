@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactNode } from 'react';
-import { Accordion, Card } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap';
+import '../styles/accordion-card.css';
 
 interface AccordionCardProps extends PropsWithChildren<{}> {
     eventKey: string;
@@ -11,19 +12,19 @@ interface AccordionCardProps extends PropsWithChildren<{}> {
 export const AccordionCard = (props: AccordionCardProps) => {
 
     return (
-        <Card
-            className={props.className}
-            bg={props.bg}
+        <Accordion>
+        <Accordion.Item
+            className={"accordion-card" + (props.className ? " " + props.className : "")}
+            eventKey={props.eventKey}
         >
-            <Accordion.Header className="px-3 py-2 clickable" as={Card.Header} eventKey={props.eventKey}>
+            <Accordion.Header>
                 {props.title}
             </Accordion.Header>
-            <Accordion.Collapse eventKey={props.eventKey}>
-                <Card.Body>
-                    {props.children}
-                </Card.Body>
-            </Accordion.Collapse>
-        </Card>
+            <Accordion.Body>
+                {props.children}
+            </Accordion.Body>
+        </Accordion.Item>
+        </Accordion>
     );
 
 }
