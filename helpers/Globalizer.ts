@@ -17,6 +17,18 @@ export class Globalizer {
             this.translations = translations;
     }
 
+    canResolveText = (resourceId: string) => {
+        const preferedTranslation = this.tryGetResourceDictionary(this.preferedLanguage);
+        if(preferedTranslation && preferedTranslation[resourceId]) {
+            return true;
+        }
+        const defaultTranslation = this.tryGetResourceDictionary(this.defaultLanguage);
+        if(defaultTranslation && defaultTranslation[resourceId]) {
+            return true;
+        }
+        return false;
+    }
+
     resolveText = (resourceId: string) => {
         const preferedTranslation = this.tryGetResourceDictionary(this.preferedLanguage);
         if(preferedTranslation && preferedTranslation[resourceId]) {
@@ -43,6 +55,9 @@ export function getPreferedLanguage(): string {
 }
 export function getFallbackLanguage(): string {
     return defaultGlobalizer.instance!.defaultLanguage;
+}
+export function canResolveText(resourceId: string): boolean {
+    return defaultGlobalizer.instance!.canResolveText(resourceId);
 }
 export function resolveText(resourceId: string): string {
     return defaultGlobalizer.instance!.resolveText(resourceId);
