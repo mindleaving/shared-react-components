@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { resolveText } from '../helpers/Globalizer';
 import { buildLoadObjectFunc } from '../helpers/LoadingHelpers';
 import { Form } from '@rjsf/bootstrap-4';
 import { AsyncButton } from '../components/AsyncButton';
 import { NotificationManager } from 'react-notifications';
-import { ArrayFieldTemplateProps, IChangeEvent } from '@rjsf/core';
+import { IChangeEvent } from '@rjsf/core';
 import { useParams } from 'react-router-dom';
-import { Accordion, Button } from 'react-bootstrap';
 import { translateSchema } from '../helpers/SchemaTranslator';
 import { v4 as uuid } from 'uuid';
+import { AccordionArrayFieldTemplate } from '../components/AccordionArrayFieldTemplate';
 
 interface GenericTypeCreateEditPageProps<T> {
     typeName: string;
     item?: T;
     itemLoader?: (id: string) => Promise<T>;
+    uiSchema?: any;
     onSubmit: (item: T) => Promise<any>;
 }
 
@@ -42,6 +43,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
     }, [ props.typeName ]);
     useEffect(() => {
         if(!props.itemLoader || !id) {
+            setIsLoadingItem(false);
             return;
         }
         const loadItem = async () => {
@@ -85,11 +87,11 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
             onChange={onChange}
             onError={() => {}}
             onSubmit={onSubmit}
-            uiSchema={{
+            uiSchema={Object.assign({
                 id: {
                     "ui:readonly": true
                 }
-            }}
+            }, props.uiSchema ?? {})}
             ArrayFieldTemplate={AccordionArrayFieldTemplate}
         >
             <AsyncButton
@@ -101,26 +103,4 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
         </Form>
     );
 
-}
-const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-    return (
-    <>
-        {props.TitleField(props as any)}
-        {props.DescriptionField(props as any)}
-        <Accordion key={props.formData.id}>
-            {props.items.map((item,index) => (
-                <Accordion.Item key={index} eventKey={index + ""}>
-                    <Accordion.Header>
-                        Item {index}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        {item.children}
-                        <Button variant="danger" onClick={() => item.onDropIndexClick(index)()}>{resolveText("Delete")}</Button>
-                    </Accordion.Body>
-                </Accordion.Item>
-            ))}
-        </Accordion>
-        {props.canAdd ? <Button className='m-2' onClick={props.onAddClick}>{resolveText("Add")}</Button> : null}
-    </>
-    )
 }
