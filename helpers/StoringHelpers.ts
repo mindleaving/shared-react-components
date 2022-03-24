@@ -41,3 +41,24 @@ export const storeObject = async <T extends unknown>(
         }
     }
 }
+
+export const submitPostRequest = async (
+    apiPath: string,
+    errorText: string,
+    body: any,
+    handleResponse?: (response: Response) => void,
+    onFinally?: () => void
+) => {
+    try {
+        const response = await apiClient.instance!.post(apiPath, {}, body);
+        if(handleResponse) {
+            handleResponse(response);
+        }
+    } catch(error: any) {
+        NotificationManager.error(error.message, errorText);
+    } finally {
+        if(onFinally) {
+            onFinally();
+        }
+    }
+}
