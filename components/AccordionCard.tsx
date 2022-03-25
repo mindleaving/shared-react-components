@@ -25,7 +25,7 @@ export const AccordionCard = (props: AccordionCardProps) => {
             </Accordion.Body>
         </Accordion.Item>
     );
-    if(props.standalone) {
+    if(!props.standalone) {
         return accordionItem;
     }
     return (
