@@ -12,19 +12,17 @@ interface AccordionCardProps extends PropsWithChildren<{}> {
 export const AccordionCard = (props: AccordionCardProps) => {
 
     return (
-        <Accordion>
         <Accordion.Item
-            className={"accordion-card" + (props.className ? " " + props.className : "")}
+            className={props.className}
             eventKey={props.eventKey}
         >
-            <Accordion.Header>
+            <Accordion.Button bsPrefix={`accordion-button` + (props.bg ? ` bg-${props.bg}` : '')}>
                 {props.title}
-            </Accordion.Header>
+            </Accordion.Button>
             <Accordion.Body>
                 {props.children}
             </Accordion.Body>
         </Accordion.Item>
-        </Accordion>
     );
 
 }
