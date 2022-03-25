@@ -17,7 +17,7 @@ interface RowFormGroupProps {
 export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
 
     return (
-        <FormGroup as={Row}>
+        <FormGroup as={Row} className='my-1'>
             <FormLabel column>{props.label}</FormLabel>
             <Col>
                 {props.type?.toLowerCase() === "date" || props.type?.toLowerCase() === "datetime"
