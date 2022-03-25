@@ -7,11 +7,12 @@ interface AccordionCardProps extends PropsWithChildren<{}> {
     title: ReactNode;
     className?: string;
     bg?: string;
+    standalone?: boolean;
 }
 
 export const AccordionCard = (props: AccordionCardProps) => {
 
-    return (
+    const accordionItem = (
         <Accordion.Item
             className={props.className}
             eventKey={props.eventKey}
@@ -23,6 +24,14 @@ export const AccordionCard = (props: AccordionCardProps) => {
                 {props.children}
             </Accordion.Body>
         </Accordion.Item>
+    );
+    if(props.standalone) {
+        return accordionItem;
+    }
+    return (
+        <Accordion>
+            {accordionItem}
+        </Accordion>
     );
 
 }
