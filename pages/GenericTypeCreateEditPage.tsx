@@ -12,6 +12,7 @@ import { AccordionArrayFieldTemplate } from '../components/AccordionArrayFieldTe
 
 interface GenericTypeCreateEditPageProps<T> {
     typeName: string;
+    paramName?: string;
     item?: T;
     itemLoader?: (id: string) => Promise<T>;
     uiSchema?: any;
@@ -20,7 +21,7 @@ interface GenericTypeCreateEditPageProps<T> {
 
 export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeCreateEditPageProps<T>) => {
 
-    const { id } = useParams();
+    const { [props.paramName ?? "id"]: id } = useParams();
     const [ isLoadingSchema, setIsLoadingSchema ] = useState<boolean>(true);
     const [ isLoadingItem, setIsLoadingItem ] = useState<boolean>(!!props.itemLoader);
     const [ schema, setSchema ] = useState<any>();
@@ -41,6 +42,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
         );
         loadSchema()
     }, [ props.typeName ]);
+
     useEffect(() => {
         if(!props.itemLoader || !id) {
             setIsLoadingItem(false);
