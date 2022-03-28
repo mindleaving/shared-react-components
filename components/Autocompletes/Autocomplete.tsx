@@ -56,15 +56,20 @@ export class Autocomplete<T> extends Component<AutocompleteProps<T>, Autocomplet
 
     runSearch = (searchText: string) => {
         const localSearchText = searchText.trim();
-        if(this.searchTimer) {
-            clearTimeout(this.searchTimer);
-        }
-        this.searchTimer = setTimeout(async () => {
+        const search = async () => {
             const searchResults = await this.props.search(localSearchText);
             this.setState({
                 suggestions: searchResults
             });
-        }, this.props.searchDelayInMilliseconds ?? 500);
+        };
+        if(this.props.searchDelayInMilliseconds && this.props.searchDelayInMilliseconds <= 0) {
+            search();
+            return;
+        }
+        if(this.searchTimer) {
+            clearTimeout(this.searchTimer);
+        }
+        this.searchTimer = setTimeout(search, this.props.searchDelayInMilliseconds ?? 500);
     }
 
     render() {

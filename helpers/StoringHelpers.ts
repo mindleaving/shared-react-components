@@ -25,14 +25,18 @@ export const buildAndStoreObject = async <T extends unknown>(
     }
 }
 
-export const storeObject = async <T extends unknown>(
+export const sendPutRequest = async <T extends unknown>(
     apiPath: string,
     errorText: string,
     item: T,
+    handleResponse?: (response: Response) => void,
     onFinally?: () => void
 ) => {
     try {
-        await apiClient.instance!.put(apiPath, {}, item);
+        const response = await apiClient.instance!.put(apiPath, {}, item);
+        if(handleResponse) {
+            handleResponse(response);
+        }
     } catch(error: any) {
         NotificationManager.error(error.message, errorText);
     } finally {
@@ -42,7 +46,7 @@ export const storeObject = async <T extends unknown>(
     }
 }
 
-export const submitPostRequest = async (
+export const sendPostRequest = async (
     apiPath: string,
     errorText: string,
     body: any,
