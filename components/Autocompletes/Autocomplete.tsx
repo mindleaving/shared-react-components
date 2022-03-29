@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, KeyboardEvent } from 'react';
 import Autosuggest from 'react-autosuggest';
 import '../../styles/react-autosuggest.css';
 
@@ -8,6 +8,7 @@ interface AutocompleteProps<T> {
     search: (searchText: string) => Promise<T[]>;
     onItemSelected: (item: T) => void;
     onChange?: (value: string) => void;
+    onKeyPress?: (keyEvent: KeyboardEvent<HTMLElement>, currentSearchText: string) => void;
     resetOnSelect?: boolean;
     searchDelayInMilliseconds?: number;
     minSearchTextLength?: number;
@@ -72,6 +73,13 @@ export class Autocomplete<T> extends Component<AutocompleteProps<T>, Autocomplet
         this.searchTimer = setTimeout(search, this.props.searchDelayInMilliseconds ?? 500);
     }
 
+    keyPressed = (keyEvent: KeyboardEvent<HTMLElement>) => {
+        if(!this.props.onKeyPress) {
+            return;
+        }
+        this.props.onKeyPress(keyEvent, this.state.searchText);
+    }
+
     render() {
         return (
             <Autosuggest
@@ -85,6 +93,7 @@ export class Autocomplete<T> extends Component<AutocompleteProps<T>, Autocomplet
                             this.props.onChange(newValue);
                         }
                     },
+                    onKeyUp: this.keyPressed,
                     placeholder: this.props.placeholder ?? 'Enter search text',
                     className: `form-control ${this.props.className ?? ''}`,
                     disabled: this.props.disabled,
