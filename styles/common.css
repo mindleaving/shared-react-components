@@ -4,6 +4,9 @@
 .red {
     color: red
 }
+.green {
+    color: green;
+}
 
 .itemListBadge {
     padding: 5px 10px;
@@ -16,4 +19,7 @@
 .itemListBadge .badge {
     margin-left: 5px;
     cursor: pointer;
+}
+.treeview {
+    list-style-type: none;
 }
