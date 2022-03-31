@@ -1,4 +1,4 @@
-import React, { Component, KeyboardEvent } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import '../../styles/react-autosuggest.css';
 
@@ -8,7 +8,7 @@ interface AutocompleteProps<T> {
     search: (searchText: string) => Promise<T[]>;
     onItemSelected: (item: T) => void;
     onChange?: (value: string) => void;
-    onKeyPress?: (keyEvent: KeyboardEvent<HTMLElement>, currentSearchText: string) => void;
+    onKeyUp?: (keyEvent: KeyboardEvent<HTMLElement>, currentSearchText: string) => void;
     resetOnSelect?: boolean;
     searchDelayInMilliseconds?: number;
     minSearchTextLength?: number;
@@ -16,98 +16,79 @@ interface AutocompleteProps<T> {
     disabled?: boolean;
     required?: boolean;
     className?: string;
-}
-interface AutocompleteState<T> {
-    searchText: string;
-    suggestions: T[];
-    selectedItem: T | null;
+    autoFocus?: boolean;
 }
 
-export class Autocomplete<T> extends Component<AutocompleteProps<T>, AutocompleteState<T>> {
-    searchTimer?: NodeJS.Timeout;
+export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => {
 
-    constructor(props: AutocompleteProps<T>) {
-        super(props);
+    const [ searchTimer, setSearchTimer ] = useState<NodeJS.Timeout>();
+    const [ searchText, setSearchText ] = useState<string>(props.defaultValue ?? '');
+    const [ suggestions, setSuggestions ] = useState<T[]>([]);
 
-        this.state = { 
-            searchText: props.defaultValue ?? '',
-            suggestions: [],
-            selectedItem: null
-        };
-    }
-
-    onItemSelected = (item: any) => {
-        if(this.props.onItemSelected) {
-            this.props.onItemSelected(item);
+    const onItemSelected = (item: any) => {
+        if(props.onItemSelected) {
+            props.onItemSelected(item);
         }
-        if(this.props.resetOnSelect) {
-            this.setState({ 
-                searchText: '', 
-                suggestions: [], 
-                selectedItem: null 
-            });
+        if(props.resetOnSelect) {
+            setSearchText('');
+            setSuggestions([]);
         } else {
-            const itemDisplayName = this.props.displayNameSelector ? this.props.displayNameSelector(item) : item;
-            this.setState({ 
-                searchText: itemDisplayName,
-                selectedItem: item
-            });
+            const itemDisplayName = props.displayNameSelector ? props.displayNameSelector(item) : item;
+            setSearchText(itemDisplayName);
         }
     }
 
-    runSearch = (searchText: string) => {
+    const runSearch = (searchText: string) => {
         const localSearchText = searchText.trim();
         const search = async () => {
-            const searchResults = await this.props.search(localSearchText);
-            this.setState({
-                suggestions: searchResults
-            });
+            const searchResults = await props.search(localSearchText);
+            setSuggestions(searchResults);
         };
-        if(this.props.searchDelayInMilliseconds && this.props.searchDelayInMilliseconds <= 0) {
+        if(props.searchDelayInMilliseconds && props.searchDelayInMilliseconds <= 0) {
             search();
             return;
         }
-        if(this.searchTimer) {
-            clearTimeout(this.searchTimer);
+        if(searchTimer) {
+            clearTimeout(searchTimer);
         }
-        this.searchTimer = setTimeout(search, this.props.searchDelayInMilliseconds ?? 500);
+        const searchTimerHandle = setTimeout(search, props.searchDelayInMilliseconds ?? 500);
+        setSearchTimer(searchTimerHandle);
     }
 
-    keyPressed = (keyEvent: KeyboardEvent<HTMLElement>) => {
-        if(!this.props.onKeyPress) {
+    const keyPressed = (keyEvent: KeyboardEvent<HTMLElement>) => {
+        if(!props.onKeyUp) {
             return;
         }
-        this.props.onKeyPress(keyEvent, this.state.searchText);
+        props.onKeyUp(keyEvent, searchText);
     }
 
-    render() {
-        return (
-            <Autosuggest
-                getSuggestionValue={this.props.displayNameSelector}
-                suggestions={this.state.suggestions}
-                inputProps={{
-                    value: this.state.searchText,
-                    onChange: (_e, { newValue }) => {
-                        this.setState({ searchText: newValue });
-                        if(this.props.onChange) {
-                            this.props.onChange(newValue);
-                        }
-                    },
-                    onKeyUp: this.keyPressed,
-                    placeholder: this.props.placeholder ?? 'Enter search text',
-                    className: `form-control ${this.props.className ?? ''}`,
-                    disabled: this.props.disabled,
-                    required: this.props.required
-                }}
-                renderSuggestion={item => (
-                    <div>{this.props.displayNameSelector(item)}</div>
-                )}
-                onSuggestionsFetchRequested={({ value }) => this.runSearch(value)}
-                onSuggestionsClearRequested={() => this.setState({ suggestions: [] })}
-                shouldRenderSuggestions={(value) => value ? value.trim().length >= (this.props.minSearchTextLength ?? 3) : false}
-                onSuggestionSelected={this.props.onItemSelected ? (_e, { suggestion }) => this.props.onItemSelected(suggestion) : undefined}
-            />
-        );
-    }
+    return (
+        <Autosuggest
+            getSuggestionValue={props.displayNameSelector}
+            suggestions={suggestions}
+            inputProps={{
+                value: searchText,
+                onChange: (_e, { newValue }) => {
+                    setSearchText(newValue);
+                    if(props.onChange) {
+                        props.onChange(newValue);
+                    }
+                },
+                onKeyUp: keyPressed,
+                placeholder: props.placeholder ?? 'Enter search text',
+                className: `form-control ${props.className ?? ''}`,
+                disabled: props.disabled,
+                required: props.required,
+                autoFocus: props.autoFocus
+            }}
+            renderSuggestion={item => (
+                <div>{props.displayNameSelector(item)}</div>
+            )}
+            onSuggestionsFetchRequested={({ value }) => runSearch(value)}
+            onSuggestionsClearRequested={() => setSuggestions([])}
+            shouldRenderSuggestions={(value) => value ? value.trim().length >= (props.minSearchTextLength ?? 3) : false}
+            onSuggestionSelected={(_e, { suggestion }) => onItemSelected(suggestion)}
+        />
+    );
 
 }
