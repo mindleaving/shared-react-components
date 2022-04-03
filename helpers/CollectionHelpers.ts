@@ -29,3 +29,7 @@ export const mostCommonValue = <T extends string | number>(collection: T[]): T |
     }
     return maxCountItem;
 }
+export const distinct = <T extends unknown>(collection: T[]): T[] => {
+    // Credit: https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+    return collection.filter((item, index, self) => self.indexOf(item) === index);
+}
