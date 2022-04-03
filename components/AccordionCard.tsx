@@ -5,12 +5,16 @@ import '../styles/accordion-card.css';
 interface AccordionCardProps extends PropsWithChildren<{}> {
     eventKey: string;
     title: ReactNode;
+    collapsedTitle?: ReactNode;
     className?: string;
     bg?: string;
     standalone?: boolean;
+    isOpenAtCreate?: boolean;
 }
 
 export const AccordionCard = (props: AccordionCardProps) => {
+
+    const isCollapsed = false;
 
     const accordionItem = (
         <Accordion.Item
@@ -18,7 +22,7 @@ export const AccordionCard = (props: AccordionCardProps) => {
             eventKey={props.eventKey}
         >
             <Accordion.Button bsPrefix={`accordion-button` + (props.bg ? ` bg-${props.bg}` : '')}>
-                {props.title}
+                {isCollapsed && props.collapsedTitle ? props.collapsedTitle : props.title}
             </Accordion.Button>
             <Accordion.Body>
                 {props.children}
@@ -29,7 +33,9 @@ export const AccordionCard = (props: AccordionCardProps) => {
         return accordionItem;
     }
     return (
-        <Accordion>
+        <Accordion 
+            defaultActiveKey={props.isOpenAtCreate ? props.eventKey : undefined}
+        >
             {accordionItem}
         </Accordion>
     );
