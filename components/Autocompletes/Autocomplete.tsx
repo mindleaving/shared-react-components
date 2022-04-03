@@ -1,5 +1,6 @@
 import { KeyboardEvent, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
+import { defaultGlobalizer, resolveText } from '../../helpers/Globalizer';
 import '../../styles/react-autosuggest.css';
 
 interface AutocompleteProps<T> {
@@ -75,7 +76,7 @@ export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => 
                     }
                 },
                 onKeyUp: keyPressed,
-                placeholder: props.placeholder ?? 'Enter search text',
+                placeholder: props.placeholder ?? (defaultGlobalizer.instance ? resolveText('Search') : 'Enter search text'),
                 className: `form-control ${props.className ?? ''}`,
                 disabled: props.disabled,
                 required: props.required,
