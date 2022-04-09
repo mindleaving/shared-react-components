@@ -33,3 +33,16 @@ export const distinct = <T extends unknown>(collection: T[]): T[] => {
     // Credit: https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
     return collection.filter((item, index, self) => self.indexOf(item) === index);
 }
+export const areEqual = <T extends unknown>(collection1: T[], collection2: T[]): boolean => {
+    if(collection1.length !== collection2.length) {
+        return false;
+    }
+    for (let index = 0; index < collection1.length; index++) {
+        const element1 = collection1[index];
+        const element2 = collection2[index];
+        if(element1 !== element2) {
+            return false;
+        }
+    }
+    return true;
+}
