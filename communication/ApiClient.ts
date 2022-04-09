@@ -1,3 +1,4 @@
+import { resolveText } from '../helpers/Globalizer';
 import { buildUrl } from '../helpers/UrlBuilder';
 import { ApiError } from './ApiError';
 
@@ -90,7 +91,11 @@ export class ApiClient {
     }
 
     _handleError = async (response: Response) => {
-        throw new ApiError(response.status, await response.text());
+        const errorText = await response.text();
+        const translatedErrorText = errorText.startsWith("resolveText:")
+            ? resolveText(errorText.replace("resolveText:", ""))
+            : errorText;
+        throw new ApiError(response.status, translatedErrorText);
     }
 }
 
