@@ -4,6 +4,8 @@ import { resolveText } from '../helpers/Globalizer';
 
 interface CopyButtonProps {
     value: string;
+    size?: "sm" | "lg";
+    className?: string;
 }
 
 export const CopyButton = (props: CopyButtonProps) => {
@@ -18,6 +20,8 @@ export const CopyButton = (props: CopyButtonProps) => {
 
     return (
         <Button
+            size={props.size}
+            className={props.className}
             variant={isCopied ? 'success' : 'primary'}
             onClick={copyToClipboard}
         >

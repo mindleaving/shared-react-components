@@ -24,6 +24,18 @@ export class ApiClient {
         };
     }
 
+    isLoggedIn = async () => {
+        const response = await this.get('api/logins/is-logged-in', {}, { handleError: false });
+        if(response.ok) {
+            return true;
+        }
+        if(response.status === 401) {
+            return false;
+        }
+        this._handleError(response);
+        return false;
+    }
+
     get = async (path: string, params: { [key: string]: string }, options?: ApiClientOptions) => {
         return await this._sendRequest("GET", path, params, undefined, options);
     }
@@ -72,7 +84,8 @@ export class ApiClient {
         const response = await fetch(requestUrl, {
             method: method,
             body: jsonBody,
-            headers: headers
+            headers: headers,
+            credentials: 'include'
         });
         if(effectiveOptions.handleError && !response.ok) {
             return await this._handleError(response);
