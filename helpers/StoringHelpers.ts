@@ -6,7 +6,7 @@ export const buildAndStoreObject = async <T extends unknown>(
     successText: string,
     errorText: string,
     itemBuilder: () => T,
-    onSuccess?: () => void,
+    onSuccess?: (item: T) => void,
     onFinally?: () => void
 ) => {
     try {
@@ -14,7 +14,7 @@ export const buildAndStoreObject = async <T extends unknown>(
         await apiClient.instance!.put(apiPath, {}, item);
         NotificationManager.success(successText);
         if(onSuccess) {
-            onSuccess();
+            onSuccess(item);
         }
     } catch(error: any) {
         NotificationManager.error(error.message, errorText);

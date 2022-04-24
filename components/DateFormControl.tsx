@@ -1,0 +1,36 @@
+import React from 'react';
+import Flatpickr from 'react-flatpickr';
+
+interface DateFormControlProps {
+    value?: Date,
+    onChange: (date: Date | undefined) => void;
+    disabled?: boolean;
+    required?: boolean;
+    enableTime?: boolean
+}
+
+export const DateFormControl = (props: DateFormControlProps) => {
+
+    return (
+        <Flatpickr
+            options={{
+                allowInput: true,
+                enableTime: props.enableTime,
+                time_24hr: true,
+                mode: 'single'
+            }}
+            className="form-control"
+            required={props.required}
+            disabled={props.disabled}
+            value={props.value}
+            onChange={(dates) => {
+                if(dates.length > 0) { 
+                    props.onChange(dates[0]); 
+                } else {
+                    props.onChange(undefined);
+                }
+            }} 
+        />
+    );
+
+}
