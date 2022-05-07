@@ -38,6 +38,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
                 delete translatedSchema.$schema;
                 setSchema(translatedSchema);
             },
+            () => {},
             () => setIsLoadingSchema(false)
         );
         loadSchema()
