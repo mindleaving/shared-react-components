@@ -1,10 +1,15 @@
 import { confirmAlert } from "react-confirm-alert";
 import { resolveText } from "./Globalizer";
 
-export const openConfirmDeleteAlert = (id: string, name: string, title: string, message: string, yesCallback: () => void, noCallback: () => void = () => {}) => {
+export const openConfirmDeleteAlert = (
+    nameOfObjectToBeDeleted: string, 
+    title: string, 
+    message: string, 
+    yesCallback: () => void, 
+    noCallback: () => void = () => {}) => {        
     confirmAlert({
         title: title,
-        message: message.replace('{0}', name),
+        message: message.replace('{0}', nameOfObjectToBeDeleted),
         closeOnClickOutside: true,
         buttons: [
             {
