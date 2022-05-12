@@ -23,6 +23,7 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                 {props.type?.toLowerCase() === "date" || props.type?.toLowerCase() === "datetime"
                 ? <Flatpickr 
                     required={props.required}
+                    className="form-control"
                     disabled={props.disabled}
                     options={{
                         allowInput: true,
