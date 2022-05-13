@@ -25,7 +25,7 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
             value={props.value}
             onChange={(dates) => {
                 if(dates.length === 2) { 
-                    props.onChange(dates[0], dates[1]); 
+                    props.onChange(dates[0].toISOString() as any, dates[1].toISOString() as any); 
                 }
             }} 
         />

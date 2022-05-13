@@ -1,6 +1,6 @@
-import React, { ElementType, PropsWithChildren } from 'react';
+import { ElementType, PropsWithChildren } from 'react';
 import { Col, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
-import Flatpickr from 'react-flatpickr';
+import { DateFormControl } from './DateFormControl';
 
 interface RowFormGroupProps {
     label: string;
@@ -21,17 +21,12 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
             <FormLabel column>{props.label}</FormLabel>
             <Col>
                 {props.type?.toLowerCase() === "date" || props.type?.toLowerCase() === "datetime"
-                ? <Flatpickr 
+                ? <DateFormControl
                     required={props.required}
-                    className="form-control"
                     disabled={props.disabled}
-                    options={{
-                        allowInput: true,
-                        enableTime: props.type.toLowerCase() === "datetime",
-                        time_24hr: true
-                    }}
+                    enableTime={props.type!.toLowerCase() === "datetime"}
                     value={props.value}
-                    onChange={selectedDates => props.onChange(selectedDates[0])}
+                    onChange={props.onChange}
                 />
                 : <FormControl
                         required={props.required}

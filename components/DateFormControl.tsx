@@ -25,7 +25,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
             value={props.value}
             onChange={(dates) => {
                 if(dates.length > 0) { 
-                    props.onChange(dates[0]); 
+                    props.onChange(dates[0].toISOString() as any); 
                 } else {
                     props.onChange(undefined);
                 }
