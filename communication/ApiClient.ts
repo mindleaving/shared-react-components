@@ -105,6 +105,13 @@ export class ApiClient {
 
     _handleError = async (response: Response) => {
         const errorText = await response.text();
+        if(errorText.startsWith('{') && errorText.endsWith('}')) {
+            const errorObject = JSON.parse(errorText);
+            if(errorObject['errors']) {
+                const errors = (errorObject['errors'] as any[]).flatMap(x => x) as string[];
+                throw new ApiError(response.status, errors.join(', '));
+            }
+        }
         const translatedErrorText = errorText.startsWith("resolveText:")
             ? resolveText(errorText.replace("resolveText:", ""))
             : errorText;
