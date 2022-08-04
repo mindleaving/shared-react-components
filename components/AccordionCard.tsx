@@ -6,6 +6,7 @@ interface AccordionCardProps extends PropsWithChildren<{}> {
     eventKey: string;
     title: ReactNode;
     collapsedTitle?: ReactNode;
+    id?: string;
     className?: string;
     bg?: string;
     standalone?: boolean;
@@ -18,6 +19,7 @@ export const AccordionCard = (props: AccordionCardProps) => {
 
     const accordionItem = (
         <Accordion.Item
+            id={props.id}
             className={props.className}
             eventKey={props.eventKey}
         >
