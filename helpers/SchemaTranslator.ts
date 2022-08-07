@@ -46,6 +46,7 @@ const translateDefinitions = (definitions: any) => {
             if(canResolveText(translationKey)) {
                 definition.title = resolveText(translationKey);
             }
+            translateConcatenatedSchemas(typeName, definition.allOf);
             translateProperties(typeName, definition.properties);
         }
     }
