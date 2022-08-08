@@ -3,10 +3,11 @@ import Flatpickr from 'react-flatpickr';
 
 interface DateRangeFormControlProps {
     value?: Date[];
-    onChange: (startDate: Date, endDate: Date) => void;
+    onChange: (startDate: Date | undefined, endDate: Date | undefined) => void;
     disabled?: boolean;
     required?: boolean;
     enableTime?: boolean;
+    triggerOnChangeForUndefinedRange?: boolean;
 }
 
 export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
@@ -26,6 +27,8 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
             onChange={(dates) => {
                 if(dates.length === 2) { 
                     props.onChange(dates[0].toISOString() as any, dates[1].toISOString() as any); 
+                } else if(props.triggerOnChangeForUndefinedRange) {
+                    props.onChange(undefined, undefined);
                 }
             }} 
         />
