@@ -107,8 +107,11 @@ export class ApiClient {
         const errorText = await response.text();
         if(errorText.startsWith('{') && errorText.endsWith('}')) {
             const errorObject = JSON.parse(errorText);
-            if(errorObject['errors']) {
-                const errors = (errorObject['errors'] as any[]).flatMap(x => x) as string[];
+            const errorsToken = errorObject['errors'];
+            if(errorsToken) {
+                const errors = Array.isArray(errorsToken)
+                    ? (errorsToken as any[]).flatMap(x => x) as string[]
+                    : [ errorText ];
                 throw new ApiError(response.status, errors.join(', '));
             }
         }
