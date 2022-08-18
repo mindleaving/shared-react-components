@@ -5,6 +5,7 @@ import { ApiError } from './ApiError';
 export interface ApiClientOptions {
     handleError?: boolean;
     contentType?: string;
+    includeCredentials?: boolean;
     stringifyBody?: boolean;
 }
 export class ApiClient {
@@ -20,6 +21,7 @@ export class ApiClient {
         this.defaultOptions = { 
             handleError: true, 
             contentType: 'application/json', 
+            includeCredentials: false,
             stringifyBody: true
         };
     }
@@ -85,7 +87,7 @@ export class ApiClient {
             method: method,
             body: jsonBody,
             headers: headers,
-            credentials: 'include'
+            credentials: effectiveOptions.includeCredentials ? 'include' : 'omit'
         });
         if(effectiveOptions.handleError && !response.ok) {
             return await this._handleError(response);
