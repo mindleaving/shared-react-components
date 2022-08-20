@@ -17,3 +17,6 @@ export const removeSurroundingQuotes = (str: string | null | undefined) => {
     }
     return str;
 }
+export const isNullOrEmpty = (word: string) => {
+    return word === undefined || word === null || word === '';
+}
