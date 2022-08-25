@@ -60,7 +60,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
             }
         };
         loadItem();
-    }, [ props.itemLoader, id ]);
+    }, [ id ]);
 
     const onChange = (e: IChangeEvent) => {
         setFormData(e.formData);
