@@ -17,6 +17,7 @@ interface GenericTypeCreateEditPageProps<T> {
     itemLoader?: (id: string) => Promise<T>;
     uiSchema?: any;
     onSubmit: (item: T) => Promise<any>;
+    onChange?: (formData: T) => void;
 }
 
 export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeCreateEditPageProps<T>) => {
@@ -64,6 +65,9 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
 
     const onChange = (e: IChangeEvent) => {
         setFormData(e.formData);
+        if(props.onChange) {
+            props.onChange(e.formData);
+        }
     }
     
     const onSubmit = async () => {
