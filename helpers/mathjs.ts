@@ -7,6 +7,9 @@ mathjs.createUnit('M', {
 });
 
 export const canConvertTo = (value: number, sourceUnit: string, targetUnit: string) => {
+    if(sourceUnit === targetUnit) {
+        return true;
+    }
     try {
         mathjs.unit(value, sourceUnit).to(targetUnit);
         return true;
