@@ -1,3 +1,5 @@
+import { compareDesc } from "date-fns";
+
 export const groupIntoDictionary = <T extends unknown>(collection: T[], keySelector: (item: T) => string) => {
     const groups: { [k: string]: T[] } = {};
     for (const item of collection) {
@@ -61,4 +63,7 @@ export const range = (start: number, end: number) => {
         return [];
     }
     return Array.from({ length: end - start + 1}, (_,i) => start + i);
+}
+export const sortByTimeDescending = <T extends unknown>(entries: T[], timeFieldSelector: (item: T) => Date): T[] => {
+    return [...entries].sort((a,b) => compareDesc(timeFieldSelector(a), timeFieldSelector(b)));
 }
