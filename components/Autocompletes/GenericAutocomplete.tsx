@@ -4,13 +4,14 @@ import { Autocomplete } from './Autocomplete';
 import { AutocompleteRunner } from '../../helpers/AutocompleteRunner';
 import { resolveText } from '../../helpers/Globalizer';
 
-interface GenericAutocompleteProps<T> {
+export interface GenericAutocompleteProps<T> {
     apiPath: string;
     isLoading?: boolean;
     value?: T;
     onChange: (item: T | undefined) => void;
     displayFunc: (item: T) => string;
     required?: boolean;
+    minSearchTextLength?: number;
 }
 
 export const GenericAutocomplete = <T extends unknown>(props: GenericAutocompleteProps<T>) => {
@@ -33,6 +34,7 @@ export const GenericAutocomplete = <T extends unknown>(props: GenericAutocomplet
         search={autocompleteRunner.search}
         displayNameSelector={props.displayFunc}
         onItemSelected={props.onChange}
+        minSearchTextLength={props.minSearchTextLength}
     />);
 
 }
