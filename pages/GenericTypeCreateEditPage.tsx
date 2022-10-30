@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { resolveText } from '../helpers/Globalizer';
-import { buildLoadObjectFunc } from '../helpers/LoadingHelpers';
 import { Form } from '@rjsf/bootstrap-4';
 import { AsyncButton } from '../components/AsyncButton';
 import { NotificationManager } from 'react-notifications';
 import { IChangeEvent } from '@rjsf/core';
 import { useParams } from 'react-router-dom';
-import { translateSchema } from '../helpers/SchemaTranslator';
 import { v4 as uuid } from 'uuid';
 import { AccordionArrayFieldTemplate } from '../components/AccordionArrayFieldTemplate';
+import { loadAndTranslateSchema } from '../helpers/ReactJsonSchemaFormsHelpers';
+import { showErrorAlert } from '../helpers/AlertHelpers';
 
 interface GenericTypeCreateEditPageProps<T> {
     typeName: string;
@@ -30,19 +30,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
     const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 
     useEffect(() => {
-        const loadSchema = buildLoadObjectFunc(
-            `api/schemas/${props.typeName}`,
-            {},
-            resolveText("GenericTypeCreateEditPage_CoultNotLoadSchema"),
-            item => {
-                const translatedSchema = translateSchema(item);
-                delete translatedSchema.$schema;
-                setSchema(translatedSchema);
-            },
-            () => {},
-            () => setIsLoadingSchema(false)
-        );
-        loadSchema()
+        loadAndTranslateSchema(props.typeName, setSchema, setIsLoadingSchema);
     }, [ props.typeName ]);
 
     useEffect(() => {
@@ -55,7 +43,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
                 const item = await props.itemLoader!(id);
                 setFormData(item);
             } catch(error: any) {
-                NotificationManager.error(error.message, resolveText("GenericTypeCreateEditPage_CoultNotLoadItem"));
+                showErrorAlert(error.message, resolveText("GenericTypeCreateEditPage_CoultNotLoadItem"));
             } finally {
                 setIsLoadingItem(false);
             }
