@@ -20,3 +20,6 @@ export const loadAndTranslateSchema = async (
         () => setIsLoading(false)
     );
 }
+export const Hide = {
+    "ui:widget": "hidden"
+}
