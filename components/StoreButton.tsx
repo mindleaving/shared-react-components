@@ -8,6 +8,7 @@ interface StoreButtonProps {
     onClick?: () => void;
     isStoring: boolean;
     disabled?: boolean;
+    size?: 'sm' | 'lg';
     className?: string;
 }
 
@@ -23,6 +24,7 @@ export const StoreButton = (props: StoreButtonProps) => {
             executingText={resolveText('Storing...')}
             isExecuting={props.isStoring}
             disabled={props.disabled}
+            size={props.size}
         />
     );
 
