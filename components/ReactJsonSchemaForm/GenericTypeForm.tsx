@@ -1,11 +1,11 @@
 import { Form } from '@rjsf/bootstrap-4';
 import { IChangeEvent } from '@rjsf/core';
 import { useState, useEffect } from 'react';
-import { showErrorAlert } from '../helpers/AlertHelpers';
-import { resolveText } from '../helpers/Globalizer';
-import { loadAndTranslateSchema } from '../helpers/ReactJsonSchemaFormsHelpers';
+import { showErrorAlert } from '../../helpers/AlertHelpers';
+import { resolveText } from '../../helpers/Globalizer';
+import { loadAndTranslateSchema } from '../../helpers/ReactJsonSchemaFormsHelpers';
+import { AsyncButton } from '../AsyncButton';
 import { AccordionArrayFieldTemplate } from './AccordionArrayFieldTemplate';
-import { AsyncButton } from './AsyncButton';
 
 interface GenericTypeFormProps {
     typeName: string;

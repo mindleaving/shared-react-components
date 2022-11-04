@@ -6,7 +6,7 @@ import { NotificationManager } from 'react-notifications';
 import { IChangeEvent } from '@rjsf/core';
 import { useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { AccordionArrayFieldTemplate } from '../components/AccordionArrayFieldTemplate';
+import { AccordionArrayFieldTemplate } from '../components/ReactJsonSchemaForm/AccordionArrayFieldTemplate';
 import { loadAndTranslateSchema } from '../helpers/ReactJsonSchemaFormsHelpers';
 import { showErrorAlert } from '../helpers/AlertHelpers';
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { AutocompleteRunner } from '../helpers/AutocompleteRunner';
-import { Autocomplete } from './Autocompletes/Autocomplete';
+import { AutocompleteRunner } from '../../helpers/AutocompleteRunner';
+import { Autocomplete } from '../Autocompletes/Autocomplete';
 
 interface MemoryFormControlProps {
     context: string;
