@@ -9,6 +9,7 @@ interface MemoryFormControlProps {
     placeholder?: string;
     minSearchTextLength?: number;
     required?: boolean;
+    disabled?: boolean;
     className?: string;
 }
 
@@ -25,6 +26,7 @@ export const MemoryFormControl = (props: MemoryFormControlProps) => {
             onChange={props.onChange}
             placeholder={props.placeholder}
             minSearchTextLength={props.minSearchTextLength}
+            disabled={props.disabled}
         />
     );
 
