@@ -12,7 +12,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     <>
         {props.TitleField(props as any)}
         {props.DescriptionField(props as any)}
-        <Accordion className="accordion-card" key={props.formData.id}>
+        <Accordion className="accordion-card" defaultActiveKey='0' key={props.formData.id}>
             {props.items.map((item,index) => (
                 <Accordion.Item 
                     key={index} 
