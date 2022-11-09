@@ -10,6 +10,7 @@ interface InfiniteScrollProps extends PropsWithChildren {
     hasMore: boolean;
     next: () => void;
     scrollThreshold?: string | number;
+    className?: string;
 }
 
 export const InfiniteScroll = (props: InfiniteScrollProps) => {
@@ -22,6 +23,7 @@ export const InfiniteScroll = (props: InfiniteScrollProps) => {
             scrollThreshold={props.scrollThreshold}
             loader={<LoadingAlert variant='secondary' />}
             endMessage={<NoMoreEntriesAlert />}
+            className={props.className}
             style={{ overflowX: 'hidden' }}
         >
             {props.dataLength > 0

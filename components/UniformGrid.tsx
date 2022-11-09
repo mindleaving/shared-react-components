@@ -5,6 +5,7 @@ interface UniformGridProps {
     columnCount: number;
     items: ReactNode[];
     size: "xs" | "sm" | "md" | "lg" | "xl";
+    className?: string;
 }
 
 export const UniformGrid = (props: UniformGridProps) => {
@@ -32,7 +33,7 @@ export const UniformGrid = (props: UniformGridProps) => {
             {currentRowColumns}
         </Row>);
     }
-    return (<>
+    return (<div className={props.className}>
         {rows}
-    </>);
+    </div>);
 }
