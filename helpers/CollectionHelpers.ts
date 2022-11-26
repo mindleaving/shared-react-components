@@ -67,3 +67,6 @@ export const range = (start: number, end: number) => {
 export const sortByTimeDescending = <T extends unknown>(entries: T[], timeFieldSelector: (item: T) => Date): T[] => {
     return [...entries].sort((a,b) => compareDesc(timeFieldSelector(a), timeFieldSelector(b)));
 }
+export const intersect = <T extends unknown>(collection1: T[], collection2: T[], itemComparer: (item1: T, item2: T) => boolean) => {
+    return collection1.filter(item1 => collection2.some(item2 => itemComparer(item1,item2)));
+}
