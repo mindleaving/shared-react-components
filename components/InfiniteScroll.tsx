@@ -4,7 +4,7 @@ import { LoadingAlert } from './LoadingAlert';
 import { NoMoreEntriesAlert } from './NoMoreEntriesAlert';
 import { NoEntriesAlertTimelineItem } from './NoEntriesAlertTimelineItem';
 
-interface InfiniteScrollProps extends PropsWithChildren {
+interface InfiniteScrollProps {
     dataLength: number;
     isLoading: boolean;
     hasMore: boolean;
@@ -13,7 +13,7 @@ interface InfiniteScrollProps extends PropsWithChildren {
     className?: string;
 }
 
-export const InfiniteScroll = (props: InfiniteScrollProps) => {
+export const InfiniteScroll = (props: PropsWithChildren<InfiniteScrollProps>) => {
 
     return (
         <InfiniteScrollFromLibrary
