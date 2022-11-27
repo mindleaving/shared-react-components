@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { resolveText } from '../helpers/Globalizer';
 import { Form } from '@rjsf/bootstrap-4';
 import { AsyncButton } from '../components/AsyncButton';
-import { NotificationManager } from 'react-notifications';
 import { IChangeEvent } from '@rjsf/core';
 import { useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -63,7 +62,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
         try {
             await props.onSubmit(formData);
         } catch(error: any) {
-            NotificationManager.error(error.message, resolveText("GenericTypeCreateEditPage_CoultNotSubmit"));
+            showErrorAlert(error.message, resolveText("GenericTypeCreateEditPage_CoultNotSubmit"));
         } finally {
             setIsSubmitting(false);
         }

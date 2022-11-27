@@ -1,5 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
-import { NotificationManager } from 'react-notifications';
+import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 
 export const buildAndStoreObject = async <T extends unknown>(
     apiPath: string,
@@ -12,12 +12,12 @@ export const buildAndStoreObject = async <T extends unknown>(
     try {
         const item = itemBuilder();
         await apiClient.instance!.put(apiPath, {}, item);
-        NotificationManager.success(successText);
+        showSuccessAlert(successText);
         if(onSuccess) {
             onSuccess(item);
         }
     } catch(error: any) {
-        NotificationManager.error(error.message, errorText);
+        showErrorAlert(error.message, errorText);
     } finally {
         if(onFinally) {
             onFinally();
@@ -42,7 +42,7 @@ export const sendPutRequest = async <T extends unknown>(
         if(onFailure) {
             onFailure();
         }
-        NotificationManager.error(error.message, errorText);
+        showErrorAlert(error.message, errorText);
     } finally {
         if(onFinally) {
             onFinally();
@@ -67,7 +67,7 @@ export const sendPostRequest = async (
         if(onFailure) {
             onFailure();
         }
-        NotificationManager.error(error.message, errorText);
+        showErrorAlert(error.message, errorText);
     } finally {
         if(onFinally) {
             onFinally();

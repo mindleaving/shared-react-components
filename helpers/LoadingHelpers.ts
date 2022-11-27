@@ -1,5 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
-import { NotificationManager } from 'react-notifications';
+import { showErrorAlert } from "./AlertHelpers";
 
 export const buildLoadObjectFunc = <T extends unknown>(
     apiPath: string,
@@ -26,7 +26,7 @@ export const loadObject = async <T extends unknown>(
         if(onFailure) {
             onFailure();
         }
-        NotificationManager.error(error.message, errorText);
+        showErrorAlert(error.message, errorText);
     } finally {
         if(onFinally) {
             onFinally();

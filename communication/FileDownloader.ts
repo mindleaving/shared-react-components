@@ -1,7 +1,7 @@
 import { resolveText } from "../helpers/Globalizer";
-import { NotificationManager } from 'react-notifications';
 import { apiClient } from "./ApiClient";
 import { removeSurroundingQuotes } from "../helpers/StringExtensions";
+import { showErrorAlert } from "../helpers/AlertHelpers";
 
 export const downloadFile = async (url: string) => {
     const anchor = document.createElement("a");
@@ -23,7 +23,7 @@ export const downloadFile = async (url: string) => {
         anchor.click();
         window.URL.revokeObjectURL(objectUrl);
     } catch(error: any) {
-        NotificationManager.error(error.message, resolveText("Download_CouldNotDownload"));
+        showErrorAlert(error.message, resolveText("Download_CouldNotDownload"));
     } finally {
         document.body.removeChild(anchor);
     }

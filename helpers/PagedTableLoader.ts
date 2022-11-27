@@ -1,6 +1,6 @@
 import { apiClient } from "../communication/ApiClient";
 import { OrderDirection } from "../types/enums.d";
-import { NotificationManager } from 'react-notifications';
+import { showErrorAlert } from "./AlertHelpers";
 
 export default class PagedTableLoader<T> {
     apiControllerPath: string;
@@ -41,7 +41,7 @@ export default class PagedTableLoader<T> {
             const items = await response.json() as T[];
             this.callback(items);
         } catch(error: any) {
-            NotificationManager.error(error.message, this.errorMessage);
+            showErrorAlert(error.message, this.errorMessage);
         }
     }
 }
