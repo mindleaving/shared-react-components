@@ -22,7 +22,7 @@ export const InfiniteScroll = (props: InfiniteScrollProps) => {
             next={props.next}
             scrollThreshold={props.scrollThreshold}
             loader={<LoadingAlert variant='secondary' />}
-            endMessage={<NoMoreEntriesAlert />}
+            endMessage={props.dataLength > 0 ? <NoMoreEntriesAlert /> : null}
             className={props.className}
             style={{ overflowX: 'hidden' }}
         >
