@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react';
 import InfiniteScrollFromLibrary from 'react-infinite-scroll-component';
-import { LoadingAlert } from '../../sharedHealthComponents/components/LoadingAlert';
-import { NoMoreEntriesAlert } from '../../sharedHealthComponents/components/NoMoreEntriesAlert';
-import { NoEntriesAlertTimelineItem } from '../../sharedHealthComponents/components/Patients/NoEntriesAlertTimelineItem';
+import { LoadingAlert } from './LoadingAlert';
+import { NoMoreEntriesAlert } from './NoMoreEntriesAlert';
+import { NoEntriesAlertTimelineItem } from './NoEntriesAlertTimelineItem';
 
 interface InfiniteScrollProps extends PropsWithChildren {
     dataLength: number;
