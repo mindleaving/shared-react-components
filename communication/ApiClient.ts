@@ -1,4 +1,5 @@
 import { resolveText } from '../helpers/Globalizer';
+import { extractJwtBody } from '../helpers/JwtHelpers';
 import { buildUrl } from '../helpers/UrlBuilder';
 import { ApiError } from './ApiError';
 
@@ -12,6 +13,7 @@ export class ApiClient {
     serverAddress: string;
     port: number;
     accessToken: string | undefined;
+    expirationTime: Date | undefined;
     defaultOptions: ApiClientOptions;
 
     constructor(serverAddress: string, port: number) {
@@ -60,6 +62,7 @@ export class ApiClient {
 
     setAccessToken = (accessToken: string) => {
         this.accessToken = accessToken;
+        this.expirationTime = new Date(extractJwtBody(accessToken).exp * 1000);
     }
 
     buildUrl = (path: string, params: {}) => {
