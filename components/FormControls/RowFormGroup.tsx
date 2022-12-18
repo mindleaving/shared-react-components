@@ -3,6 +3,8 @@ import { Col, FormCheck, FormControl, FormGroup, FormLabel, Row } from 'react-bo
 import { DateFormControl } from './DateFormControl';
 
 interface RowFormGroupProps {
+    id?: string;
+    name?: string;
     label: string;
     as?: ElementType<any>;
     type?: string;
@@ -22,6 +24,8 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
             <Col>
                 {props.type?.toLowerCase() === "date" || props.type?.toLowerCase() === "datetime"
                 ? <DateFormControl
+                    id={props.id}
+                    name={props.name}
                     required={props.required}
                     disabled={props.disabled}
                     enableTime={props.type!.toLowerCase() === "datetime"}
@@ -30,6 +34,8 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                 />
                 : props.type?.toLowerCase() === "checkbox"
                 ? <FormCheck
+                    id={props.id}
+                    name={props.name}
                     required={props.required}
                     checked={props.value}
                     onChange={(e:any) => props.onChange(e.target.checked)}
@@ -39,6 +45,8 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                     required={props.required}
                     as={props.as}
                     type={props.type}
+                    id={props.id}
+                    name={props.name}
                     value={props.value}
                     min={props.min}
                     max={props.max}
