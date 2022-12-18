@@ -1,5 +1,5 @@
 import { ElementType, PropsWithChildren } from 'react';
-import { Col, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
+import { Col, FormCheck, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { DateFormControl } from './DateFormControl';
 
 interface RowFormGroupProps {
@@ -28,18 +28,25 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                     value={props.value}
                     onChange={props.onChange}
                 />
+                : props.type?.toLowerCase() === "checkbox"
+                ? <FormCheck
+                    required={props.required}
+                    checked={props.value}
+                    onChange={(e:any) => props.onChange(e.target.checked)}
+                    disabled={props.disabled}
+                />
                 : <FormControl
-                        required={props.required}
-                        as={props.as}
-                        type={props.type}
-                        value={props.value}
-                        min={props.min}
-                        max={props.max}
-                        onChange={(e:any) => props.onChange(e.target.value)}
-                        disabled={props.disabled}
-                    >
-                        {props.children}
-                    </FormControl>
+                    required={props.required}
+                    as={props.as}
+                    type={props.type}
+                    value={props.value}
+                    min={props.min}
+                    max={props.max}
+                    onChange={(e:any) => props.onChange(e.target.value)}
+                    disabled={props.disabled}
+                >
+                    {props.children}
+                </FormControl>
                 }
             </Col>
         </FormGroup>
