@@ -29,7 +29,7 @@ export class ApiClient {
     }
 
     isLoggedIn = async () => {
-        const response = await this.get('api/logins/is-logged-in', {}, { handleError: false });
+        const response = await this.get('api/logins/is-logged-in', [], { handleError: false });
         if(response.ok) {
             return true;
         }
@@ -40,23 +40,23 @@ export class ApiClient {
         return false;
     }
 
-    get = async (path: string, params: { [key: string]: string }, options?: ApiClientOptions) => {
+    get = async (path: string, params?: QueryParameters, options?: ApiClientOptions) => {
         return await this._sendRequest("GET", path, params, undefined, options);
     }
 
-    put = async (path: string, params: { [key: string]: string }, body: any, options?: ApiClientOptions) => {
+    put = async (path: string, body: any, params?: QueryParameters, options?: ApiClientOptions) => {
         return await this._sendRequest("PUT", path, params, body, options);
     }
 
-    post = async (path: string, params: { [key: string]: string }, body: any, options?: ApiClientOptions) => {
+    post = async (path: string, body: any, params?: QueryParameters, options?: ApiClientOptions) => {
         return await this._sendRequest("POST", path, params, body, options);
     }
 
-    patch = async (path: string, params: { [key: string]: string }, body: any, options?: ApiClientOptions) => {
+    patch = async (path: string, body: any, params?: QueryParameters, options?: ApiClientOptions) => {
         return await this._sendRequest("PATCH", path, params, body, options);
     }
 
-    delete = async (path: string, params: { [key: string]: string }, options?: ApiClientOptions) => {
+    delete = async (path: string, params?: QueryParameters, options?: ApiClientOptions) => {
         return await this._sendRequest("DELETE", path, params, undefined, options);
     }
 
@@ -65,14 +65,14 @@ export class ApiClient {
         this.expirationTime = new Date(extractJwtBody(accessToken).exp * 1000);
     }
 
-    buildUrl = (path: string, params: {}) => {
+    buildUrl = (path: string, params?: QueryParameters) => {
         return buildUrl(`https://${this.serverAddress}:${this.port}`, path, params);
     }
 
     _sendRequest = async (
         method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
         path: string, 
-        params: { [key: string]: string },
+        params?: QueryParameters,
         body?: any,
         options?: ApiClientOptions) => {
 

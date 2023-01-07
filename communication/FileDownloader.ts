@@ -7,7 +7,7 @@ export const downloadFile = async (url: string) => {
     const anchor = document.createElement("a");
     document.body.appendChild(anchor);
     try {
-        const response = await apiClient.instance!.get(url, {});
+        const response = await apiClient.instance!.get(url);
         const result = await response.blob();
         const contentDispositionHeader = response.headers.get("content-disposition");
         const filenameFromHeader = removeSurroundingQuotes(contentDispositionHeader

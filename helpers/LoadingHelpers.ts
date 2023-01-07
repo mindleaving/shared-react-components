@@ -3,7 +3,7 @@ import { showErrorAlert } from "./AlertHelpers";
 
 export const buildLoadObjectFunc = <T extends unknown>(
     apiPath: string,
-    params: { [key:string]: string } = {},
+    params: QueryParameters = {},
     errorText: string,
     onItemLoaded: (item: T) => void,
     onFailure?: () => void,
@@ -12,7 +12,7 @@ export const buildLoadObjectFunc = <T extends unknown>(
 }
 export const loadObject = async <T extends unknown>(
     apiPath: string,
-    params: { [key:string]: string } = {},
+    params: QueryParameters = {},
     errorText: string,
     onItemLoaded: (item: T) => void,
     onFailure?: () => void,

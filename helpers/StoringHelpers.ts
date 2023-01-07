@@ -3,6 +3,7 @@ import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 
 export const buildAndStoreObject = async <T extends unknown>(
     apiPath: string,
+    params: QueryParameters,
     successText: string,
     errorText: string,
     itemBuilder: () => T,
@@ -11,7 +12,7 @@ export const buildAndStoreObject = async <T extends unknown>(
 ) => {
     try {
         const item = itemBuilder();
-        await apiClient.instance!.put(apiPath, {}, item);
+        await apiClient.instance!.put(apiPath, item, params);
         showSuccessAlert(successText);
         if(onSuccess) {
             onSuccess(item);
@@ -27,6 +28,7 @@ export const buildAndStoreObject = async <T extends unknown>(
 
 export const sendPutRequest = async <T extends unknown>(
     apiPath: string,
+    params: QueryParameters,
     errorText: string,
     item: T,
     handleResponse?: (response: Response) => void,
@@ -34,7 +36,7 @@ export const sendPutRequest = async <T extends unknown>(
     onFinally?: () => void
 ) => {
     try {
-        const response = await apiClient.instance!.put(apiPath, {}, item);
+        const response = await apiClient.instance!.put(apiPath, item, params);
         if(handleResponse) {
             handleResponse(response);
         }
@@ -52,6 +54,7 @@ export const sendPutRequest = async <T extends unknown>(
 
 export const sendPostRequest = async (
     apiPath: string,
+    params: QueryParameters,
     errorText: string,
     body: any,
     onSuccess?: (response: Response) => void,
@@ -59,7 +62,7 @@ export const sendPostRequest = async (
     onFinally?: () => void
 ) => {
     try {
-        const response = await apiClient.instance!.post(apiPath, {}, body);
+        const response = await apiClient.instance!.post(apiPath, body, params);
         if(onSuccess) {
             onSuccess(response);
         }
