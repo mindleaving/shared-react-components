@@ -58,17 +58,24 @@ export const sendPostRequest = async (
     errorText: string,
     body: any,
     onSuccess?: (response: Response) => void,
-    onFailure?: () => void,
+    onFailure?: (response: Response | undefined) => void,
     onFinally?: () => void
 ) => {
     try {
-        const response = await apiClient.instance!.post(apiPath, body, params);
-        if(onSuccess) {
-            onSuccess(response);
+        const response = await apiClient.instance!.post(apiPath, body, params, { handleError: false });
+        if(response.ok) {
+            if(onSuccess) {
+                onSuccess(response);
+            }
+        } else {
+            if(onFailure) {
+                showErrorAlert(errorText);
+                onFailure(response);
+            }
         }
     } catch(error: any) {
         if(onFailure) {
-            onFailure();
+            onFailure(undefined);
         }
         showErrorAlert(error.message, errorText);
     } finally {
