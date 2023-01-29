@@ -69,8 +69,15 @@ export const sendPostRequest = async (
             }
         } else {
             if(onFailure) {
-                showErrorAlert(errorText);
                 onFailure(response);
+            } else {
+                try {
+                    const errorDescription = await response.text();
+                    showErrorAlert(errorText, errorDescription);
+                } catch {
+                    showErrorAlert(errorText);
+                    // Ignore
+                }
             }
         }
     } catch(error: any) {
