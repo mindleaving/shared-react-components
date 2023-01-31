@@ -42,7 +42,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
                 const item = await props.itemLoader!(id);
                 setFormData(item);
             } catch(error: any) {
-                showErrorAlert(error.message, resolveText("GenericTypeCreateEditPage_CoultNotLoadItem"));
+                showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotLoadItem"), error.message);
             } finally {
                 setIsLoadingItem(false);
             }
@@ -62,7 +62,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
         try {
             await props.onSubmit(formData);
         } catch(error: any) {
-            showErrorAlert(error.message, resolveText("GenericTypeCreateEditPage_CoultNotSubmit"));
+            showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotSubmit"), error.message);
         } finally {
             setIsSubmitting(false);
         }

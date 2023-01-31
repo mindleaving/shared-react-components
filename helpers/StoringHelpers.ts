@@ -18,7 +18,7 @@ export const buildAndStoreObject = async <T extends unknown>(
             onSuccess(item);
         }
     } catch(error: any) {
-        showErrorAlert(error.message, errorText);
+        showErrorAlert(errorText, error.message);
     } finally {
         if(onFinally) {
             onFinally();
@@ -44,7 +44,7 @@ export const sendPutRequest = async <T extends unknown>(
         if(onFailure) {
             onFailure();
         }
-        showErrorAlert(error.message, errorText);
+        showErrorAlert(errorText, error.message);
     } finally {
         if(onFinally) {
             onFinally();
@@ -84,7 +84,7 @@ export const sendPostRequest = async (
         if(onFailure) {
             onFailure(undefined);
         }
-        showErrorAlert(error.message, errorText);
+        showErrorAlert(errorText, error.message);
     } finally {
         if(onFinally) {
             onFinally();

@@ -41,7 +41,7 @@ export default class PagedTableLoader<T> {
             const items = await response.json() as T[];
             this.callback(items);
         } catch(error: any) {
-            showErrorAlert(error.message, this.errorMessage);
+            showErrorAlert(this.errorMessage, error.message);
         }
     }
 }

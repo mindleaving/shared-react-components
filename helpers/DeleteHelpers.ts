@@ -17,7 +17,7 @@ export const deleteObject = async (
             onSuccess();
         }
     } catch(error: any) {
-        showErrorAlert(error.message, errorText);
+        showErrorAlert(errorText, error.message);
         if(onFailure) {
             onFailure();
         }

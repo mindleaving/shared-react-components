@@ -30,7 +30,7 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
         try {
             await props.onSubmit();
         } catch(error: any) {
-            showErrorAlert(error.message, resolveText("GenericTypeCreateEditPage_CoultNotSubmit"));
+            showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotSubmit"), error.message);
         } finally {
             setIsSubmitting(false);
         }

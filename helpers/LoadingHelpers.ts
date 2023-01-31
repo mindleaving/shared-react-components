@@ -26,7 +26,7 @@ export const loadObject = async <T extends unknown>(
         if(onFailure) {
             onFailure();
         }
-        showErrorAlert(error.message, errorText);
+        showErrorAlert(errorText, error.message);
     } finally {
         if(onFinally) {
             onFinally();

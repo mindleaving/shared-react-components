@@ -23,7 +23,7 @@ export const downloadFile = async (url: string) => {
         anchor.click();
         window.URL.revokeObjectURL(objectUrl);
     } catch(error: any) {
-        showErrorAlert(error.message, resolveText("Download_CouldNotDownload"));
+        showErrorAlert(resolveText("Download_CouldNotDownload"), error.message);
     } finally {
         document.body.removeChild(anchor);
     }
