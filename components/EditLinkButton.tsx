@@ -4,6 +4,7 @@ import { resolveText } from '../helpers/Globalizer';
 
 interface EditLinkButtonProps {
     onClick: () => void;
+    className?: string;
 }
 
 export const EditLinkButton = (props: EditLinkButtonProps) => {
@@ -12,6 +13,7 @@ export const EditLinkButton = (props: EditLinkButtonProps) => {
         <Button 
             variant="link" 
             onClick={props.onClick}
+            className={props.className}
         >
             {resolveText('Edit...')}
         </Button>
