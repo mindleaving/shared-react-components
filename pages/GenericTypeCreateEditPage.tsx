@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { resolveText } from '../helpers/Globalizer';
-import { Form } from '@rjsf/bootstrap-4';
+import Form from '@rjsf/bootstrap-4';
+import validator from "@rjsf/validator-ajv8";
 import { AsyncButton } from '../components/AsyncButton';
 import { IChangeEvent } from '@rjsf/core';
 import { useParams } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { AccordionArrayFieldTemplate } from '../components/ReactJsonSchemaForm/AccordionArrayFieldTemplate';
 import { loadAndTranslateSchema } from '../helpers/ReactJsonSchemaFormsHelpers';
 import { showErrorAlert } from '../helpers/AlertHelpers';
+import { SelectWidget } from '../components/ReactJsonSchemaForm/SelectWidget';
 
 interface GenericTypeCreateEditPageProps<T> {
     typeName: string;
@@ -76,7 +78,11 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
     }
     return (
         <Form
-            schema={schema}
+            schema={{
+                ...schema,
+                title: undefined
+            }}
+            validator={validator}
             formData={formData}
             onChange={onChange}
             onError={() => {}}
@@ -86,7 +92,12 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
                     "ui:readonly": true
                 }
             }, props.uiSchema ?? {})}
-            ArrayFieldTemplate={AccordionArrayFieldTemplate}
+            templates={{
+                ArrayFieldTemplate: AccordionArrayFieldTemplate
+            }}
+            widgets={{
+                SelectWidget: SelectWidget
+            }}
         >
             <AsyncButton
                 type='submit'

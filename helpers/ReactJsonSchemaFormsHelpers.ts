@@ -1,4 +1,4 @@
-import { WidgetProps } from "@rjsf/core";
+import { WidgetProps } from '@rjsf/utils';
 import { resolveText } from "./Globalizer";
 import { loadObject } from "./LoadingHelpers";
 import { isEmptyObject } from "./ObjectHelpers";
@@ -24,27 +24,4 @@ export const loadAndTranslateSchema = async (
 }
 export const Hide = {
     "ui:widget": "hidden"
-}
-
-export const buildWidgetProps = (item: any, itemsWidgetOptions: any): WidgetProps => {
-    return {
-        autofocus: item.props.autofocus,
-        disabled: item.props.disabled,
-        formContext: undefined,
-        id: item.props.idSchema.$id,
-        label: '',
-        multiple: false,
-        onBlur: item.props.onBlur,
-        onChange: item.props.onChange,
-        onFocus: item.props.onFocus,
-        options: itemsWidgetOptions,
-        placeholder: '',
-        rawErrors: item.props.rawErrors,
-        readonly: item.props.readonly,
-        registry: item.props.registry,
-        required: item.props.required,
-        schema: item.props.schema,
-        uiSchema: item.props.uiSchema,
-        value: !isEmptyObject(item.props.formData) ? item.props.formData : undefined
-    };
 }

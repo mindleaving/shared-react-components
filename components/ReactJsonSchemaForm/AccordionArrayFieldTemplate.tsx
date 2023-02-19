@@ -1,17 +1,12 @@
-import { ArrayFieldTemplateProps } from "@rjsf/core"
+import { ArrayFieldTemplateProps } from "@rjsf/utils";
 import { Accordion, Button } from "react-bootstrap"
 import { resolveText } from "../../helpers/Globalizer"
-import { buildWidgetProps } from "../../helpers/ReactJsonSchemaFormsHelpers";
 
 export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-    const hasItemsWidget = props.uiSchema.items && props.uiSchema.items["ui:widget"];
-    const itemsWidgetOptions = hasItemsWidget ? props.uiSchema.items["ui:options"] : undefined;
 
-    const Widget = hasItemsWidget ? props.uiSchema.items["ui:widget"] : undefined;
     return (
     <>
-        {props.TitleField(props as any)}
-        {props.DescriptionField(props as any)}
+        {props.title}
         <Accordion className="accordion-card" defaultActiveKey='0' key={props.formData.id}>
             {props.items.map((item,index) => (
                 <Accordion.Item 
@@ -23,11 +18,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                         {resolveText("ItemX").replace("{0}", index + '')}
                     </Accordion.Header>
                     <Accordion.Body>
-                        {hasItemsWidget ?
-                        <Widget 
-                            {...buildWidgetProps(item.children, itemsWidgetOptions)}
-                        />
-                        : item.children}
+                        {item.children}
                         <Button 
                             variant="danger" 
                             className="mt-2" 

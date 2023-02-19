@@ -1,28 +1,19 @@
-import { ArrayFieldTemplateProps } from '@rjsf/core';
+import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import { Button, Col, Row } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
-import { buildWidgetProps } from '../../helpers/ReactJsonSchemaFormsHelpers';
 
 export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
-    const hasItemsWidget = props.uiSchema.items && props.uiSchema.items["ui:widget"];
-    const itemsWidgetOptions = hasItemsWidget ? props.uiSchema.items["ui:options"] : undefined;
 
-    const Widget = hasItemsWidget ? props.uiSchema.items["ui:widget"] : undefined;
     return (
     <>
-        {props.TitleField(props as any)}
-        {props.DescriptionField(props as any)}
+        {props.title}
         {props.items.map((item,index) => (
             <Row 
                 key={index} 
                 className='align-items-center'
             >
                 <Col>
-                    {hasItemsWidget ?
-                    <Widget 
-                        {...buildWidgetProps(item.children, itemsWidgetOptions)}
-                    />
-                    : item.children}
+                    {item.children}
                 </Col>
                 <Col xs="auto">
                     <Button 

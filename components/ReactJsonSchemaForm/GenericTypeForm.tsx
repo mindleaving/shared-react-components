@@ -1,4 +1,5 @@
-import { Form } from '@rjsf/bootstrap-4';
+import Form from '@rjsf/bootstrap-4';
+import validator from "@rjsf/validator-ajv8";
 import { IChangeEvent } from '@rjsf/core';
 import { useState, useEffect } from 'react';
 import { showErrorAlert } from '../../helpers/AlertHelpers';
@@ -6,6 +7,8 @@ import { resolveText } from '../../helpers/Globalizer';
 import { loadAndTranslateSchema } from '../../helpers/ReactJsonSchemaFormsHelpers';
 import { AsyncButton } from '../AsyncButton';
 import { AccordionArrayFieldTemplate } from './AccordionArrayFieldTemplate';
+import { UiSchema } from '@rjsf/utils';
+import { SelectWidget } from './SelectWidget';
 
 interface GenericTypeFormProps {
     typeName: string;
@@ -45,7 +48,11 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
 
     return (
         <Form
-            schema={schema}
+            schema={{
+                ...schema,
+                title: undefined
+            }}
+            validator={validator}
             formData={props.formData}
             onChange={(e: IChangeEvent) => props.onChange(e.formData)}
             onSubmit={onSubmit}
@@ -53,8 +60,13 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                 id: {
                     "ui:readonly": true
                 }
-            }, props.uiSchema ?? {})}
-            ArrayFieldTemplate={AccordionArrayFieldTemplate}
+            } as UiSchema, props.uiSchema ?? {})}
+            templates={{
+                ArrayFieldTemplate: AccordionArrayFieldTemplate
+            }}
+            widgets={{
+                SelectWidget: SelectWidget
+            }}
         >
             <AsyncButton
                 type='submit'
