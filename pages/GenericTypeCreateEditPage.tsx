@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
 import { resolveText } from '../helpers/Globalizer';
-import Form from '@rjsf/bootstrap-4';
-import validator from "@rjsf/validator-ajv8";
-import { AsyncButton } from '../components/AsyncButton';
-import { IChangeEvent } from '@rjsf/core';
 import { useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { AccordionArrayFieldTemplate } from '../components/ReactJsonSchemaForm/AccordionArrayFieldTemplate';
-import { loadAndTranslateSchema } from '../helpers/ReactJsonSchemaFormsHelpers';
 import { showErrorAlert } from '../helpers/AlertHelpers';
-import { SelectWidget } from '../components/ReactJsonSchemaForm/SelectWidget';
+import { GenericTypeForm } from '../components/ReactJsonSchemaForm/GenericTypeForm';
+import { LoadingAlert } from '../components/LoadingAlert';
 
 interface GenericTypeCreateEditPageProps<T> {
     typeName: string;
@@ -24,15 +19,8 @@ interface GenericTypeCreateEditPageProps<T> {
 export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeCreateEditPageProps<T>) => {
 
     const { [props.paramName ?? "id"]: id } = useParams();
-    const [ isLoadingSchema, setIsLoadingSchema ] = useState<boolean>(true);
     const [ isLoadingItem, setIsLoadingItem ] = useState<boolean>(!!props.itemLoader);
-    const [ schema, setSchema ] = useState<any>();
     const [ formData, setFormData ] = useState<T>(props.item ?? { id: uuid() } as T);
-    const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
-
-    useEffect(() => {
-        loadAndTranslateSchema(props.typeName, setSchema, setIsLoadingSchema);
-    }, [ props.typeName ]);
 
     useEffect(() => {
         if(!props.itemLoader || !id) {
@@ -52,60 +40,23 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
         loadItem();
     }, [ id ]);
 
-    const onChange = (e: IChangeEvent) => {
-        setFormData(e.formData);
+    const onChange = (formData: any) => {
+        setFormData(formData);
         if(props.onChange) {
-            props.onChange(e.formData);
-        }
-    }
-    
-    const onSubmit = async () => {
-        setIsSubmitting(true);
-        try {
-            await props.onSubmit(formData);
-        } catch(error: any) {
-            showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotSubmit"), error.message);
-        } finally {
-            setIsSubmitting(false);
+            props.onChange(formData);
         }
     }
 
-    if(isLoadingSchema || isLoadingItem) {
-        return (<h3>{resolveText("Loading...")}</h3>);
+    if(isLoadingItem) {
+        return (<LoadingAlert />);
     }
-    if(!schema) {
-        return (<h3>{resolveText("GenericTypeCreateEditPage_CoultNotLoadSchema")}</h3>)
-    }
-    return (
-        <Form
-            schema={{
-                ...schema,
-                title: undefined
-            }}
-            validator={validator}
-            formData={formData}
-            onChange={onChange}
-            onError={() => {}}
-            onSubmit={onSubmit}
-            uiSchema={Object.assign({
-                id: {
-                    "ui:readonly": true
-                }
-            }, props.uiSchema ?? {})}
-            templates={{
-                ArrayFieldTemplate: AccordionArrayFieldTemplate
-            }}
-            widgets={{
-                SelectWidget: SelectWidget
-            }}
-        >
-            <AsyncButton
-                type='submit'
-                activeText={resolveText("Submit")}
-                executingText={resolveText("Submitting...")}
-                isExecuting={isSubmitting}
-            />
-        </Form>
-    );
+    
+    return (<GenericTypeForm
+        typeName={props.typeName}
+        formData={formData}
+        onChange={onChange}
+        onSubmit={() => props.onSubmit(formData)}
+        uiSchema={props.uiSchema}
+    />)
 
 }

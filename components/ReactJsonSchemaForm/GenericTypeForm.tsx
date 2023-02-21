@@ -9,6 +9,9 @@ import { AsyncButton } from '../AsyncButton';
 import { AccordionArrayFieldTemplate } from './AccordionArrayFieldTemplate';
 import { UiSchema } from '@rjsf/utils';
 import { SelectWidget } from './SelectWidget';
+import { LoadingAlert } from '../LoadingAlert';
+import { Alert } from 'react-bootstrap';
+import { OptionalObjectField } from './OptionalObjectField';
 
 interface GenericTypeFormProps {
     typeName: string;
@@ -40,10 +43,12 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
     }
 
     if(isLoadingSchema) {
-        return (<h3>{resolveText("Loading...")}</h3>);
+        return (<LoadingAlert />);
     }
     if(!schema) {
-        return (<h3>{resolveText("GenericTypeCreateEditPage_CoultNotLoadSchema")}</h3>)
+        return (<Alert variant='danger'>
+            {resolveText("GenericTypeCreateEditPage_CoultNotLoadSchema")}
+        </Alert>);
     }
 
     return (
@@ -61,6 +66,9 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                     "ui:readonly": true
                 }
             } as UiSchema, props.uiSchema ?? {})}
+            fields={{
+                OneOfField: OptionalObjectField
+            }}
             templates={{
                 ArrayFieldTemplate: AccordionArrayFieldTemplate
             }}
