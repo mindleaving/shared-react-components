@@ -1,4 +1,4 @@
-import { resolveText } from '../helpers/Globalizer';
+import { translateErrorMessage } from '../helpers/ErrorMessageTranslator';
 import { extractJwtBody } from '../helpers/JwtHelpers';
 import { buildUrl } from '../helpers/UrlBuilder';
 import { ApiError } from './ApiError';
@@ -120,9 +120,7 @@ export class ApiClient {
                 throw new ApiError(response.status, errors.join(', '));
             }
         }
-        const translatedErrorText = errorText.startsWith("resolveText:")
-            ? resolveText(errorText.replace("resolveText:", ""))
-            : errorText;
+        const translatedErrorText = translateErrorMessage(errorText);
         throw new ApiError(response.status, translatedErrorText);
     }
 }

@@ -1,5 +1,6 @@
 import { apiClient } from "../communication/ApiClient";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
+import { translateErrorMessage } from "./ErrorMessageTranslator";
 
 export const buildAndStoreObject = async <T extends unknown>(
     apiPath: string,
@@ -73,7 +74,8 @@ export const sendPostRequest = async (
             } else {
                 try {
                     const errorDescription = await response.text();
-                    showErrorAlert(errorText, errorDescription);
+                    const translatedErrorText = translateErrorMessage(errorDescription);
+                    showErrorAlert(errorText, translatedErrorText);
                 } catch {
                     showErrorAlert(errorText);
                     // Ignore
