@@ -1,5 +1,8 @@
 import { canResolveText, resolveText } from "./Globalizer";
 
+/**
+ * CAUTION: Makes changes directly to input schema
+ */
 export const translateSchema = (schema: any) => {
     const typeName = firstLetterToUpper(schema.title);
     translateConcatenatedSchemas(typeName, schema.allOf);
@@ -31,6 +34,9 @@ const translateProperties = (typeName: string, properties: any) => {
             const translationKey = `${typeName}_${firstLetterToUpper(propertyName)}`;
             if(canResolveText(translationKey)) {
                 property.title = resolveText(translationKey);
+            }
+            if(typeof property.type === 'string' && property.type.toLowerCase() === 'image-annotation') {
+                property.type = 'string';
             }
         }
     }
