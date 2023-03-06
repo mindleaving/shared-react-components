@@ -1,12 +1,12 @@
 import { ArrayFieldTemplateProps } from "@rjsf/utils";
-import { Accordion, Button } from "react-bootstrap"
+import { Accordion, Button, FormGroup, FormLabel } from "react-bootstrap"
 import { resolveText } from "../../helpers/Globalizer"
 
 export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
     return (
-    <>
-        {props.title}
+    <FormGroup>
+        <FormLabel>{props.title}</FormLabel>
         <Accordion className="accordion-card" defaultActiveKey='0' key={props.formData.id}>
             {props.items.map((item,index) => (
                 <Accordion.Item 
@@ -32,11 +32,11 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         </Accordion>
         {props.canAdd 
         ? <Button 
-            className='m-2' 
+            className='d-block m-2' 
             size="sm" 
             onClick={props.onAddClick}
         >
             {resolveText("Add")}
         </Button> : null}
-    </>);
+    </FormGroup>);
 }

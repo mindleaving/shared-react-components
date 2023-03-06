@@ -1,12 +1,12 @@
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
 
 export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
     return (
-    <>
-        {props.title}
+    <FormGroup>
+        <FormLabel>{props.title}</FormLabel>
         {props.items.map((item,index) => (
             <Row 
                 key={index} 
@@ -28,12 +28,12 @@ export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         ))}
         {props.canAdd
         ? <Button 
-            className='m-2' 
+            className='d-block m-2' 
             size="sm" 
             onClick={props.onAddClick}
         >
             {resolveText("Add")}
         </Button> : null}
-    </>);
+    </FormGroup>);
 
 }
