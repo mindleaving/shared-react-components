@@ -7,6 +7,7 @@ interface DateRangeFormControlProps {
     disabled?: boolean;
     required?: boolean;
     enableTime?: boolean;
+    noCalendar?: boolean;
     triggerOnChangeForUndefinedRange?: boolean;
 }
 
@@ -16,6 +17,7 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
         <Flatpickr
             options={{
                 allowInput: true,
+                noCalendar: props.noCalendar,
                 enableTime: props.enableTime,
                 time_24hr: true,
                 mode: 'range'
