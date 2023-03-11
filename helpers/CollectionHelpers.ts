@@ -11,7 +11,7 @@ export const groupIntoDictionary = <T extends unknown>(collection: T[], keySelec
     }
     return groups;
 }
-export const groupBy = <T extends unknown>(collection: T[], keySelector: (item: T) => string) => {
+export const groupBy = <T extends unknown>(collection: T[], keySelector: (item: T) => string): Groups<T> => {
     const groups = groupIntoDictionary(collection, keySelector);
     return Object.keys(groups).map(key => ({
         key: key,
