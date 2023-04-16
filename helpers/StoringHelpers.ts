@@ -93,3 +93,35 @@ export const sendPostRequest = async (
         }
     }
 }
+export const uploadFile = (
+    file: File,
+    url: string,
+    options?: {
+        method?: "POST" | "PUT"
+        contentType?: string,
+        accessToken?: string,
+        onProgressChanged?: (progress: number) => void
+    }): Promise<number> => {
+
+    const xhr = new XMLHttpRequest();
+    return new Promise((resolve,reject) => {
+        xhr.upload.addEventListener("progress", e => {
+            if(e.lengthComputable && options?.onProgressChanged) {
+                options.onProgressChanged(100 * e.loaded / e.total);
+            }
+        });
+        xhr.addEventListener("loadend", () => {
+            if(xhr.status === 200) {
+                resolve(xhr.status);
+            } else {
+                reject();
+            }
+        })
+        xhr.open(options?.method ?? "POST", url, true);
+        xhr.setRequestHeader("Content-Type", options?.contentType ?? "application/octet-stream");
+        if(options?.accessToken) {
+            xhr.setRequestHeader("Authorization", `Bearer ${options.accessToken}`);
+        }
+        xhr.send(file);
+    });
+}
