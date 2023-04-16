@@ -65,6 +65,11 @@ export class ApiClient {
         this.expirationTime = new Date(extractJwtBody(accessToken).exp * 1000);
     }
 
+    clearAccessToken = () => {
+        this.accessToken = undefined;
+        this.expirationTime = undefined;
+    }
+
     buildUrl = (path: string, params?: QueryParameters) => {
         return buildUrl(`https://${this.serverAddress}:${this.port}`, path, params);
     }
