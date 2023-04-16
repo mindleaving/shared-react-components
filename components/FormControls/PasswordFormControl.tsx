@@ -5,6 +5,8 @@ interface PasswordFormControlProps extends FormControlProps {
     required?: boolean;
     minLength?: number;
     name?: string;
+    min?: number;
+    max?: number;
 }
 
 export const PasswordFormControl = (props: PasswordFormControlProps) => {
