@@ -2,7 +2,9 @@ import React from 'react';
 import { Alert } from 'react-bootstrap';
 import { resolveText } from '../helpers/Globalizer';
 
-interface CouldNotLoadAlertProps {}
+interface CouldNotLoadAlertProps {
+    errorText?: string;
+}
 
 export const CouldNotLoadAlert = (props: CouldNotLoadAlertProps) => {
 
@@ -10,7 +12,7 @@ export const CouldNotLoadAlert = (props: CouldNotLoadAlertProps) => {
         <Alert
             variant='danger'
         >
-            {resolveText("CouldNotLoad")}
+            {props.errorText ?? resolveText("CouldNotLoad")}
         </Alert>
     );
 
