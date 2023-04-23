@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
-import { RouteDefinition } from '../../localComponents/types/frontendTypes';
+import { RouteDefinition } from '../types/frontendTypes';
 
 interface RoutesBuilderProps {
     routeDefinitions: RouteDefinition[];

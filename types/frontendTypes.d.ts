@@ -18,6 +18,5 @@ interface JsonWebToken {
 export interface RouteDefinition {
     path: string;
     element: ReactNode;
-    audience: AccountType[];
     usesCustomLayout?: boolean;
 };

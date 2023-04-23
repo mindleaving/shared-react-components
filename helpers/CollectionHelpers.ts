@@ -1,4 +1,5 @@
 import { compareDesc } from "date-fns";
+import { Groups } from "../types/frontendTypes";
 
 export const groupIntoDictionary = <T extends unknown>(collection: T[], keySelector: (item: T) => string) => {
     const groups: { [k: string]: T[] } = {};
