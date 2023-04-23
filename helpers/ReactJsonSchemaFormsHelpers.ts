@@ -1,7 +1,5 @@
-import { WidgetProps } from '@rjsf/utils';
 import { resolveText } from "./Globalizer";
 import { loadObject } from "./LoadingHelpers";
-import { isEmptyObject } from "./ObjectHelpers";
 import { translateSchema } from "./SchemaTranslator";
 
 export const loadAndTranslateSchema = async (
