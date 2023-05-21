@@ -1,6 +1,7 @@
 import { translateErrorMessage } from '../helpers/ErrorMessageTranslator';
 import { extractJwtBody } from '../helpers/JwtHelpers';
 import { buildUrl } from '../helpers/UrlBuilder';
+import { QueryParameters } from '../types/frontendTypes';
 import { ApiError } from './ApiError';
 
 export interface ApiClientOptions {

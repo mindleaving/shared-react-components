@@ -1,3 +1,5 @@
+import { QueryParameters } from "../types/frontendTypes";
+
 export function buildUrl(endpoint: string, path: string, params?: QueryParameters) {
     let url = endpoint.endsWith('/') 
         ? endpoint.substring(0, endpoint.length-1) 

@@ -1,4 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
+import { QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { translateErrorMessage } from "./ErrorMessageTranslator";
 

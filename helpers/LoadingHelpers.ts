@@ -1,4 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
+import { QueryParameters } from "../types/frontendTypes";
 import { showErrorAlert } from "./AlertHelpers";
 
 export const buildLoadObjectFunc = <T extends unknown>(
