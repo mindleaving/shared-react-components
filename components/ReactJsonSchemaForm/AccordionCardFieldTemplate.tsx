@@ -1,6 +1,10 @@
 import { FieldTemplateProps } from '@rjsf/utils';
 import { AccordionCard } from '../AccordionCard';
 
+export interface AccordionCardFieldTemplateOptions {
+    isOpenAtCreate?: boolean;
+}
+
 export const AccordionCardFieldTemplate = (props: FieldTemplateProps) => {
 
     if(props.schema.type === 'null') {
@@ -15,9 +19,14 @@ export const AccordionCardFieldTemplate = (props: FieldTemplateProps) => {
             {props.help}
         </div>)
     }
+
+    const options = props.uiSchema?.['ui:options'] as any as AccordionCardFieldTemplateOptions;
+    const isOpenAtCreate = options?.isOpenAtCreate ?? false;
     
     return (
-        <AccordionCard standalone isOpenAtCreate
+        <AccordionCard 
+            standalone 
+            isOpenAtCreate={isOpenAtCreate}
             title={props.label}
             eventKey={props.id}
         >
