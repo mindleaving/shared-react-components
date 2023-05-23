@@ -3,12 +3,12 @@ import Autosuggest from 'react-autosuggest';
 import { defaultGlobalizer, resolveText } from '../../helpers/Globalizer';
 import '../../styles/react-autosuggest.css';
 
-interface AutocompleteProps<T> {
+export interface AutocompleteProps<T> {
     defaultValue?: string;
     displayNameSelector: (item: T) => string;
     search: (searchText: string) => Promise<T[]>;
     onItemSelected: (item: T) => void;
-    onChange?: (value: string) => void;
+    onSearchTextChange?: (value: string) => void;
     onKeyUp?: (keyEvent: KeyboardEvent<HTMLElement>, currentSearchText: string) => void;
     resetOnSelect?: boolean;
     searchDelayInMilliseconds?: number;
@@ -26,7 +26,7 @@ export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => 
     const { 
         defaultValue,
         displayNameSelector,
-        onChange,
+        onSearchTextChange: onChange,
         onKeyUp,
         resetOnSelect,
         searchDelayInMilliseconds,

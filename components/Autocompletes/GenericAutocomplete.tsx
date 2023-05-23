@@ -4,14 +4,24 @@ import { Autocomplete } from './Autocomplete';
 import { AutocompleteRunner } from '../../helpers/AutocompleteRunner';
 import { resolveText } from '../../helpers/Globalizer';
 
-export interface GenericAutocompleteProps<T> {
-    apiPath: string;
+export interface GenericAutocompleteImplementationProps<T> {
     isLoading?: boolean;
     value?: T;
     onChange: (item: T | undefined) => void;
-    displayFunc: (item: T) => string;
-    required?: boolean;
+
+    // From AutocompleteProps
+    searchDelayInMilliseconds?: number;
     minSearchTextLength?: number;
+    placeholder?: string;
+    disabled?: boolean;
+    required?: boolean;
+    className?: string;
+    autoFocus?: boolean;
+    autoSelectSingleItem?: boolean;
+}
+export interface GenericAutocompleteProps<T> extends GenericAutocompleteImplementationProps<T> {
+    apiPath: string;
+    displayFunc: (item: T) => string;
 }
 
 export const GenericAutocomplete = <T extends unknown>(props: GenericAutocompleteProps<T>) => {
@@ -30,11 +40,18 @@ export const GenericAutocomplete = <T extends unknown>(props: GenericAutocomplet
         </Alert>);
     }
     return (<Autocomplete
-        required={props.required}
         search={autocompleteRunner.search}
         displayNameSelector={props.displayFunc}
         onItemSelected={props.onChange}
+        searchDelayInMilliseconds={props.searchDelayInMilliseconds}
         minSearchTextLength={props.minSearchTextLength}
+        placeholder={props.placeholder}
+        disabled={props.disabled}
+        required={props.required}
+        className={props.className}
+        autoFocus={props.autoFocus}
+        autoSelectSingleItem={props.autoSelectSingleItem}
+        resetOnSelect
     />);
 
 }

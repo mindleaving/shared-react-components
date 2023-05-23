@@ -23,7 +23,7 @@ export const MemoryFormControl = (props: MemoryFormControlProps) => {
             search={autocompleteRunner.search}
             displayNameSelector={x => x}
             onItemSelected={props.onChange}
-            onChange={props.onChange}
+            onSearchTextChange={props.onChange}
             placeholder={props.placeholder}
             minSearchTextLength={props.minSearchTextLength}
             disabled={props.disabled}
