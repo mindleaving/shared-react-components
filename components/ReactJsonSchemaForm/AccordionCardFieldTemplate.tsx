@@ -29,6 +29,7 @@ export const AccordionCardFieldTemplate = (props: FieldTemplateProps) => {
             isOpenAtCreate={isOpenAtCreate}
             title={props.label}
             eventKey={props.id}
+            headerClassName='py-2 border border-secondary'
         >
             {props.description}
             {props.children}
