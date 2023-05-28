@@ -19,6 +19,20 @@ export const groupBy = <T extends unknown>(collection: T[], keySelector: (item: 
         items: groups[key]
     }));
 }
+export const sum = <T extends unknown>(collection: T[], valueSelector: (item: T) => number) => {
+    let sum = 0;
+    for (const item of collection) {
+        const value = valueSelector(item);
+        sum += value;
+    }
+    return sum;
+}
+export const average = <T extends unknown>(collection: T[], valueSelector: (item: T) => number) => {
+    if(collection.length === 0) {
+        return 0;
+    }
+    return sum(collection, valueSelector) / collection.length;
+}
 export const mostCommonValue = <T extends string | number>(collection: T[]): T | undefined => {
     const distinctItems: { [key: string | number]: number } = {};
     let maxCount  = 0;
