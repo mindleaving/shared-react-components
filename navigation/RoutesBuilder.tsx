@@ -1,9 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import PageContainer from '../components/PageContainer';
 import { RouteDefinition } from '../types/frontendTypes';
+import { ReactNode } from 'react';
 
 interface RoutesBuilderProps {
     routeDefinitions: RouteDefinition[];
+    containerBuilder: (children: ReactNode) => ReactNode;
 }
 
 export const RoutesBuilder = (props: RoutesBuilderProps) => {
@@ -16,7 +17,7 @@ export const RoutesBuilder = (props: RoutesBuilderProps) => {
                 path={routeDefinition.path} 
                 element={routeDefinition.usesCustomLayout 
                     ? routeDefinition.element
-                    : <PageContainer>{routeDefinition.element}</PageContainer>
+                    : props.containerBuilder(routeDefinition.element)
                 } 
             />
         ))}
