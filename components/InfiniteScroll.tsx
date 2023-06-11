@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import InfiniteScrollFromLibrary from 'react-infinite-scroll-component';
 import { LoadingAlert } from './LoadingAlert';
 import { NoMoreEntriesAlert } from './NoMoreEntriesAlert';
-import { NoEntriesAlertTimelineItem } from './NoEntriesAlertTimelineItem';
+import { NoEntriesAlert } from './NoEntriesAlert';
 
 interface InfiniteScrollProps {
     dataLength: number;
@@ -29,7 +29,7 @@ export const InfiniteScroll = (props: PropsWithChildren<InfiniteScrollProps>) =>
             {props.dataLength > 0
             ? props.children
             : props.isLoading ? <LoadingAlert />
-            : <NoEntriesAlertTimelineItem />}
+            : <NoEntriesAlert />}
         </InfiniteScrollFromLibrary>
     );
 
