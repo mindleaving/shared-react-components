@@ -67,6 +67,12 @@ export const areEqual = <T extends unknown>(collection1: T[], collection2: T[]):
     }
     return true;
 }
+export const firstOrDefault = <T extends unknown>(items: T[]): T | undefined => {
+    if(!items || items.length === 0) {
+        return undefined;
+    }
+    return items[0];
+}
 export const last = <T extends unknown>(collection: T[]): T | undefined => {
     if(!collection || collection.length === 0) {
         return undefined;

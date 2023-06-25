@@ -20,3 +20,9 @@ export interface RouteDefinition {
     element: ReactNode;
     usesCustomLayout?: boolean;
 };
+export interface IdAutocompleteProps {
+    value: string | undefined;
+    onChange: (value: string | undefined) => void;
+    disabled?: boolean;
+    required?: boolean;
+}

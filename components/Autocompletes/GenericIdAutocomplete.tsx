@@ -3,20 +3,19 @@ import { Models } from '../../../localComponents/types/models';
 import { resolveText } from '../../helpers/Globalizer';
 import { loadObject } from '../../helpers/LoadingHelpers';
 import { uuid } from '../../helpers/uuid';
+import { GenericAutocompleteImplementationProps } from './GenericAutocomplete';
+import { IdAutocompleteProps } from '../../types/frontendTypes';
 
-interface GenericIdAutocompleteProps<T> {
-    value: string | undefined;
-    onChange: (value: string | undefined) => void;
+interface GenericIdAutocompleteProps<T> extends IdAutocompleteProps {
     autocompleteBuilder: (
         key: string,
-        onChange: (item: T | undefined) => void, 
-        isLoading: boolean,
-        value?: T) => ReactNode;
+        props: GenericAutocompleteImplementationProps<T>) => ReactNode;
     loadItemApiPathBuilder: (id: string) => string;
 }
 
 export const GenericIdAutocomplete = <T extends Models.IId>(props: GenericIdAutocompleteProps<T>) => {
 
+    const { disabled, required } = props;
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
     const [ item, setItem ] = useState<T>();
     const key = useMemo(() => uuid(), []);
@@ -48,7 +47,18 @@ export const GenericIdAutocomplete = <T extends Models.IId>(props: GenericIdAuto
         loadItem();
     }, [ props.value ]);
 
-    return (<>{props.autocompleteBuilder(key, setItem, isLoading, item)}</>);
+    return (<>
+    {props.autocompleteBuilder(
+        key, 
+        {
+            isLoading: isLoading,
+            value: item,
+            onChange: setItem,
+            disabled,
+            required
+        }
+    )}
+    </>);
 
 }
 export default GenericIdAutocomplete;
