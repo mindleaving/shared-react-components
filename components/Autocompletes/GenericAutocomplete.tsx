@@ -22,35 +22,54 @@ export interface GenericAutocompleteImplementationProps<T> {
 export interface GenericAutocompleteProps<T> extends GenericAutocompleteImplementationProps<T> {
     apiPath: string;
     displayFunc: (item: T) => string;
+    orderBy?: string;
+    additionalParameters?: { [key:string]: string };
 }
 
 export const GenericAutocomplete = <T extends unknown>(props: GenericAutocompleteProps<T>) => {
 
-    const autocompleteRunner = useMemo(() => new AutocompleteRunner<T>(props.apiPath, 'searchText', 10), [ props.apiPath ]);
+    const { 
+        isLoading,
+        value,
+        onChange,
+        required,
+        disabled,
+        autoFocus,
+        placeholder,
+        className,
+        searchDelayInMilliseconds,
+        minSearchTextLength,
+        autoSelectSingleItem,
+        displayFunc,
+        apiPath,
+        orderBy, 
+        additionalParameters 
+    } = props;
+    const autocompleteRunner = useMemo(() => new AutocompleteRunner<T>(apiPath, 'searchText', 10, orderBy, additionalParameters), [ apiPath ]);
 
-    if(props.value || props.isLoading) {
+    if(value || isLoading) {
         return (<Alert 
             variant="info"
             dismissible
-            onClose={() => props.onChange(undefined)}
+            onClose={() => onChange(undefined)}
         >
-            {props.isLoading 
+            {isLoading 
             ? resolveText('Loading...') 
-            : props.displayFunc(props.value!)}
+            : displayFunc(value!)}
         </Alert>);
     }
     return (<Autocomplete
         search={autocompleteRunner.search}
-        displayNameSelector={props.displayFunc}
-        onItemSelected={props.onChange}
-        searchDelayInMilliseconds={props.searchDelayInMilliseconds}
-        minSearchTextLength={props.minSearchTextLength}
-        placeholder={props.placeholder}
-        disabled={props.disabled}
-        required={props.required}
-        className={props.className}
-        autoFocus={props.autoFocus}
-        autoSelectSingleItem={props.autoSelectSingleItem}
+        displayNameSelector={displayFunc}
+        onItemSelected={onChange}
+        searchDelayInMilliseconds={searchDelayInMilliseconds}
+        minSearchTextLength={minSearchTextLength}
+        placeholder={placeholder}
+        disabled={disabled}
+        required={required}
+        className={className}
+        autoFocus={autoFocus}
+        autoSelectSingleItem={autoSelectSingleItem}
         resetOnSelect
     />);
 
