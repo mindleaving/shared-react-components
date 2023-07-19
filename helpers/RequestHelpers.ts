@@ -1,3 +1,5 @@
+import { QueryParameters } from "../types/frontendTypes";
+
 export const getQueryParameter = (params: QueryParameters, key: string) => {
     if(!params) {
         return undefined;
