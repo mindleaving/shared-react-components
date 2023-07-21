@@ -15,27 +15,30 @@ interface GenericIdAutocompleteProps<T> extends IdAutocompleteProps {
 
 export const GenericIdAutocomplete = <T extends Models.IId>(props: GenericIdAutocompleteProps<T>) => {
 
-    const { disabled, required } = props;
-    const [ isLoading, setIsLoading ] = useState<boolean>(false);
+    const { value, onChange, disabled, required } = props;
+    const [ isLoading, setIsLoading ] = useState<boolean>(!!value);
     const [ item, setItem ] = useState<T>();
     const key = useMemo(() => uuid(), []);
 
     useEffect(() => {
-        if(item?.id === props.value) {
+        if(isLoading) {
             return;
         }
-        props.onChange(item?.id);
+        if(item?.id === value) {
+            return;
+        }
+        onChange(item?.id);
     }, [ item ]);
 
     useEffect(() => {
-        if(!props.value) {
+        if(!value) {
             return;
         }
-        if(item && item.id === props.value) {
+        if(item && item.id === value) {
             return;
         }
         const loadItem = async () => {
-            const apiPath = props.loadItemApiPathBuilder(props.value!);
+            const apiPath = props.loadItemApiPathBuilder(value!);
             await loadObject(
                 apiPath, {},
                 resolveText("GenericItem_CouldNotLoad"),
@@ -45,7 +48,7 @@ export const GenericIdAutocomplete = <T extends Models.IId>(props: GenericIdAuto
             )
         }
         loadItem();
-    }, [ props.value ]);
+    }, [ value ]);
 
     return (<>
     {props.autocompleteBuilder(
