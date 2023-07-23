@@ -67,6 +67,15 @@ export const areEqual = <T extends unknown>(collection1: T[], collection2: T[]):
     }
     return true;
 }
+export const areEquivalent = <T extends unknown>(collection1: T[] | undefined, collection2: T[] | undefined) => {
+    if(!collection1 && !collection2) {
+        return true;
+    }
+    if(!collection1 || !collection2) {
+        return false;
+    }
+    return collection1.every(item1 => collection2.includes(item1));
+}
 export const firstOrDefault = <T extends unknown>(items: T[]): T | undefined => {
     if(!items || items.length === 0) {
         return undefined;
