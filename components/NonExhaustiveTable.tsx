@@ -5,8 +5,11 @@ import { NoEntriesTableRow } from './NoEntriesTableRow';
 import { resolveText } from '../helpers/Globalizer';
 import { InfiniteScroll } from './InfiniteScroll';
 import { Models } from '../../localComponents/types/models';
+import { Center } from './Center';
 
 interface NonExhaustiveTableProps<ItemType> {
+    autoScroll?: boolean;
+    hover?: boolean;
     isLoading: boolean;
     items: ItemType[];
     hasMoreItems: boolean;
@@ -16,37 +19,73 @@ interface NonExhaustiveTableProps<ItemType> {
     colSpan: number;
     hasCreateNewButton?: boolean;
     onCreateNew?: () => void;
+    showNoMoreItemsAlert?: boolean;
 }
 
 export const NonExhaustiveTable = <ItemType extends Models.IId>(props: NonExhaustiveTableProps<ItemType>) => {
 
-    const items = props.items;
+    const { 
+        autoScroll, 
+        hover, 
+        isLoading, 
+        items,
+        hasMoreItems,
+        loadMoreItems,
+        hasCreateNewButton,
+        onCreateNew,
+        tableHeaderBuilder,
+        tableRowBuilder,
+        colSpan,
+        showNoMoreItemsAlert
+    } = props;
+
+    const table = (
+        <Table hover={hover}>
+            {tableHeaderBuilder ? tableHeaderBuilder() : null}
+            <tbody>
+                {items.length > 0
+                ? items.map(tableRowBuilder)
+                : isLoading ? <LoadingTableRow colSpan={colSpan} />
+                : <NoEntriesTableRow colSpan={colSpan} />}
+            </tbody>
+        </Table>
+    )
     return (
     <>
-        <Row>
+        {hasCreateNewButton 
+        ? <Row>
             <Col></Col>
             <Col xs="auto">
-                {props.hasCreateNewButton 
-                ? <Button className="m-1 float-right" onClick={props.onCreateNew}>{resolveText('CreateNew')}</Button> 
-                : null}
+                <Button 
+                    className="m-1 float-right" 
+                    onClick={onCreateNew}
+                >
+                    {resolveText('CreateNew')}
+                </Button>
             </Col>
-        </Row>
-        <InfiniteScroll
-            dataLength={props.items.length}
-            hasMore={props.hasMoreItems}
-            next={props.loadMoreItems}
-            isLoading={props.isLoading}
+        </Row> : null}
+        {autoScroll
+        ? <InfiniteScroll
+            dataLength={items.length}
+            hasMore={hasMoreItems}
+            next={loadMoreItems}
+            isLoading={isLoading}
+            showNoMoreItemsAlert={showNoMoreItemsAlert}
         >
-            <Table responsive>
-                {props.tableHeaderBuilder ? props.tableHeaderBuilder() : null}
-                <tbody>
-                    {items.length > 0
-                    ? items.map(props.tableRowBuilder)
-                    : props.isLoading ? <LoadingTableRow colSpan={props.colSpan} />
-                    : <NoEntriesTableRow colSpan={props.colSpan} />}
-                </tbody>
-            </Table>
+            {table}
         </InfiniteScroll>
+        : <>
+            {table}
+            {hasMoreItems
+            ? <Center>
+                <Button
+                    variant='link'
+                    onClick={loadMoreItems}
+                >
+                    {resolveText("LoadMore")}
+                </Button>
+            </Center> : null}
+        </>}
     </>
     );
 

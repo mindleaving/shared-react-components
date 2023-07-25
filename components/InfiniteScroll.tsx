@@ -11,24 +11,35 @@ interface InfiniteScrollProps {
     next: () => void;
     scrollThreshold?: string | number;
     className?: string;
+    showNoMoreItemsAlert?: boolean;
 }
 
 export const InfiniteScroll = (props: PropsWithChildren<InfiniteScrollProps>) => {
 
+    const { 
+        dataLength,
+        isLoading,
+        hasMore,
+        next,
+        scrollThreshold,
+        className,
+        showNoMoreItemsAlert 
+    } = props;
+
     return (
         <InfiniteScrollFromLibrary
-            dataLength={props.dataLength}
-            hasMore={props.hasMore}
-            next={props.next}
-            scrollThreshold={props.scrollThreshold}
+            dataLength={dataLength}
+            hasMore={hasMore}
+            next={next}
+            scrollThreshold={scrollThreshold}
             loader={<LoadingAlert variant='secondary' />}
-            endMessage={props.dataLength > 0 ? <NoMoreEntriesAlert /> : null}
-            className={props.className}
+            endMessage={dataLength > 0 && showNoMoreItemsAlert ? <NoMoreEntriesAlert /> : null}
+            className={className}
             style={{ overflowX: 'hidden' }}
         >
-            {props.dataLength > 0
+            {dataLength > 0
             ? props.children
-            : props.isLoading ? <LoadingAlert />
+            : isLoading ? <LoadingAlert />
             : <NoEntriesAlert />}
         </InfiniteScrollFromLibrary>
     );
