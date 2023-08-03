@@ -44,7 +44,7 @@ export const AccordionCard = (props: AccordionCardProps) => {
             eventKey={props.eventKey}
         >
             <Accordion.Button as="div"
-                className={props.headerClassName}
+                className={props.headerClassName + " clickable"}
                 bsPrefix={`accordion-button` + (props.bg ? ` bg-${props.bg}` : '')}
             >
                 {isCollapsed && props.collapsedTitle ? props.collapsedTitle : props.title}

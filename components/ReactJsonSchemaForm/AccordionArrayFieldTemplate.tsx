@@ -21,7 +21,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                     eventKey={index + ""}
                     className="my-2 border border-secondary"
                 >
-                    <Accordion.Header>
+                    <Accordion.Button as="div" className={item.hasMoveUp || item.hasMoveDown ? `clickable py-2` : 'clickable'}>
                         <Row className="align-items-center w-100 pe-3">
                             <Col>
                                 {customTitle ? customTitle : resolveText("ItemX").replace("{0}", index + '')}
@@ -51,7 +51,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                                 </Button>
                             </Col> : null}
                         </Row>
-                    </Accordion.Header>
+                    </Accordion.Button>
                     <Accordion.Body>
                         {item.children}
                         <Button 
