@@ -1,5 +1,5 @@
 import { ArrayFieldTemplateProps } from "@rjsf/utils";
-import { Accordion, Button, FormGroup, FormLabel } from "react-bootstrap"
+import { Accordion, Button, Row, Col, FormGroup, FormLabel } from "react-bootstrap"
 import { resolveText } from "../../helpers/Globalizer"
 
 export interface AccordionArrayFieldTemplateOptions {
@@ -22,7 +22,35 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                     className="my-2 border border-secondary"
                 >
                     <Accordion.Header>
-                        {customTitle ? customTitle : resolveText("ItemX").replace("{0}", index + '')}
+                        <Row className="align-items-center w-100 pe-3">
+                            <Col>
+                                {customTitle ? customTitle : resolveText("ItemX").replace("{0}", index + '')}
+                            </Col>
+                            {item.hasMoveUp && index > 0 ?
+                            <Col xs="auto" className="px-1">
+                                <Button
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        item.onReorderClick(index, index-1);
+                                    }}
+                                    variant="outline-primary"
+                                >
+                                    <i className="fa fa-arrow-up" />
+                                </Button>
+                            </Col> : null}
+                            {item.hasMoveDown && index + 1 < props.items.length
+                            ? <Col xs="auto" className="px-1">
+                                 <Button
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        item.onReorderClick(index, index+1);
+                                    }}
+                                    variant="outline-primary"
+                                >
+                                    <i className="fa fa-arrow-down" />
+                                </Button>
+                            </Col> : null}
+                        </Row>
                     </Accordion.Header>
                     <Accordion.Body>
                         {item.children}

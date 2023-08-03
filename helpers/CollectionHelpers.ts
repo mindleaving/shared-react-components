@@ -106,3 +106,30 @@ export const intersect = <T extends unknown>(collection1: T[], collection2: T[],
     }
     return collection1.filter(item1 => collection2.some(item2 => itemComparer(item1,item2)));
 }
+export const moveItem = (collection: any[], from: number, to: number) => {
+    if(from < 0 || from >= collection.length) {
+        throw new Error("Invalid index of item to be reordered");
+    }
+    if(to < 0 || to >= collection.length) {
+        throw new Error("Invalid target index for item to be reordered");
+    }
+    if(to === from) {
+        return collection;
+    }
+    const itemToBeMoved = collection[from];
+    if(from < to) {
+        return [ 
+            ...collection.slice(0, from),
+            ...collection.slice(from + 1, to + 1),
+            itemToBeMoved,
+            ...collection.slice(to + 1)
+        ];
+    } else {
+        return [ 
+            ...collection.slice(0, to),
+            itemToBeMoved,
+            ...collection.slice(to, from),
+            ...collection.slice(from+1)
+        ];
+    }
+}
