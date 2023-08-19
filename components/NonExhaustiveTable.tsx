@@ -6,6 +6,7 @@ import { resolveText } from '../helpers/Globalizer';
 import { InfiniteScroll } from './InfiniteScroll';
 import { Models } from '../../localComponents/types/models';
 import { Center } from './Center';
+import { AsyncButton } from './AsyncButton';
 
 interface NonExhaustiveTableProps<ItemType> {
     autoScroll?: boolean;
@@ -78,12 +79,13 @@ export const NonExhaustiveTable = <ItemType extends Models.IId>(props: NonExhaus
             {table}
             {hasMoreItems
             ? <Center>
-                <Button
+                <AsyncButton
                     variant='link'
                     onClick={loadMoreItems}
-                >
-                    {resolveText("LoadMore")}
-                </Button>
+                    activeText={resolveText("LoadMore")}
+                    executingText={resolveText("Loading...")}
+                    isExecuting={isLoading}
+                />
             </Center> : null}
         </>}
     </>
