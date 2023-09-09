@@ -50,7 +50,7 @@ export const GenericAutocomplete = <T extends unknown>(props: GenericAutocomplet
     if(value || isLoading) {
         return (<Alert 
             variant="info"
-            dismissible
+            dismissible={!disabled}
             onClose={() => onChange(undefined)}
         >
             {isLoading 
