@@ -13,7 +13,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     return (
     <FormGroup>
         <FormLabel>{props.title}</FormLabel>
-        <Accordion className="accordion-card" defaultActiveKey='0' key={props.formData.id}>
+        <Accordion className="accordion-card" key={props.formData.id}>
             {props.items.map((item,index) => {
                 const customTitle = displayFunc ? displayFunc(props.formData[index]) : undefined;
                 return (<Accordion.Item 
