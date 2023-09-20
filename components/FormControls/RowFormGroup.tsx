@@ -15,6 +15,8 @@ interface RowFormGroupProps {
     onChange: (changedValue: any) => void;
     disabled?: boolean;
     required?: boolean;
+    isValid?: boolean;
+    isInvalid?: boolean;
 }
 
 export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
@@ -41,17 +43,19 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                     checked={props.value}
                     onChange={(e:any) => props.onChange(e.target.checked)}
                     disabled={props.disabled}
+                    isValid={props.isValid}
+                    isInvalid={props.isInvalid}
                 />
                 : props.type?.toLowerCase() === "password"
                 ? <PasswordFormControl
                     required={props.required}
-                    as={props.as}
-                    type={props.type}
                     id={props.id}
                     name={props.name}
                     value={props.value}
                     min={props.min}
                     max={props.max}
+                    isValid={props.isValid}
+                    isInvalid={props.isInvalid}
                     onChange={(e:any) => props.onChange(e.target.value)}
                     disabled={props.disabled}
                 />
@@ -64,6 +68,8 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                     value={props.value}
                     min={props.min}
                     max={props.max}
+                    isValid={props.isValid}
+                    isInvalid={props.isInvalid}
                     onChange={(e:any) => props.onChange(e.target.value)}
                     disabled={props.disabled}
                 >

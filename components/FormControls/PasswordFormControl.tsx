@@ -11,13 +11,13 @@ interface PasswordFormControlProps extends FormControlProps {
 
 export const PasswordFormControl = (props: PasswordFormControlProps) => {
 
-    const [ showPassword, setShowPassword ] = useState<boolean>();
+    const [ showPassword, setShowPassword ] = useState<boolean>(false);
 
     return (
         <InputGroup>
             <FormControl
-                type={showPassword ? 'text' : 'password'}
                 {...props}
+                type={showPassword ? 'text' : 'password'}
             />
             <Button
                 variant={showPassword ? 'outline-danger' : 'outline-success'}
