@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { resolveText } from '../helpers/Globalizer';
 import { useParams } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
 import { showErrorAlert } from '../helpers/AlertHelpers';
 import { GenericTypeForm } from '../components/ReactJsonSchemaForm/GenericTypeForm';
 import { LoadingAlert } from '../components/LoadingAlert';
+import { uuid } from '../helpers/uuid';
 
 interface GenericTypeCreateEditPageProps<T> {
     typeName: string;

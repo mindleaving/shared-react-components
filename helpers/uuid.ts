@@ -1,3 +1,3 @@
-import { v4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
-export const uuid = v4;
+export const uuid = randomUUID;
