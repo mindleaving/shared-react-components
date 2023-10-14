@@ -19,6 +19,7 @@ export interface AutocompleteProps<T> {
     className?: string;
     autoFocus?: boolean;
     autoSelectSingleItem?: boolean;
+    highlightFirstSuggestion?: boolean;
 }
 
 export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => {
@@ -36,7 +37,8 @@ export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => 
         required,
         className,
         autoFocus,
-        autoSelectSingleItem 
+        autoSelectSingleItem,
+        highlightFirstSuggestion
     } = props;
     const [ searchTimer, setSearchTimer ] = useState<NodeJS.Timeout>();
     const [ searchText, setSearchText ] = useState<string>(defaultValue ?? '');
@@ -114,6 +116,7 @@ export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => 
             renderSuggestion={item => (
                 <div>{displayNameSelector(item)}</div>
             )}
+            highlightFirstSuggestion={highlightFirstSuggestion}
             onSuggestionsFetchRequested={({ value }) => runSearch(value)}
             onSuggestionsClearRequested={() => setSuggestions([])}
             shouldRenderSuggestions={(value) => value ? value.trim().length >= (minSearchTextLength ?? 3) : false}
