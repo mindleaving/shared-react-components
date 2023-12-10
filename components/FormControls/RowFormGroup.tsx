@@ -23,7 +23,7 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
 
     return (
         <FormGroup as={Row} className='my-1'>
-            <FormLabel column>{props.label}</FormLabel>
+            <FormLabel column xs={4} lg={6}>{props.label}</FormLabel>
             <Col>
                 {props.type?.toLowerCase() === "date" || props.type?.toLowerCase() === "datetime"
                 ? <DateFormControl
