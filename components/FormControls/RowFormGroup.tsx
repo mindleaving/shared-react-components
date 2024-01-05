@@ -17,6 +17,8 @@ interface RowFormGroupProps {
     required?: boolean;
     isValid?: boolean;
     isInvalid?: boolean;
+    pattern?: string;
+    placeholder?: string;
 }
 
 export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
@@ -68,14 +70,15 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                     value={props.value}
                     min={props.min}
                     max={props.max}
+                    pattern={props.pattern}
                     isValid={props.isValid}
                     isInvalid={props.isInvalid}
                     onChange={(e:any) => props.onChange(e.target.value)}
                     disabled={props.disabled}
+                    placeholder={props.placeholder}
                 >
                     {props.children}
-                </FormControl>
-                }
+                </FormControl>}
             </Col>
         </FormGroup>
     );
