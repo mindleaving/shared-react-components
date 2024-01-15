@@ -9,6 +9,7 @@ interface AccordionCardProps extends PropsWithChildren<{}> {
     id?: string;
     className?: string;
     headerClassName?: string;
+    bodyClassName?: string;
     bg?: string;
     standalone?: boolean;
     isOpenAtCreate?: boolean;
@@ -54,7 +55,7 @@ export const AccordionCard = (props: AccordionCardProps) => {
                 onEnter={() => setIsCollapsed(false)}
                 onExited={() => setIsCollapsed(true)}
             >
-                <Card.Body className='py-2 px-3'>
+                <Card.Body className={props.bodyClassName ?? 'py-2 px-3'}>
                     {hasBeenMounted ? props.children : null}
                 </Card.Body>
             </Accordion.Collapse>
