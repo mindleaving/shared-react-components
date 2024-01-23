@@ -7,6 +7,7 @@ import { InfiniteScroll } from './InfiniteScroll';
 import { Models } from '../../localComponents/types/models';
 import { Center } from './Center';
 import { AsyncButton } from './AsyncButton';
+import { NoMoreEntriesAlert } from './NoMoreEntriesAlert';
 
 interface NonExhaustiveTableProps<ItemType> {
     autoScroll?: boolean;
@@ -86,7 +87,9 @@ export const NonExhaustiveTable = <ItemType extends Models.IId>(props: NonExhaus
                     executingText={resolveText("Loading...")}
                     isExecuting={isLoading}
                 />
-            </Center> : null}
+            </Center> 
+            : showNoMoreItemsAlert ? <NoMoreEntriesAlert />
+            : null}
         </>}
     </>
     );
