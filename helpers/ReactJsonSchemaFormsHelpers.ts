@@ -23,3 +23,8 @@ export const loadAndTranslateSchema = async (
 export const Hide = {
     "ui:widget": "hidden"
 }
+export const HideLabel = {
+    "ui:options": {
+        label: false
+    }
+}
