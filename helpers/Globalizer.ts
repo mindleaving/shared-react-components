@@ -1,3 +1,5 @@
+import { toDictionary } from "./Transformations";
+
 interface Translation {
     language: string;
     [key: string]: string;
@@ -6,23 +8,29 @@ interface Translation {
 export class Globalizer {
     preferedLanguage: string;
     defaultLanguage: string;
-    translations: Translation[];
+    translations: { [language:string] : Translation };
 
     constructor(
         preferedLanguages: readonly string[],
         defaultLanguage: string,
         translations: Translation[]) {
-            const availableLanguages = translations.map(x => x.language);
+            const availableLanguages = translations.map(x => x.language.toLocaleLowerCase());
+            this.defaultLanguage = defaultLanguage.toLocaleLowerCase();
             this.preferedLanguage = this.selectPreferedLanguage(
                 preferedLanguages, 
                 availableLanguages,
-                defaultLanguage);
-            this.defaultLanguage = defaultLanguage;
-            this.translations = translations;
+                this.defaultLanguage);
+            this.translations = toDictionary(translations, x => x.language.toLocaleLowerCase());
     }
 
-    selectPreferedLanguage = (preferedLanguages: readonly string[], availableLanguages: string[], defaultLanguage: string): string => {
-        const matchingPreferedLanguage = preferedLanguages.find(language => availableLanguages.includes(language));
+    selectPreferedLanguage = (
+        preferedLanguages: readonly string[], 
+        availableLanguages: string[], 
+        defaultLanguage: string): string => {
+
+        const matchingPreferedLanguage = preferedLanguages
+            .map(language => language.toLocaleLowerCase())
+            .find(language => availableLanguages.includes(language));
         return matchingPreferedLanguage ?? defaultLanguage;
     }
 
@@ -51,13 +59,13 @@ export class Globalizer {
     }
 
     tryGetResourceDictionary = (language: string): { [key: string]: string } | undefined => {
-        return this.translations.find(x => x.language === language.toLocaleLowerCase());
+        return this.translations[language];
     }
 }
 export const defaultGlobalizer: { instance?: Globalizer } = {}
 
 export function setLanguage(languageId: string): void {
-    defaultGlobalizer.instance!.preferedLanguage = languageId;
+    defaultGlobalizer.instance!.preferedLanguage = languageId.toLocaleLowerCase();
 }
 export function getPreferedLanguage(): string {
     return defaultGlobalizer.instance!.preferedLanguage;
