@@ -9,12 +9,21 @@ interface DeleteButtonProps {
     confirmDialogTitle?: string;
     confirmDialogMessage?: string;
     className?: string;
+    size?: "xs";
 }
 
 export const DeleteButton = (props: DeleteButtonProps) => {
 
     if(props.requireConfirm && !(props.confirmDialogTitle && props.confirmDialogMessage)) {
         throw new Error("If delete confirmation is required, title and message for the confirmation dialog must be specified");
+    }
+
+    const onClick = () => {
+        if(props.requireConfirm) {
+            confirmDelete();
+            return;
+        }
+        props.onClick(false);
     }
 
     const confirmDelete = () => {
@@ -35,6 +44,13 @@ export const DeleteButton = (props: DeleteButtonProps) => {
         });
     }
 
+    if(props.size === "xs") {
+        return (<i
+            className='fa fa-trash red clickable'
+            onClick={onClick}
+        />);
+    }
+
     return (
         <AsyncButton
             variant="danger"
@@ -42,7 +58,7 @@ export const DeleteButton = (props: DeleteButtonProps) => {
             activeText={resolveText('Delete')}
             executingText={resolveText('Deleting...')}
             isExecuting={props.isDeleting}
-            onClick={props.requireConfirm ? confirmDelete : () => props.onClick(false)}
+            onClick={onClick}
         />
     );
 
