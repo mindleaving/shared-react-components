@@ -16,7 +16,7 @@ export const loadAndTranslateSchema = async (
             delete translatedSchema.$schema;
             setSchema(translatedSchema);
         },
-        () => {},
+        undefined,
         () => setIsLoading(false)
     );
 }

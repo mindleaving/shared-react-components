@@ -1,7 +1,7 @@
 import { apiClient } from "../communication/ApiClient";
 import { QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
-import { translateErrorMessage } from "./ErrorMessageTranslator";
+import { handleResponse } from "./ApiResponseHandler";
 
 export const buildAndStoreObject = async <T extends unknown>(
     apiPath: string,
@@ -33,18 +33,16 @@ export const sendPutRequest = async <T extends unknown>(
     params: QueryParameters,
     errorText: string,
     item: T,
-    handleResponse?: (response: Response) => void,
-    onFailure?: () => void,
+    onSuccess?: (response: Response) => Promise<void>,
+    onFailure?: (response: Response | undefined) => Promise<void>,
     onFinally?: () => void
 ) => {
     try {
-        const response = await apiClient.instance!.put(apiPath, item, params);
-        if(handleResponse) {
-            handleResponse(response);
-        }
+        const response = await apiClient.instance!.put(apiPath, item, params, { handleError: false });
+        await handleResponse(response, errorText, onSuccess, onFailure);
     } catch(error: any) {
         if(onFailure) {
-            onFailure();
+            onFailure(undefined);
         }
         showErrorAlert(errorText, error.message);
     } finally {
@@ -59,30 +57,13 @@ export const sendPostRequest = async (
     params: QueryParameters,
     errorText: string,
     body: any,
-    onSuccess?: (response: Response) => void,
-    onFailure?: (response: Response | undefined) => void,
+    onSuccess?: (response: Response) => Promise<void>,
+    onFailure?: (response: Response | undefined) => Promise<void>,
     onFinally?: () => void
 ) => {
     try {
         const response = await apiClient.instance!.post(apiPath, body, params, { handleError: false });
-        if(response.ok) {
-            if(onSuccess) {
-                onSuccess(response);
-            }
-        } else {
-            if(onFailure) {
-                onFailure(response);
-            } else {
-                try {
-                    const errorDescription = await response.text();
-                    const translatedErrorText = translateErrorMessage(errorDescription);
-                    showErrorAlert(errorText, translatedErrorText);
-                } catch {
-                    showErrorAlert(errorText);
-                    // Ignore
-                }
-            }
-        }
+        await handleResponse(response, errorText, onSuccess, onFailure);
     } catch(error: any) {
         if(onFailure) {
             onFailure(undefined);
@@ -94,6 +75,7 @@ export const sendPostRequest = async (
         }
     }
 }
+
 export const uploadFile = (
     file: File,
     url: string,
