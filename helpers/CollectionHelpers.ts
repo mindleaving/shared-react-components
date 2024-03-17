@@ -54,6 +54,16 @@ export const distinct = <T extends unknown>(collection: T[]): T[] => {
     // Credit: https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
     return collection.filter((item, index, self) => self.indexOf(item) === index);
 }
+export const distinctBy = <T extends unknown>(collection: T[], itemEqualityComparer: (item1: T, item2: T) => boolean): T[] => {
+    const distinctItems: T[] = [];
+    for (const item of collection) {
+        if(distinctItems.some(item1 => itemEqualityComparer(item1, item))) {
+            continue;
+        }
+        distinctItems.push(item);
+    }
+    return distinctItems;
+}
 export const areEqual = <T extends unknown>(collection1: T[], collection2: T[]): boolean => {
     if(collection1.length !== collection2.length) {
         return false;
@@ -135,4 +145,16 @@ export const moveItem = (collection: any[], from: number, to: number) => {
             ...collection.slice(from+1)
         ];
     }
+}
+export const max = (collection: number[]): number | undefined => {
+    if(!collection || collection.length === 0) {
+        return undefined;
+    }
+    let maxValue = collection[0];
+    for (const item of collection.slice(1)) {
+        if(item > maxValue) {
+            maxValue = item;
+        }
+    }
+    return maxValue;
 }
