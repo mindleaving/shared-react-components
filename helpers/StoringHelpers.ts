@@ -82,6 +82,8 @@ export const uploadFile = (
     options?: {
         method?: "POST" | "PUT"
         contentType?: string,
+        csrfTokenHeaderName?: string,
+        csrfToken?: string,
         accessToken?: string,
         onProgressChanged?: (progress: number) => void
     }): Promise<number> => {
@@ -102,6 +104,9 @@ export const uploadFile = (
         })
         xhr.open(options?.method ?? "POST", url, true);
         xhr.setRequestHeader("Content-Type", options?.contentType ?? "application/octet-stream");
+        if(options?.csrfTokenHeaderName && options?.csrfToken) {
+            xhr.setRequestHeader(options.csrfTokenHeaderName, options.csrfToken);
+        }
         if(options?.accessToken) {
             xhr.setRequestHeader("Authorization", `Bearer ${options.accessToken}`);
         }
