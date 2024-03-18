@@ -1,3 +1,4 @@
+import { accessTokenSessionStorageKey, csrfTokenSessionStorageKey } from '../helpers/Constants';
 import { translateErrorMessage } from '../helpers/ErrorMessageTranslator';
 import { buildUrl } from '../helpers/UrlBuilder';
 import { QueryParameters } from '../types/frontendTypes';
@@ -44,6 +45,19 @@ export class ApiClient {
         }
         this._handleError(response);
         return false;
+    }
+
+    logOut = async () => {
+        try {
+            await apiClient.instance!.post('api/logins/logout', null);
+        } finally {
+            this.isLoggedIn = false;
+            this.accessToken = undefined;
+            this.csrfToken = undefined;
+            this.loginExpirationTime = undefined;
+            sessionStorage.removeItem(accessTokenSessionStorageKey);
+            sessionStorage.removeItem(csrfTokenSessionStorageKey);
+        }
     }
 
     get = async (path: string, params?: QueryParameters, options?: ApiClientOptions) => {

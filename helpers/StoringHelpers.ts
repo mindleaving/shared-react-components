@@ -84,6 +84,7 @@ export const uploadFile = (
         contentType?: string,
         csrfTokenHeaderName?: string,
         csrfToken?: string,
+        includeCredentials?: boolean;
         accessToken?: string,
         onProgressChanged?: (progress: number) => void
     }): Promise<number> => {
@@ -106,6 +107,9 @@ export const uploadFile = (
         xhr.setRequestHeader("Content-Type", options?.contentType ?? "application/octet-stream");
         if(options?.csrfTokenHeaderName && options?.csrfToken) {
             xhr.setRequestHeader(options.csrfTokenHeaderName, options.csrfToken);
+        }
+        if(options?.includeCredentials) {
+            xhr.withCredentials = true;
         }
         if(options?.accessToken) {
             xhr.setRequestHeader("Authorization", `Bearer ${options.accessToken}`);
