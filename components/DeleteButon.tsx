@@ -3,9 +3,9 @@ import { resolveText } from '../helpers/Globalizer';
 import { AsyncButton } from './AsyncButton';
 
 interface DeleteButtonProps {
-    isDeleting: boolean;
+    isDeleting?: boolean;
     onClick: (isConfirmed?: boolean) => void;
-    requireConfirm: boolean;
+    requireConfirm?: boolean;
     confirmDialogTitle?: string;
     confirmDialogMessage?: string;
     className?: string;
