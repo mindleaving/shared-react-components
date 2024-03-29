@@ -1,6 +1,6 @@
 import '../styles/multistep.css';
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Update } from "../types/frontendTypes";
 import { PreviousNextButtons } from "./PreviousNextButtons";
 import { resolveText } from "../helpers/Globalizer";
@@ -20,6 +20,10 @@ export const MultiStepForm = <T extends unknown>(props: MultiStepFormProps<T>) =
 
     const [ currentStep, setCurrentStep ] = useState<FormStep<T>>(steps[0]);
 
+    useEffect(() => {
+        setCurrentStep(steps[0]);
+    }, [ steps ]);
+
     const currentStepIndex = useMemo(() => steps.indexOf(currentStep), [ currentStep, steps ]);
     const previousStep = useMemo(() => currentStepIndex > 0 ? steps[currentStepIndex-1] : undefined, [ currentStep, steps ]);
     const canGoPrevious = useMemo(() => currentStep.canMovePrevious ? currentStep.canMovePrevious(formData) : previousStep !== undefined, [ currentStep, previousStep, formData ]);
@@ -31,6 +35,7 @@ export const MultiStepForm = <T extends unknown>(props: MultiStepFormProps<T>) =
         ? async () => setCurrentStep(nextStep) 
         : async () => await onSubmit(formData)
     , [ nextStep ]);
+    const hideNavigation = useMemo(() => currentStep.hideNavigation && currentStep.hideNavigation(formData), [ currentStep, formData ]);
 
     const StepView = useMemo(() => currentStep.element, [ currentStep ]);
     return (<>
@@ -58,14 +63,15 @@ export const MultiStepForm = <T extends unknown>(props: MultiStepFormProps<T>) =
             formData={formData}
             onChange={onChange}
         />
-        <PreviousNextButtons
+        {!hideNavigation
+        ? <PreviousNextButtons
             canGoPrevious={canGoPrevious}
             onPrevious={previousStepFunc}
             canGoNext={canGoNext}
             onNext={nextStepFunc}
             nextText={isLastStep ? submitButtonText ?? resolveText("Submit") : undefined}
             nextButtonSize={isLastStep ? 'lg' : undefined}
-        />
+        /> : null}
     </>);
 
 }

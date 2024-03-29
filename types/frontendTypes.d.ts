@@ -35,4 +35,5 @@ export interface FormStep<T> {
     element: (props: FormStepProps<T>) => ReactNode;
     canMovePrevious?: (formData: T) => boolean;
     canMoveNext?: (formData: T) => boolean;
+    hideNavigation?: (formData: T) => boolean;
 }
