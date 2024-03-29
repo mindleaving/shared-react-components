@@ -1,4 +1,4 @@
-import { getMonth, getDate, getYear, isSameDay, isLeapYear } from "date-fns";
+import { getMonth, getDate, getYear, isSameDay, isLeapYear, format } from "date-fns";
 
 export const isBirthday = (date: Date, birthDate: Date) => {
     const isSameDateAndMonth = getMonth(date) === getMonth(birthDate) && getDate(date) === getDate(birthDate);
@@ -13,4 +13,10 @@ export const isBirthday = (date: Date, birthDate: Date) => {
         return isSameDay(date, new Date(getYear(date), 2, 1));
     }
     return false;
+}
+export const toDateOnly = (date: Date): Date => {
+    return format(date, 'yyyy-MM-dd') as any;
+}
+export const toTimeOnly = (date: Date): string => {
+    return format(date, 'HH:mm:ss');
 }

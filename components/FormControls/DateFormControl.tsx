@@ -1,5 +1,5 @@
-import React from 'react';
 import Flatpickr from 'react-flatpickr';
+import { toDateOnly } from '../../helpers/DateHelpers';
 
 interface DateFormControlProps {
     id?: string;
@@ -28,8 +28,8 @@ export const DateFormControl = (props: DateFormControlProps) => {
             disabled={props.disabled}
             value={props.value}
             onChange={(dates) => {
-                if(dates.length > 0) { 
-                    props.onChange(dates[0].toISOString() as any); 
+                if(dates.length > 0) {
+                    props.onChange(props.enableTime ? dates[0].toISOString() as any : toDateOnly(dates[0])); 
                 } else {
                     props.onChange(undefined);
                 }
