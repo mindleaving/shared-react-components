@@ -16,6 +16,9 @@ export const SelectWidget = (props: WidgetProps) => {
     , [ props.value, props.options.enumOptions, options]);
 
     useEffect(() => {
+        if(!value) {
+            return;
+        }
         if(props.value !== value) {
             props.onChange(value);
         }
@@ -24,8 +27,8 @@ export const SelectWidget = (props: WidgetProps) => {
     return (
         <FormControl
             as="select"
-            value={value}
-            onChange={e => props.onChange(e.target.value)}
+            value={value ?? ''}
+            onChange={e => props.onChange(e.target.value !== '' ? e.target.value : undefined)}
         >
             <option value=''>{resolveText("PleaseSelect...")}</option>
             {(props.options.enumOptions ?? []).map(x => (
