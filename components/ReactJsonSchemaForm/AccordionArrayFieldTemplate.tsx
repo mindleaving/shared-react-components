@@ -31,7 +31,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                                 <Button
                                     onClick={e => {
                                         e.stopPropagation();
-                                        item.onReorderClick(index, index-1);
+                                        item.onReorderClick(index, index-1)();
                                     }}
                                     variant="outline-primary"
                                 >
@@ -43,7 +43,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                                  <Button
                                     onClick={e => {
                                         e.stopPropagation();
-                                        item.onReorderClick(index, index+1);
+                                        item.onReorderClick(index, index+1)();
                                     }}
                                     variant="outline-primary"
                                 >
