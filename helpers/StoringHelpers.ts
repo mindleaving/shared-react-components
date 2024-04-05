@@ -2,6 +2,7 @@ import { apiClient } from "../communication/ApiClient";
 import { QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
+import { resolveText } from "./Globalizer";
 
 export const buildAndStoreObject = async <T extends unknown>(
     apiPath: string,
@@ -99,8 +100,10 @@ export const uploadFile = (
         xhr.addEventListener("loadend", () => {
             if(xhr.status === 200) {
                 resolve(xhr.status);
+            } else if(xhr.status === 402) {
+                reject(resolveText("StorageQuota_LimitExceeded"));
             } else {
-                reject();
+                reject(xhr.statusText);
             }
         })
         xhr.open(options?.method ?? "POST", url, true);
