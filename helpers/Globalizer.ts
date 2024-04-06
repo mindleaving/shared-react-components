@@ -6,36 +6,36 @@ interface Translation {
 }
 
 export class Globalizer {
-    preferedLanguage: string;
+    preferredLanguage: string;
     defaultLanguage: string;
     translations: { [language:string] : Translation };
 
     constructor(
-        preferedLanguages: readonly string[],
+        preferredLanguages: readonly string[],
         defaultLanguage: string,
         translations: Translation[]) {
             const availableLanguages = translations.map(x => x.language.toLocaleLowerCase());
             this.defaultLanguage = defaultLanguage.toLocaleLowerCase();
-            this.preferedLanguage = this.selectPreferedLanguage(
-                preferedLanguages, 
+            this.preferredLanguage = this.selectPreferredLanguage(
+                preferredLanguages, 
                 availableLanguages,
                 this.defaultLanguage);
             this.translations = toDictionary(translations, x => x.language.toLocaleLowerCase());
     }
 
-    selectPreferedLanguage = (
-        preferedLanguages: readonly string[], 
+    selectPreferredLanguage = (
+        preferredLanguages: readonly string[], 
         availableLanguages: string[], 
         defaultLanguage: string): string => {
 
-        const matchingPreferedLanguage = preferedLanguages
+        const matchingPreferredLanguage = preferredLanguages
             .map(language => language.toLocaleLowerCase())
             .find(language => availableLanguages.includes(language));
-        return matchingPreferedLanguage ?? defaultLanguage;
+        return matchingPreferredLanguage ?? defaultLanguage;
     }
 
     canResolveText = (resourceId: string) => {
-        const preferedTranslation = this.tryGetResourceDictionary(this.preferedLanguage);
+        const preferedTranslation = this.tryGetResourceDictionary(this.preferredLanguage);
         if(preferedTranslation && preferedTranslation[resourceId]) {
             return true;
         }
@@ -47,7 +47,7 @@ export class Globalizer {
     }
 
     resolveText = (resourceId: string) => {
-        const preferedTranslation = this.tryGetResourceDictionary(this.preferedLanguage);
+        const preferedTranslation = this.tryGetResourceDictionary(this.preferredLanguage);
         if(preferedTranslation && preferedTranslation[resourceId]) {
             return preferedTranslation[resourceId];
         }
@@ -65,10 +65,10 @@ export class Globalizer {
 export const defaultGlobalizer: { instance?: Globalizer } = {}
 
 export function setLanguage(languageId: string): void {
-    defaultGlobalizer.instance!.preferedLanguage = languageId.toLocaleLowerCase();
+    defaultGlobalizer.instance!.preferredLanguage = languageId.toLocaleLowerCase();
 }
-export function getPreferedLanguage(): string {
-    return defaultGlobalizer.instance!.preferedLanguage;
+export function getPreferredLanguage(): string {
+    return defaultGlobalizer.instance!.preferredLanguage;
 }
 export function getFallbackLanguage(): string {
     return defaultGlobalizer.instance!.defaultLanguage;
