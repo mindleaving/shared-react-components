@@ -14,6 +14,7 @@ interface GenericTypeCreateEditPageProps<T> {
     uiSchema?: any;
     onSubmit: (item: T) => Promise<any>;
     onChange?: (formData: T) => void;
+    validated?: boolean;
 }
 
 export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeCreateEditPageProps<T>) => {
@@ -57,6 +58,7 @@ export const GenericTypeCreateEditPage = <T extends unknown>(props: GenericTypeC
         onChange={onChange}
         onSubmit={() => props.onSubmit(formData)}
         uiSchema={props.uiSchema}
+        validated={props.validated}
     />)
 
 }

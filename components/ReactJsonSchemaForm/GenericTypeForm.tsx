@@ -19,22 +19,24 @@ interface GenericTypeFormProps {
     uiSchema?: any;
     onChange: (formData: any) => void;
     onSubmit: () => Promise<void>;
+    validated?: boolean;
 }
 
 export const GenericTypeForm = (props: GenericTypeFormProps) => {
 
+    const { typeName, formData, uiSchema, onChange, onSubmit: onSubmitFromProps, validated } = props;
     const [ schema, setSchema ] = useState<any>();
     const [ isLoadingSchema, setIsLoadingSchema ] = useState<boolean>(true);
     const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
 
     useEffect(() => {
-        loadAndTranslateSchema(props.typeName, setSchema, setIsLoadingSchema);
-    }, [ props.typeName ]);
+        loadAndTranslateSchema(typeName, setSchema, setIsLoadingSchema);
+    }, [ typeName ]);
 
     const onSubmit = async () => {
         setIsSubmitting(true);
         try {
-            await props.onSubmit();
+            await onSubmitFromProps();
         } catch(error: any) {
             showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotSubmit"), error.message);
         } finally {
@@ -58,14 +60,15 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                 title: undefined
             }}
             validator={validator}
-            formData={props.formData}
-            onChange={(e: IChangeEvent) => props.onChange(e.formData)}
+            className={validated ? 'was-validated' : undefined}
+            formData={formData}
+            onChange={(e: IChangeEvent) => onChange(e.formData)}
             onSubmit={onSubmit}
             uiSchema={Object.assign({
                 id: {
                     "ui:readonly": true
                 }
-            } as UiSchema, props.uiSchema ?? {})}
+            } as UiSchema, uiSchema ?? {})}
             fields={{
                 OneOfField: OptionalObjectField
             }}

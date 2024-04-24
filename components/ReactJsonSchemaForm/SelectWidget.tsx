@@ -29,6 +29,8 @@ export const SelectWidget = (props: WidgetProps) => {
             as="select"
             value={value ?? ''}
             onChange={e => props.onChange(e.target.value !== '' ? e.target.value : undefined)}
+            required={props.required}
+            disabled={props.disabled}
         >
             <option value=''>{resolveText("PleaseSelect...")}</option>
             {(props.options.enumOptions ?? []).map(x => (

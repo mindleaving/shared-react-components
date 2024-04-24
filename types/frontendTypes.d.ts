@@ -37,3 +37,14 @@ export interface FormStep<T> {
     canMoveNext?: (formData: T) => boolean;
     hideNavigation?: (formData: T) => boolean;
 }
+export interface CustomFormControlProps {
+    required?: boolean;
+    readOnly?: boolean;
+    disabled?: boolean;
+    ariaDescribedBy?: string;
+    min?: number;
+    max?: number;
+    minLength?: number;
+    isValid?: boolean;
+    isInvalid?: boolean;
+}

@@ -111,6 +111,7 @@ export const Autocomplete = <T extends unknown>(props: AutocompleteProps<T>) => 
                 className: `form-control ${className ?? ''}`,
                 disabled: disabled,
                 required: required,
+                pattern: required ? '/Please select a value/' : undefined,
                 autoFocus: autoFocus
             }}
             renderSuggestion={item => (
