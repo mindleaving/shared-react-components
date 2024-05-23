@@ -55,8 +55,8 @@ export const DeleteButton = (props: DeleteButtonProps) => {
         <AsyncButton
             variant="danger"
             className={props.className ?? 'm-2'}
-            activeText={resolveText('Delete')}
-            executingText={resolveText('Deleting...')}
+            activeText={<><i className='fa fa-trash' /> {resolveText('Delete')}</>}
+            executingText={<><i className='fa fa-trash' /> {resolveText('Deleting...')}</>}
             isExecuting={props.isDeleting}
             onClick={onClick}
         />
