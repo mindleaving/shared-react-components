@@ -48,3 +48,7 @@ export interface CustomFormControlProps {
     isValid?: boolean;
     isInvalid?: boolean;
 }
+export interface DistinctItemWithMultiplicity<T> {
+    item: T;
+    multiplicity: number;
+}

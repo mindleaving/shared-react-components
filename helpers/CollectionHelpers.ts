@@ -1,5 +1,5 @@
 import { compareAsc, compareDesc } from "date-fns";
-import { Groups } from "../types/frontendTypes";
+import { DistinctItemWithMultiplicity, Groups } from "../types/frontendTypes";
 
 export const groupIntoDictionary = <T extends unknown>(collection: T[], keySelector: (item: T) => string) => {
     const groups: { [k: string]: T[] } = {};
@@ -157,4 +157,34 @@ export const max = (collection: number[]): number | undefined => {
         }
     }
     return maxValue;
+}
+export const getDistinctWithMultiplicity = <T extends unknown>(collection: T[], itemEqualityComparer: (a: T, b: T) => boolean) => {
+    const distincItemsWithMultiplicity: DistinctItemWithMultiplicity<T>[] = [];
+    let multiplicity = 1;
+    let lastItem: T | null = null;
+    for (const item of collection) {
+        if(lastItem === null) {
+            lastItem = item;
+            multiplicity = 1;
+            continue;
+        }
+        if(itemEqualityComparer(item, lastItem)) {
+            multiplicity++;
+        } else {
+            distincItemsWithMultiplicity.push({
+                item: lastItem,
+                multiplicity: multiplicity
+            });
+
+            multiplicity = 1;
+        }
+        lastItem = item;
+    }
+    if(lastItem !== null) {
+        distincItemsWithMultiplicity.push({
+            item: lastItem,
+            multiplicity: multiplicity
+        });
+    }
+    return distincItemsWithMultiplicity;
 }

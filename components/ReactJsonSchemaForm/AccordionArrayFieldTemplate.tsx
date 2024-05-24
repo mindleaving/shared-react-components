@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateProps } from "@rjsf/utils";
+import { ArrayFieldTemplateProps } from "@rjsf/utils"
 import { Accordion, Button, Row, Col, FormGroup, FormLabel } from "react-bootstrap"
 import { resolveText } from "../../helpers/Globalizer"
 
@@ -17,7 +17,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             {props.items.map((item,index) => {
                 const customTitle = displayFunc ? displayFunc(props.formData[index]) : undefined;
                 return (<Accordion.Item 
-                    key={index} 
+                    key={item.key}
                     eventKey={index + ""}
                     className="my-2 border border-secondary"
                 >

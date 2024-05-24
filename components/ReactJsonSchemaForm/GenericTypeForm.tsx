@@ -10,8 +10,9 @@ import { AccordionArrayFieldTemplate } from './AccordionArrayFieldTemplate';
 import { UiSchema } from '@rjsf/utils';
 import { SelectWidget } from './SelectWidget';
 import { LoadingAlert } from '../LoadingAlert';
-import { Alert } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 import { OptionalObjectField } from './OptionalObjectField';
+import { Center } from '../Center';
 
 interface GenericTypeFormProps {
     typeName: string;
@@ -19,12 +20,13 @@ interface GenericTypeFormProps {
     uiSchema?: any;
     onChange: (formData: any) => void;
     onSubmit: () => Promise<void>;
+    onCancel?: () => void;
     validated?: boolean;
 }
 
 export const GenericTypeForm = (props: GenericTypeFormProps) => {
 
-    const { typeName, formData, uiSchema, onChange, onSubmit: onSubmitFromProps, validated } = props;
+    const { typeName, formData, uiSchema, onChange, onSubmit: onSubmitFromProps, onCancel, validated } = props;
     const [ schema, setSchema ] = useState<any>();
     const [ isLoadingSchema, setIsLoadingSchema ] = useState<boolean>(true);
     const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
@@ -79,12 +81,24 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                 SelectWidget: SelectWidget
             }}
         >
-            <AsyncButton
-                type='submit'
-                activeText={resolveText("Submit")}
-                executingText={resolveText("Submitting...")}
-                isExecuting={isSubmitting}
-            />
+            <Center>
+                {onCancel
+                ? <Button
+                    type="button"
+                    onClick={onCancel}
+                    variant='secondary'
+                    className='mx-2'
+                >
+                    {resolveText("Cancel")}
+                </Button> : null}
+                <AsyncButton
+                    type='submit'
+                    activeText={resolveText("Submit")}
+                    executingText={resolveText("Submitting...")}
+                    isExecuting={isSubmitting}
+                    className='mx-2'
+                />
+            </Center>
         </Form>
     );
 
