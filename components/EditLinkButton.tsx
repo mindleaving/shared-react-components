@@ -1,11 +1,10 @@
-import React from 'react';
 import { Button } from 'react-bootstrap';
 import { resolveText } from '../helpers/Globalizer';
 
 interface EditLinkButtonProps {
     onClick: () => void;
     className?: string;
-    size?: 'xs';
+    size?: 'xs' | 'sm' | 'lg';
 }
 
 export const EditLinkButton = (props: EditLinkButtonProps) => {
@@ -26,6 +25,7 @@ export const EditLinkButton = (props: EditLinkButtonProps) => {
     return (
         <Button 
             variant="link" 
+            size={size}
             onClick={onClick}
             className={className}
         >
