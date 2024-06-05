@@ -1,7 +1,7 @@
 import { accessTokenSessionStorageKey, csrfTokenSessionStorageKey } from '../helpers/Constants';
 import { translateErrorMessage } from '../helpers/ErrorMessageTranslator';
 import { buildUrl } from '../helpers/UrlBuilder';
-import { QueryParameters } from '../types/frontendTypes';
+import { JsonPatchDocument, QueryParameters } from '../types/frontendTypes';
 import { ApiError } from './ApiError';
 
 export interface ApiClientOptions {
@@ -72,7 +72,7 @@ export class ApiClient {
         return await this._sendRequest("POST", path, params, body, options);
     }
 
-    patch = async (path: string, body: any, params?: QueryParameters, options?: ApiClientOptions) => {
+    patch = async (path: string, body: JsonPatchDocument[], params?: QueryParameters, options?: ApiClientOptions) => {
         return await this._sendRequest("PATCH", path, params, body, options);
     }
 

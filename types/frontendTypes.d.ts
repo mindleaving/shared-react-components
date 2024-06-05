@@ -52,3 +52,17 @@ export interface DistinctItemWithMultiplicity<T> {
     item: T;
     multiplicity: number;
 }
+export type JsonPatchDocument = {
+    op: "add" | "replace"
+    path: string;
+    value: any
+}
+| {
+    op: "remove",
+    path: string;
+} 
+| {
+    op: "copy" | "move",
+    from: string;
+    path: string;
+};

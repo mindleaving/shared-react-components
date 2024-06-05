@@ -1,5 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
-import { QueryParameters } from "../types/frontendTypes";
+import { JsonPatchDocument, QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
 import { resolveText } from "./Globalizer";
@@ -64,6 +64,30 @@ export const sendPostRequest = async (
 ) => {
     try {
         const response = await apiClient.instance!.post(apiPath, body, params, { handleError: false });
+        await handleResponse(response, errorText, onSuccess, onFailure);
+    } catch(error: any) {
+        if(onFailure) {
+            onFailure(undefined);
+        }
+        showErrorAlert(errorText, error.message);
+    } finally {
+        if(onFinally) {
+            onFinally();
+        }
+    }
+}
+
+export const sendPatchRequest = async (
+    apiPath: string,
+    params: QueryParameters,
+    errorText: string,
+    body: JsonPatchDocument[],
+    onSuccess?: (response: Response) => Promise<void>,
+    onFailure?: (response: Response | undefined) => Promise<void>,
+    onFinally?: () => void
+) => {
+    try {
+        const response = await apiClient.instance!.patch(apiPath, body, params, { handleError: false });
         await handleResponse(response, errorText, onSuccess, onFailure);
     } catch(error: any) {
         if(onFailure) {
