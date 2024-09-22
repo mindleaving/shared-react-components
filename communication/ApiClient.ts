@@ -1,4 +1,4 @@
-import { accessTokenSessionStorageKey, csrfTokenSessionStorageKey } from '../helpers/Constants';
+import { accessTokenExpirationSessionStorageKey, accessTokenSessionStorageKey, csrfTokenSessionStorageKey } from '../helpers/Constants';
 import { translateErrorMessage } from '../helpers/ErrorMessageTranslator';
 import { buildUrl } from '../helpers/UrlBuilder';
 import { JsonPatchDocument, QueryParameters } from '../types/frontendTypes';
@@ -56,6 +56,7 @@ export class ApiClient {
             this.csrfToken = undefined;
             this.loginExpirationTime = undefined;
             sessionStorage.removeItem(accessTokenSessionStorageKey);
+            sessionStorage.removeItem(accessTokenExpirationSessionStorageKey);
             sessionStorage.removeItem(csrfTokenSessionStorageKey);
         }
     }
