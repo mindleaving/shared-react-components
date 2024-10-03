@@ -11,12 +11,13 @@ interface DateFormControlProps {
     disabled?: boolean;
     required?: boolean;
     enableTime?: boolean
+    size?: "sm" | "lg";
 }
 
 export const DateFormControl = (props: DateFormControlProps) => {
 
     return (
-    <Row>
+    <Row className='align-items-center'>
         <Col>
             <Flatpickr
                 options={{
@@ -50,6 +51,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                         props.onChange(toDateOnly(now) as any);
                     }
                 }}
+                size={props.size}
             >
                 {props.enableTime ? resolveText("Now") : resolveText("Today")}
             </Button>
