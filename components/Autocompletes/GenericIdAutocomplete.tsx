@@ -13,7 +13,7 @@ interface GenericIdAutocompleteProps<T> extends IdAutocompleteProps {
     loadItemApiPathBuilder: (id: string) => string;
 }
 
-export const GenericIdAutocomplete = <T extends Models.IId>(props: GenericIdAutocompleteProps<T>) => {
+export const GenericIdAutocomplete = <T extends Models.IId<string>>(props: GenericIdAutocompleteProps<T>) => {
 
     const { value, onChange, disabled, required } = props;
     const [ isLoading, setIsLoading ] = useState<boolean>(!!value);
@@ -64,4 +64,3 @@ export const GenericIdAutocomplete = <T extends Models.IId>(props: GenericIdAuto
     </>);
 
 }
-export default GenericIdAutocomplete;

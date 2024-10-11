@@ -24,7 +24,7 @@ interface NonExhaustiveTableProps<ItemType> {
     showNoMoreItemsAlert?: boolean;
 }
 
-export const NonExhaustiveTable = <ItemType extends Models.IId>(props: NonExhaustiveTableProps<ItemType>) => {
+export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: NonExhaustiveTableProps<ItemType>) => {
 
     const { 
         autoScroll, 
