@@ -3,7 +3,7 @@ import { resolveText } from "../helpers/Globalizer";
 import { StoreButton } from "../components/StoreButton";
 import { FormEvent, useState } from "react";
 import { Models } from "../../localComponents/types/models";
-import { uuid } from "../helpers/uuid";
+import { EmptyUUID, uuid } from "../helpers/uuid";
 import { sendPostRequest } from "../helpers/StoringHelpers";
 import { showSuccessAlert } from "../helpers/AlertHelpers";
 
@@ -27,7 +27,7 @@ export const FeedbackModal = (props: FeedbackModalProps) => {
         const feedback: Models.Feedback = {
             id: uuid(),
             timestamp: new Date().toISOString() as any, // Will be replaced by API
-            submitterAccountId: '', // Will be filled in by API
+            submitterAccountId: EmptyUUID, // Will be filled in by API
             url: window.location.pathname,
             message: message
         };
