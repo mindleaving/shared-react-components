@@ -41,7 +41,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                 }} 
             />
         </Col>
-        <Col xs="auto">
+        <Col xs="auto" className="no-print">
             <Button
                 onClick={() => {
                     const now = new Date();
