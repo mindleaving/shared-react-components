@@ -60,14 +60,14 @@ export const SearchTextHighlightedText = (props: SearchTextHighlightedTextProps)
     }, [ text, searchTerms ]);
 
     return (<div className="d-inline">
-        {fragments.map(fragment => {
+        {fragments.map((fragment,fragmentIndex) => {
             if(fragment.isHighlighted) {
                 if(highlightedClassName !== undefined) {
-                    return (<span className={highlightedClassName}>{fragment.text}</span>);
+                    return (<span key={fragment.text+fragmentIndex} className={highlightedClassName}>{fragment.text}</span>);
                 }
-                return (<span><strong>{fragment.text}</strong></span>);
+                return (<span key={fragment.text+fragmentIndex}><strong>{fragment.text}</strong></span>);
             } else {
-                return (<span>{fragment.text}</span>);
+                return (<span key={fragment.text+fragmentIndex}>{fragment.text}</span>);
             }
         })}
     </div>);
