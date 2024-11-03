@@ -9,7 +9,8 @@ interface DeleteButtonProps {
     confirmDialogTitle?: string;
     confirmDialogMessage?: string;
     className?: string;
-    size?: "xs";
+    size?: "xs" | "sm" | "lg";
+    type?: "button" | "submit" | "reset";
 }
 
 export const DeleteButton = (props: DeleteButtonProps) => {
@@ -47,7 +48,10 @@ export const DeleteButton = (props: DeleteButtonProps) => {
     if(props.size === "xs") {
         return (<i
             className='fa fa-trash red clickable'
-            onClick={onClick}
+            onClick={e => {
+                e.stopPropagation();
+                onClick();
+            }}
         />);
     }
 
@@ -58,7 +62,12 @@ export const DeleteButton = (props: DeleteButtonProps) => {
             activeText={<><i className='fa fa-trash' /> {resolveText('Delete')}</>}
             executingText={<><i className='fa fa-trash' /> {resolveText('Deleting...')}</>}
             isExecuting={props.isDeleting}
-            onClick={onClick}
+            onClick={e => {
+                e.stopPropagation();
+                onClick();
+            }}
+            size={props.size}
+            type={props.type}
         />
     );
 

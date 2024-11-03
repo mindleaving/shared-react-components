@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 interface AsyncButtonProps {
     type?: "button" | "submit" | "reset" | undefined;
     form?: string;
-    onClick?: () => void;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
     variant?: string;
     size?: "sm" | "lg";
     isExecuting?: boolean;
