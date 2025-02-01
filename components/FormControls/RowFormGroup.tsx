@@ -19,12 +19,13 @@ interface RowFormGroupProps {
     isInvalid?: boolean;
     pattern?: string;
     placeholder?: string;
+    className?: string;
 }
 
 export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
 
     return (
-        <FormGroup as={Row} className='my-1'>
+        <FormGroup as={Row} className={props.className ?? 'my-1'}>
             <FormLabel column xs={4} lg={6}>{props.label}{props.required ? '*' : null}</FormLabel>
             <Col>
                 {props.type?.toLowerCase() === "date" || props.type?.toLowerCase() === "datetime"
