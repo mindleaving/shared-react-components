@@ -21,6 +21,7 @@ interface NonExhaustiveTableProps<ItemType> {
     colSpan: number;
     hasCreateNewButton?: boolean;
     onCreateNew?: () => void;
+    additionalButtons?: ReactNode;
     showNoMoreItemsAlert?: boolean;
 }
 
@@ -35,6 +36,7 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
         loadMoreItems,
         hasCreateNewButton,
         onCreateNew,
+        additionalButtons,
         tableHeaderBuilder,
         tableRowBuilder,
         colSpan,
@@ -55,11 +57,14 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
     return (
     <>
         {hasCreateNewButton 
-        ? <Row>
+        ? <Row className='align-items-center'>
             <Col></Col>
+            {additionalButtons
+            ? <Col xs="auto">
+                {additionalButtons}
+            </Col> : null}
             <Col xs="auto">
-                <Button 
-                    className="m-1 float-right" 
+                <Button
                     onClick={onCreateNew}
                 >
                     {resolveText('CreateNew')}

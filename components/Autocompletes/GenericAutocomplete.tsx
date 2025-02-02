@@ -45,7 +45,9 @@ export const GenericAutocomplete = <T extends unknown>(props: GenericAutocomplet
         orderBy, 
         additionalParameters 
     } = props;
-    const autocompleteRunner = useMemo(() => new AutocompleteRunner<T>(apiPath, 'searchText', 10, orderBy, additionalParameters), [ apiPath ]);
+    const autocompleteRunner = useMemo(() => 
+        new AutocompleteRunner<T>(apiPath, 'searchText', 10, orderBy, additionalParameters), 
+    [ apiPath, orderBy, additionalParameters ]);
 
     if(value || isLoading) {
         return (<Alert 
