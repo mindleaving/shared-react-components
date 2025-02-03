@@ -21,7 +21,7 @@ interface NonExhaustiveTableProps<ItemType> {
     colSpan: number;
     hasCreateNewButton?: boolean;
     onCreateNew?: () => void;
-    additionalButtons?: ReactNode;
+    additionalButtons?: ReactNode[];
     showNoMoreItemsAlert?: boolean;
 }
 
@@ -60,9 +60,11 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
         ? <Row className='align-items-center'>
             <Col></Col>
             {additionalButtons
-            ? <Col xs="auto">
-                {additionalButtons}
-            </Col> : null}
+            ? additionalButtons.map((additionalButton,buttonIndex) => (
+                <Col key={buttonIndex} xs="auto">
+                    {additionalButton}
+                </Col>)) 
+            : null}
             <Col xs="auto">
                 <Button
                     onClick={onCreateNew}
