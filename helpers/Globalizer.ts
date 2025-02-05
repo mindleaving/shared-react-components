@@ -79,3 +79,19 @@ export function canResolveText(resourceId: string): boolean {
 export function resolveText(resourceId: string): string {
     return defaultGlobalizer.instance!.resolveText(resourceId);
 }
+export function replaceResolvableText(str: string) {
+    const resourceReferences = str.match(/resolveText:[a-zA-Z0-9_]+/g);
+    if(!resourceReferences) {
+        return str;
+    }
+    let output = str;
+    for (const resourceReference of resourceReferences) {
+        const resourceId = resourceReference.slice('resolveText:'.length);
+        if(!canResolveText(resourceId)) {
+            continue;
+        }
+        const translatedText = resolveText(resourceId);
+        output = output.replaceAll(resourceReference, translatedText);
+    }
+    return output;
+}
