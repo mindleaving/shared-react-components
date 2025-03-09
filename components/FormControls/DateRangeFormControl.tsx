@@ -2,8 +2,8 @@ import React from 'react';
 import Flatpickr from 'react-flatpickr';
 
 interface DateRangeFormControlProps {
-    value?: Date[];
-    onChange: (startDate: Date | undefined, endDate: Date | undefined) => void;
+    value?: string[];
+    onChange: (startDate: string | undefined, endDate: string | undefined) => void;
     disabled?: boolean;
     required?: boolean;
     enableTime?: boolean;
@@ -28,7 +28,7 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
             value={props.value}
             onChange={(dates) => {
                 if(dates.length === 2) { 
-                    props.onChange(dates[0].toISOString() as any, dates[1].toISOString() as any); 
+                    props.onChange(dates[0].toISOString(), dates[1].toISOString()); 
                 } else if(props.triggerOnChangeForUndefinedRange) {
                     props.onChange(undefined, undefined);
                 }

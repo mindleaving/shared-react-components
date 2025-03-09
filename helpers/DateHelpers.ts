@@ -14,8 +14,8 @@ export const isBirthday = (date: Date, birthDate: Date) => {
     }
     return false;
 }
-export const toDateOnly = (date: Date): Date => {
-    return format(date, 'yyyy-MM-dd') as any;
+export const toDateOnly = (date: Date): string => {
+    return format(date, 'yyyy-MM-dd');
 }
 export const toTimeOnly = (date: Date): string => {
     return format(date, 'HH:mm:ss');

@@ -3,8 +3,8 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { DateFormControl } from './FormControls/DateFormControl';
 
 interface DateSelectionRowProps {
-    date: Date;
-    onChange: (date: Date) => void;
+    date: string;
+    onChange: (date: string) => void;
 }
 export const DateSelectionRow = (props: DateSelectionRowProps) => {
     const { date: selectedDate, onChange } = props;
@@ -12,7 +12,7 @@ export const DateSelectionRow = (props: DateSelectionRowProps) => {
         <Col />
         <Col xs="auto">
             <Button
-                onClick={() => onChange(addDays(new Date(selectedDate), -1).toISOString() as any)}
+                onClick={() => onChange(addDays(new Date(selectedDate), -1).toISOString())}
             >
                 &lt;
             </Button>
@@ -29,7 +29,7 @@ export const DateSelectionRow = (props: DateSelectionRowProps) => {
         </Col>
         <Col xs="auto">
             <Button
-                onClick={() => onChange(addDays(new Date(selectedDate), 1).toISOString() as any)}
+                onClick={() => onChange(addDays(new Date(selectedDate), 1).toISOString())}
             >
                 &gt;
             </Button>

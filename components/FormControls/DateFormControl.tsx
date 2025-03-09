@@ -6,8 +6,8 @@ import { resolveText } from '../../helpers/Globalizer';
 interface DateFormControlProps {
     id?: string;
     name?: string;
-    value?: Date,
-    onChange: (date: Date | undefined) => void;
+    value?: string,
+    onChange: (date: string | undefined) => void;
     disabled?: boolean;
     required?: boolean;
     enableTime?: boolean
@@ -24,7 +24,8 @@ export const DateFormControl = (props: DateFormControlProps) => {
                     allowInput: true,
                     enableTime: props.enableTime,
                     time_24hr: true,
-                    mode: 'single'
+                    mode: 'single',
+                    static: true
                 }}
                 id={props.id}
                 name={props.name}
@@ -34,7 +35,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                 value={props.value}
                 onChange={(dates) => {
                     if(dates.length > 0) {
-                        props.onChange(props.enableTime ? dates[0].toISOString() as any : toDateOnly(dates[0])); 
+                        props.onChange(props.enableTime ? dates[0].toISOString() : toDateOnly(dates[0])); 
                     } else {
                         props.onChange(undefined);
                     }
@@ -46,7 +47,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                 onClick={() => {
                     const now = new Date();
                     if(props.enableTime) {
-                        props.onChange(now.toISOString() as any);
+                        props.onChange(now.toISOString());
                     } else {
                         props.onChange(toDateOnly(now) as any);
                     }

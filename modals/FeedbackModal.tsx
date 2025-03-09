@@ -26,7 +26,7 @@ export const FeedbackModal = (props: FeedbackModalProps) => {
         }
         const feedback: Models.Feedback = {
             id: uuid(),
-            timestamp: new Date().toISOString() as any, // Will be replaced by API
+            timestamp: new Date().toISOString(), // Will be replaced by API
             submitterAccountId: EmptyUUID, // Will be filled in by API
             url: window.location.pathname,
             message: message

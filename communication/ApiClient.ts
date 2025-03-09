@@ -17,7 +17,7 @@ export class ApiClient {
     port: number;
     accessToken: string | undefined;
     csrfToken: string | undefined;
-    loginExpirationTime: Date | undefined;
+    loginExpirationTime: string | undefined;
     defaultOptions: ApiClientOptions;
 
     constructor(serverAddress: string, port: number) {
