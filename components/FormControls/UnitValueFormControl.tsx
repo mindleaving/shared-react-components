@@ -1,11 +1,11 @@
-import math from "mathjs";
+import { Unit } from "mathjs";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { mathjs } from "../../helpers/mathjs";
 
 interface UnitValueFormControlProps {
-    defaultValue?: math.Unit;
-    onChange: (unitValue: math.Unit | undefined) => void;
+    defaultValue?: Unit;
+    onChange: (unitValue: Unit | undefined) => void;
     placeholder?: string;
     className?: string;
     required?: boolean;
