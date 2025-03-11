@@ -9,6 +9,7 @@ interface DateRangeFormControlProps {
     enableTime?: boolean;
     noCalendar?: boolean;
     triggerOnChangeForUndefinedRange?: boolean;
+    static?: boolean;
 }
 
 export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
@@ -20,7 +21,8 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
                 noCalendar: props.noCalendar,
                 enableTime: props.enableTime,
                 time_24hr: true,
-                mode: 'range'
+                mode: 'range',
+                static: props.static
             }}
             className="form-control"
             required={props.required}
