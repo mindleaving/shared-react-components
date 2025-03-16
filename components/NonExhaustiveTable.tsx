@@ -23,6 +23,7 @@ interface NonExhaustiveTableProps<ItemType> {
     onCreateNew?: () => void;
     additionalButtons?: ReactNode[];
     showNoMoreItemsAlert?: boolean;
+    title?: ReactNode;
 }
 
 export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: NonExhaustiveTableProps<ItemType>) => {
@@ -40,7 +41,8 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
         tableHeaderBuilder,
         tableRowBuilder,
         colSpan,
-        showNoMoreItemsAlert
+        showNoMoreItemsAlert,
+        title
     } = props;
 
     const table = (
@@ -56,23 +58,23 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
     )
     return (
     <>
-        {hasCreateNewButton 
-        ? <Row className='align-items-center'>
-            <Col></Col>
+        <Row className='align-items-center'>
+            <Col>{title}</Col>
             {additionalButtons
             ? additionalButtons.map((additionalButton,buttonIndex) => (
                 <Col key={buttonIndex} xs="auto">
                     {additionalButton}
                 </Col>)) 
             : null}
-            <Col xs="auto">
+            {hasCreateNewButton 
+            ? <Col xs="auto">
                 <Button
                     onClick={onCreateNew}
                 >
                     {resolveText('CreateNew')}
                 </Button>
-            </Col>
-        </Row> : null}
+            </Col> : null}
+        </Row>
         {autoScroll
         ? <InfiniteScroll
             dataLength={items.length}

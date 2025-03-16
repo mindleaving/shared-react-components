@@ -35,7 +35,7 @@ interface SortInformation {
     columnIndex: number;
     sortOrder: OrderDirection;
 }
-export const SortableTable = <T>(props: SortableTableProps<T>) => {
+export const SortableTable = <T,>(props: SortableTableProps<T>) => {
 
     const { 
         items, 

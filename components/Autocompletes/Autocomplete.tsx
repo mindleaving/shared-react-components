@@ -22,7 +22,7 @@ export interface AutocompleteProps<T> {
     highlightFirstSuggestion?: boolean;
 }
 
-export const Autocomplete = <T>(props: AutocompleteProps<T>) => {
+export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
 
     const { 
         defaultValue,

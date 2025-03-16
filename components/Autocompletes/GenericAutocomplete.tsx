@@ -26,7 +26,7 @@ export interface GenericAutocompleteProps<T> extends GenericAutocompleteImplemen
     additionalParameters?: { [key:string]: string };
 }
 
-export const GenericAutocomplete = <T>(props: GenericAutocompleteProps<T>) => {
+export const GenericAutocomplete = <T,>(props: GenericAutocompleteProps<T>) => {
 
     const { 
         isLoading,

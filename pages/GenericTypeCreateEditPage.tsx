@@ -17,7 +17,7 @@ interface GenericTypeCreateEditPageProps<T> {
     validated?: boolean;
 }
 
-export const GenericTypeCreateEditPage = <T>(props: GenericTypeCreateEditPageProps<T>) => {
+export const GenericTypeCreateEditPage = <T,>(props: GenericTypeCreateEditPageProps<T>) => {
 
     const { [props.paramName ?? "id"]: id } = useParams();
     const [ isLoadingItem, setIsLoadingItem ] = useState<boolean>(!!props.itemLoader);

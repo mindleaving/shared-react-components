@@ -14,7 +14,7 @@ interface MultiStepFormProps<T> {
     submitButtonText?: string;
 }
 
-export const MultiStepForm = <T>(props: MultiStepFormProps<T>) => {
+export const MultiStepForm = <T,>(props: MultiStepFormProps<T>) => {
 
     const { steps, formData, onChange, onSubmit, submitButtonText } = props;
 
