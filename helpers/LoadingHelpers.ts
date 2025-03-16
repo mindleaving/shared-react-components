@@ -3,7 +3,7 @@ import { QueryParameters } from "../types/frontendTypes";
 import { showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
 
-export const buildLoadObjectFunc = <T extends unknown>(
+export const buildLoadObjectFunc = <T>(
     apiPath: string,
     params: QueryParameters = {},
     errorText: string,
@@ -12,7 +12,7 @@ export const buildLoadObjectFunc = <T extends unknown>(
     onFinally?: () => void) => {
     return async () => await loadObject(apiPath, params, errorText, onItemLoaded, onFailure, onFinally);
 }
-export const loadObject = async <T extends unknown>(
+export const loadObject = async <T>(
     apiPath: string,
     params: QueryParameters = {},
     errorText: string,

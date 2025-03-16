@@ -4,7 +4,7 @@ import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
 import { resolveText } from "./Globalizer";
 
-export const buildAndStoreObject = async <T extends unknown>(
+export const buildAndStoreObject = async <T>(
     apiPath: string,
     params: QueryParameters,
     successText: string,
@@ -29,7 +29,7 @@ export const buildAndStoreObject = async <T extends unknown>(
     }
 }
 
-export const sendPutRequest = async <T extends unknown>(
+export const sendPutRequest = async <T>(
     apiPath: string,
     params: QueryParameters,
     errorText: string,

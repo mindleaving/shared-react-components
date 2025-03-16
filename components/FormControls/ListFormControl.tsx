@@ -8,7 +8,7 @@ interface ListFormControlProps<T> {
     removeItem: (item: T) => void;
 }
 
-export const ListFormControl = <T extends unknown>(props: ListFormControlProps<T>) => {
+export const ListFormControl = <T>(props: ListFormControlProps<T>) => {
     return (
         <div className="listFormControl">
             {props.items.map(item => 
