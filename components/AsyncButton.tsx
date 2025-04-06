@@ -12,6 +12,7 @@ interface AsyncButtonProps {
     executingText: ReactNode;
     className?: string;
     disabled?: boolean;
+    title?: string;
 }
 
 export const AsyncButton = (props: AsyncButtonProps) => {
@@ -24,6 +25,7 @@ export const AsyncButton = (props: AsyncButtonProps) => {
             size={props.size}
             onClick={props.onClick}
             disabled={props.isExecuting || props.disabled}
+            title={props.title}
         >
             {!props.isExecuting
                 ? <>{props.activeText}</>
