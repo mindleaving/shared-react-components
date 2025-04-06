@@ -25,6 +25,7 @@ export interface IdAutocompleteProps {
     onChange: (value: string | undefined) => void;
     disabled?: boolean;
     required?: boolean;
+    placeholder?: string;
 }
 export interface FormStepProps<T> {
     formData: T;

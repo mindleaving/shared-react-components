@@ -15,7 +15,7 @@ interface GenericIdAutocompleteProps<T> extends IdAutocompleteProps {
 
 export const GenericIdAutocomplete = <T extends Models.IId<string>>(props: GenericIdAutocompleteProps<T>) => {
 
-    const { value, onChange, disabled, required } = props;
+    const { value, onChange, disabled, required, placeholder } = props;
     const [ isLoading, setIsLoading ] = useState<boolean>(!!value);
     const [ item, setItem ] = useState<T>();
     const key = useMemo(() => uuid(), []);
@@ -58,7 +58,8 @@ export const GenericIdAutocomplete = <T extends Models.IId<string>>(props: Gener
             value: item,
             onChange: setItem,
             disabled,
-            required
+            required,
+            placeholder
         }
     )}
     </>);
