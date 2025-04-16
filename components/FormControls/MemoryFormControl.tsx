@@ -11,6 +11,7 @@ interface MemoryFormControlProps {
     required?: boolean;
     disabled?: boolean;
     className?: string;
+    size?: "sm" | "lg";
 }
 
 export const MemoryFormControl = (props: MemoryFormControlProps) => {
@@ -27,6 +28,7 @@ export const MemoryFormControl = (props: MemoryFormControlProps) => {
             placeholder={props.placeholder}
             minSearchTextLength={props.minSearchTextLength}
             disabled={props.disabled}
+            size={props.size}
         />
     );
 

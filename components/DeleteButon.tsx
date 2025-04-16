@@ -47,7 +47,7 @@ export const DeleteButton = (props: DeleteButtonProps) => {
 
     if(props.size === "xs") {
         return (<i
-            className='fa fa-trash red clickable'
+            className={`fa fa-trash red clickable ${props.className}`}
             onClick={e => {
                 e.stopPropagation();
                 onClick();
