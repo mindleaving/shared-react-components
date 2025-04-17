@@ -48,6 +48,7 @@ export interface CustomFormControlProps {
     minLength?: number;
     isValid?: boolean;
     isInvalid?: boolean;
+    size?: "sm" | "lg";
 }
 export interface DistinctItemWithMultiplicity<T> {
     item: T;

@@ -19,6 +19,7 @@ export const CountrySelector = (props: CountrySelectorProps) => {
         required={required}
         readOnly={props.readOnly}
         disabled={props.disabled}
+        size={props.size}
         isValid={props.isValid}
         isInvalid={props.isInvalid}
         aria-describedby={props.ariaDescribedBy}

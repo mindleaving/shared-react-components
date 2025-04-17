@@ -19,6 +19,7 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         required,
         readOnly,
         disabled,
+        size
     } = props;
 
     return (<FormControl
@@ -28,6 +29,7 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         required={required}
         readOnly={readOnly}
         disabled={disabled}
+        size={size}
         isValid={props.isValid}
         isInvalid={props.isInvalid}
         aria-describedby={props.ariaDescribedBy}
