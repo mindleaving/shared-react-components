@@ -1,7 +1,7 @@
 import Form from '@rjsf/bootstrap-4';
 import validator from "@rjsf/validator-ajv8";
 import { IChangeEvent } from '@rjsf/core';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, PropsWithChildren } from 'react';
 import { showErrorAlert } from '../../helpers/AlertHelpers';
 import { resolveText } from '../../helpers/Globalizer';
 import { loadAndTranslateSchema } from '../../helpers/ReactJsonSchemaFormsHelpers';
@@ -14,7 +14,7 @@ import { Alert, Button } from 'react-bootstrap';
 import { OptionalObjectField } from './OptionalObjectField';
 import { Center } from '../Center';
 
-interface GenericTypeFormProps {
+interface GenericTypeFormProps extends PropsWithChildren {
     typeName: string;
     formData: any;
     uiSchema?: any;
@@ -82,6 +82,7 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
             }}
         >
             <Center>
+                {props.children}
                 {onCancel
                 ? <Button
                     type="button"
