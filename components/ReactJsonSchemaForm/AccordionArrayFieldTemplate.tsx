@@ -1,18 +1,33 @@
 import { ArrayFieldTemplateProps } from "@rjsf/utils"
 import { Accordion, Button, Row, Col, FormGroup, FormLabel } from "react-bootstrap"
 import { resolveText } from "../../helpers/Globalizer"
+import { ReactNode } from "react";
 
 export interface AccordionArrayFieldTemplateOptions {
     displayFunc?: (item: any) => string;
+    buttons?: ReactNode;
+    overAccordionNode?: ReactNode;
+    underAccordionNode?: ReactNode;
 }
 export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
 
     const options = props.uiSchema?.["ui:options"] as AccordionArrayFieldTemplateOptions;
     const displayFunc = options?.displayFunc;
+    const buttons = options?.buttons;
 
-    return (
+    return (<>
+    <hr />
     <FormGroup>
-        <FormLabel>{props.title}</FormLabel>
+        <FormLabel>
+            <Row>
+                <Col><h5>{props.title}</h5></Col>
+                {buttons
+                ? <Col xs="auto">
+                    {buttons}
+                </Col> : null}
+            </Row>
+        </FormLabel>
+        {options?.overAccordionNode}
         <Accordion className="accordion-card" key={props.formData.id}>
             {props.items.map((item,index) => {
                 const customTitle = displayFunc ? displayFunc(props.formData[index]) : undefined;
@@ -73,5 +88,8 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         >
             {resolveText("Add")}
         </Button> : null}
-    </FormGroup>);
+        {options?.underAccordionNode}
+    </FormGroup>
+    <hr />
+    </>);
 }
