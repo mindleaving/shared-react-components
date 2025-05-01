@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 
 export interface SelectWidgetOptions extends GlobalUISchemaOptions {
     defaultValue?: string;
+    enumName?: string;
 }
 export const SelectWidget = (props: WidgetProps) => {
 
@@ -34,7 +35,9 @@ export const SelectWidget = (props: WidgetProps) => {
         >
             <option value=''>{resolveText("PleaseSelect...")}</option>
             {(props.options.enumOptions ?? []).map(x => (
-                <option key={x.value} value={x.value}>{x.label}</option>
+                <option key={x.value} value={x.value}>
+                    {options?.enumName ? resolveText(`${options.enumName}_${x.value}`) : x.label}
+                </option>
             ))}
         </FormControl>
     );
