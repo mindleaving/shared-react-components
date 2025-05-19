@@ -8,7 +8,7 @@ interface RowFormGroupProps {
     name?: string;
     label: string;
     as?: ElementType<any>;
-    type?: "date" | "datetime" | "checkbox" | "password" | "number" | "text";
+    type?: "date" | "datetime" | "checkbox" | "password" | "email" | "number" | "text";
     value: any;
     min?: number,
     max?: number,
