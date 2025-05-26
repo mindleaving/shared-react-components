@@ -34,6 +34,7 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         isInvalid={props.isInvalid}
         aria-describedby={props.ariaDescribedBy}
     >
+        <option value="">{resolveText("PleaseSelect...")}</option>
         {Object.values(enumValues).map(x => (
             <option key={x} value={x}>{resolveText(`${enumName}_${x}`)}</option>
         ))}

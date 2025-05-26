@@ -45,6 +45,7 @@ export interface CustomFormControlProps {
     ariaDescribedBy?: string;
     min?: number;
     max?: number;
+    step?: number,
     minLength?: number;
     isValid?: boolean;
     isInvalid?: boolean;

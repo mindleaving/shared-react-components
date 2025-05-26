@@ -20,7 +20,7 @@ export const OptionalObjectField = (props: FieldProps) => {
                     label={resolveText("GenericTypeForm_NullableSet")}
                 />
             </FormGroup>
-            {!!props.formData
+            {props.formData
             ? <SchemaField
                 {...notNullProps}
             /> : null}
