@@ -21,7 +21,7 @@ export interface RouteDefinition {
     usesCustomLayout?: boolean;
 };
 export interface IdAutocompleteProps {
-    value: string | null | undefined;
+    value?: string | null;
     onChange: (value: string | undefined) => void;
     disabled?: boolean;
     required?: boolean;
