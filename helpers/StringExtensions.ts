@@ -20,3 +20,12 @@ export const removeSurroundingQuotes = (str: string | null | undefined) => {
 export const isNullOrEmpty = (word: string) => {
     return word === undefined || word === null || word === '';
 }
+export const truncateText = (str: string, maxLength: number) => {
+    if(!str) {
+        return str;
+    }
+    if(str.length <= maxLength) {
+        return str;
+    }
+    return str.substring(0, maxLength - 3) + '...';
+}

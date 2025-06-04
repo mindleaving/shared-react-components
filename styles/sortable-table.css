@@ -3,6 +3,9 @@
 }
 .sortable .sort-direction-indicator {
     opacity: 30%;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 .sortable:hover .sort-direction-indicator {
     opacity: 100%;

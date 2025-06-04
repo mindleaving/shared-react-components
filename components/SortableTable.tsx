@@ -21,6 +21,7 @@ interface SortableTableProps<T> {
     items: T[];
     rowBuilder: (item: T) => ReactNode;
     columns: SortableTableColumn<T,any>[];
+    initialSort?: SortInformation,
     size?: 'sm' | 'lg';
     bordered?: boolean;
     borderless?: boolean;
@@ -31,7 +32,7 @@ interface SortableTableProps<T> {
     className?: string;
 }
 
-interface SortInformation {
+export interface SortInformation {
     columnIndex: number;
     sortOrder: OrderDirection;
 }
@@ -41,6 +42,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         items, 
         rowBuilder, 
         columns, 
+        initialSort,
         size,
         bordered,
         borderless,
@@ -51,7 +53,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         className
     } = props;
 
-    const [ sortInfo, setSortInfo ] = useState<SortInformation>({
+    const [ sortInfo, setSortInfo ] = useState<SortInformation>(initialSort ?? {
         columnIndex: 0,
         sortOrder: OrderDirection.Ascending
     });
@@ -93,39 +95,42 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
 
     const generateHeaderCellWithSortIndicator = useCallback((
         headerCell: SortableTableHeaderCell | undefined,
-        cssClasses: string[],
-        columnIndex: number
+        columnIndex: number,
+        sortInfo: SortInformation
     ) => {
+        const cssClasses: string[] = [ 'sortable' ];
+        if(columnIndex === sortInfo.columnIndex) {
+            cssClasses.push('is-sort-column');
+        }
         return (<th 
             key={columnIndex} 
             colSpan={headerCell?.colSpan ?? 1}
             className={cssClasses.join(' ')}
             onClick={() => toggleSearchDirection(columnIndex)}
+            title={headerCell?.title}
         >
-            <Row>
-                <Col>
+            <div className='position-relative'>
+                <div className={headerCell?.center ? 'text-center mx-2' : 'mx-2'}>
                     {headerCell?.content}
-                </Col>
-                <Col xs="auto">
-                    <div className="sort-direction-indicator">
+                </div>
+                <div className="sort-direction-indicator">
                     {columnIndex !== sortInfo.columnIndex ? <i className="fa fa-sort" />
                     : sortInfo.sortOrder === OrderDirection.Ascending ? <i className="fa fa-sort-asc" />
                     : <i className="fa fa-sort-desc" />}
-                    </div>
-                </Col>
-            </Row>
+                </div>
+            </div>
         </th>);
-    }, [ sortInfo, toggleSearchDirection ]);
+    }, [ toggleSearchDirection ]);
 
     const generateHeaderCellWithoutSortIndicator = useCallback((
         headerCell: SortableTableHeaderCell | undefined,
-        cssClasses: string[],
         columnIndex: number
     ) => {
         return (<th 
             key={columnIndex} 
             colSpan={headerCell?.colSpan ?? 1}
-            className={cssClasses.join(' ')}
+            className={headerCell?.center ? 'text-center' : undefined}
+            title={headerCell?.title}
         >
             {headerCell?.content}
         </th>);
@@ -155,18 +160,10 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
                     ? column.headerCells[colSpanRespectingHeaderCellIndex] 
                     : undefined;
                 const isSortable = !!column.sortValueSelector && headerCellConf;
-                const cssClasses: string[] = [];
-                if(headerCellConf?.center) {
-                    cssClasses.push('text-center');
-                }
                 if(isSortable && !headerCellConf.hideSortIndicator) {
-                    cssClasses.push('sortable');
-                    if(columnIndex === sortInfo.columnIndex) {
-                        cssClasses.push('is-sort-column');
-                    }
-                    renderedHeaderCells.push(generateHeaderCellWithSortIndicator(headerCellConf, cssClasses, columnIndex));
+                    renderedHeaderCells.push(generateHeaderCellWithSortIndicator(headerCellConf, columnIndex, sortInfo));
                 } else {
-                    renderedHeaderCells.push(generateHeaderCellWithoutSortIndicator(headerCellConf, cssClasses, columnIndex));
+                    renderedHeaderCells.push(generateHeaderCellWithoutSortIndicator(headerCellConf, columnIndex));
                 }
                 remainingColSpan = (headerCellConf?.colSpan ?? 1) - 1;
             }
