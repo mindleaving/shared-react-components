@@ -10,7 +10,7 @@ interface DateFormControlProps {
     onChange: (date: string | undefined) => void;
     disabled?: boolean;
     required?: boolean;
-    enableTime?: boolean
+    enableTime?: boolean;
     size?: "sm" | "lg";
     static?: boolean;
 }
