@@ -19,7 +19,7 @@ export interface SortableTableColumn<T,TSortValue> {
 }
 interface SortableTableProps<T> {
     items: T[];
-    rowBuilder: (item: T) => ReactNode;
+    rowBuilder: (item: T, rowIndex: number) => ReactNode;
     columns: SortableTableColumn<T,any>[];
     initialSort?: SortInformation,
     size?: 'sm' | 'lg';
