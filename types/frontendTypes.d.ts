@@ -69,3 +69,7 @@ export type JsonPatchDocument = {
     from: string;
     path: string;
 };
+export interface TextFragment {
+    text: string;
+    isHighlighted: boolean;
+}
