@@ -39,7 +39,7 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
                     <Accordion.Button as="div" className={item.hasMoveUp || item.hasMoveDown ? `clickable py-2` : 'clickable'}>
                         <Row className="align-items-center w-100 pe-3">
                             <Col>
-                                {customTitle ? customTitle : resolveText("ItemX").replace("{0}", index + '')}
+                                {customTitle ? customTitle : resolveText("ItemX").replace("{0}", (index + 1) + '')}
                             </Col>
                             {item.hasMoveUp && index > 0 ?
                             <Col xs="auto" className="px-1">
