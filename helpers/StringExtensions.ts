@@ -29,3 +29,11 @@ export const truncateText = (str: string, maxLength: number) => {
     }
     return str.substring(0, maxLength - 3) + '...';
 }
+export const includesAll = (str: string, searchTerms: string[]) => {
+    for (const searchTerm of searchTerms) {
+        if(!str.includes(searchTerm)) {
+            return false;
+        }
+    }
+    return true;
+}
