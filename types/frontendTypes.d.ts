@@ -73,3 +73,8 @@ export interface TextFragment {
     text: string;
     isHighlighted: boolean;
 }
+export interface TimeCluster<T> {
+    startTime: Date;
+    endTime: Date;
+    items: T[];
+}
