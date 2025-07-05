@@ -14,3 +14,9 @@
     color: blue;
     opacity: 100%;
 }
+@media print
+{
+    .sort-direction-indicator {
+        display: none;
+    }
+}

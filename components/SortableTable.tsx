@@ -4,6 +4,7 @@ import { ReactNode, useCallback, useMemo, useState } from "react";
 import { Col, Row, Table } from "react-bootstrap";
 import { NoEntriesTableRow } from "./NoEntriesTableRow";
 import { OrderDirection } from "../types/enums";
+import { combineCssClasses } from '../helpers/StylingHelpers';
 
 export interface SortableTableHeaderCell {
     colSpan?: number;
@@ -11,6 +12,7 @@ export interface SortableTableHeaderCell {
     title?: string;
     center?: boolean;
     hideSortIndicator?: boolean;
+    className?: string;
 }
 export interface SortableTableColumn<T,TSortValue> {
     headerCells: SortableTableHeaderCell[];
@@ -110,7 +112,13 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             title={headerCell?.title}
         >
             <div className='position-relative'>
-                <div className={headerCell?.center ? 'text-center mx-2' : 'mx-2'}>
+                <div 
+                    className={combineCssClasses([ 
+                        headerCell?.center ? 'text-center' : undefined, 
+                        'mx-2', 
+                        headerCell?.className 
+                    ])}
+                >
                     {headerCell?.content}
                 </div>
                 <div className="sort-direction-indicator">
@@ -129,7 +137,10 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         return (<th 
             key={columnIndex} 
             colSpan={headerCell?.colSpan ?? 1}
-            className={headerCell?.center ? 'text-center' : undefined}
+            className={combineCssClasses([ 
+                headerCell?.center ? 'text-center' : undefined, 
+                headerCell?.className 
+            ])}
             title={headerCell?.title}
         >
             {headerCell?.content}
