@@ -5,6 +5,9 @@ mathjs.createUnit('M', {
     definition: "1 mol/L",
     prefixes: "short"
 });
+mathjs.createUnit("UI", {
+    definition: ""
+});
 
 export const canConvertTo = (value: number, sourceUnit: string, targetUnit: string) => {
     if(sourceUnit === targetUnit) {

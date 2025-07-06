@@ -100,9 +100,12 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         columnIndex: number,
         sortInfo: SortInformation
     ) => {
-        const cssClasses: string[] = [ 'sortable' ];
+        const cssClasses: string[] = [ 'sortable', 'align-content-end' ];
         if(columnIndex === sortInfo.columnIndex) {
             cssClasses.push('is-sort-column');
+        }
+        if(headerCell?.className) {
+            cssClasses.push(headerCell.className);
         }
         return (<th 
             key={columnIndex} 
@@ -115,8 +118,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
                 <div 
                     className={combineCssClasses([ 
                         headerCell?.center ? 'text-center' : undefined, 
-                        'mx-2', 
-                        headerCell?.className 
+                        'mx-2' 
                     ])}
                 >
                     {headerCell?.content}
