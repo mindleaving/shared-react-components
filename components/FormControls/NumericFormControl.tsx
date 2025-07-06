@@ -8,7 +8,7 @@ interface NumericFormControlProps extends CustomFormControlProps {
     autoBlur?: boolean;
     autoBlurDelayInMilliseconds?: number;
     precision?: number;
-    onIsChangeInProgress: (isChangeInProgress: boolean) => void;
+    onIsChangeInProgress?: (isChangeInProgress: boolean) => void;
 }
 
 export const NumericFormControl = (props: NumericFormControlProps) => {
@@ -52,7 +52,9 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
             if(autoBlurTimeout) {
                 clearTimeout(autoBlurTimeout);
             }
-            onIsChangeInProgress(false);
+            if(onIsChangeInProgress) {
+                onIsChangeInProgress(false);
+            }
         }}
         min={props.min}
         max={props.max}
@@ -76,7 +78,9 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
                 const timeout = setTimeout(blur, autoBlurDelayInMilliseconds ?? 1500);
                 setAutoBlurTimeout(timeout);
             }
-            onIsChangeInProgress(true);
+            if(onIsChangeInProgress) {
+                onIsChangeInProgress(true);
+            }
         }}
     />);
 
