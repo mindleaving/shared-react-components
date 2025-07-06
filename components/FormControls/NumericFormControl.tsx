@@ -1,6 +1,6 @@
 import { FormControl } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface NumericFormControlProps extends CustomFormControlProps {
     value: number;
@@ -8,9 +8,22 @@ interface NumericFormControlProps extends CustomFormControlProps {
     autoBlur?: boolean;
     autoBlurDelayInMilliseconds?: number;
     precision?: number;
+    decimals?: number;
     onIsChangeInProgress?: (isChangeInProgress: boolean) => void;
 }
 
+const formatNumber = (value: number, decimals?: number, precision?: number) => {
+    if(decimals) {
+        return value.toFixed(decimals);
+    }
+    if(precision) {
+        if(value >= Math.pow(10, precision)) {
+            return value.toFixed(0);
+        }
+        return value.toPrecision(precision);
+    }
+    return value.toFixed(0);
+}
 export const NumericFormControl = (props: NumericFormControlProps) => {
 
     const { 
@@ -19,11 +32,12 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
         autoBlur, 
         autoBlurDelayInMilliseconds, 
         precision,
+        decimals,
         onIsChangeInProgress
     } = props;
 
     const ref = useRef<HTMLInputElement>(null);
-    const [ inputValue, setInputValue ] = useState<string>(value?.toPrecision(precision ?? 3) ?? '');
+    const [ inputValue, setInputValue ] = useState<string>(formatNumber(value, decimals, precision));
     const [ autoBlurTimeout, setAutoBlurTimeout ] = useState<NodeJS.Timeout>();
 
     const blur = () => {
@@ -36,7 +50,7 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
     }
 
     useEffect(() => {
-        setInputValue(value?.toPrecision(precision ?? 3) ?? '');
+        setInputValue(formatNumber(value, decimals, precision));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ value ]);
 
@@ -44,7 +58,6 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
     <FormControl
         ref={ref}
         type="text"
-        pattern="^[0-9,]+$"
         value={inputValue}
         onChange={e => setInputValue(e.target.value.replaceAll(',', '.'))}
         onBlur={() => {
