@@ -1,6 +1,6 @@
 import { FormControl } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface NumericFormControlProps extends CustomFormControlProps {
     value: number;
@@ -23,6 +23,7 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
     } = props;
 
     const ref = useRef<HTMLInputElement>(null);
+    const [ inputValue, setInputValue ] = useState<string>(value?.toPrecision(precision ?? 3) ?? '');
     const [ autoBlurTimeout, setAutoBlurTimeout ] = useState<NodeJS.Timeout>();
 
     const blur = () => {
@@ -30,14 +31,24 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
         ref.current?.focus();
     }
 
+    const commit = () => {
+        onChange(Number(inputValue));
+    }
+
+    useEffect(() => {
+        setInputValue(value?.toPrecision(precision ?? 3) ?? '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ value ]);
+
     return (
     <FormControl
         ref={ref}
         type="text"
         pattern="^[0-9,]+$"
-        defaultValue={value.toPrecision(precision ?? 3)}
-        onBlur={e => {
-            onChange(Number(e.target.value.replaceAll(',', '.')));
+        value={inputValue}
+        onChange={e => setInputValue(e.target.value.replaceAll(',', '.'))}
+        onBlur={() => {
+            commit();
             if(autoBlurTimeout) {
                 clearTimeout(autoBlurTimeout);
             }
