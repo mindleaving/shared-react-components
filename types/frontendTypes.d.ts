@@ -4,6 +4,7 @@ type Group<T> = {
     items: T[];
 }
 type Groups<T> = Group<T>[];
+type Dictionary<T> = { [key:string]: T };
 type QueryParameter = { key: string, value: string | undefined };
 type QueryParameters = { [key:string]: string | undefined } | QueryParameter[];
 interface JsonWebToken {
