@@ -1,4 +1,4 @@
-import { FormControl } from "react-bootstrap";
+import { FormControl, FormSelect } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
 import { resolveText } from "../../helpers/Globalizer";
 
@@ -17,17 +17,14 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         value, 
         onChange,
         required,
-        readOnly,
         disabled,
         size
     } = props;
 
-    return (<FormControl
-        as="select"
+    return (<FormSelect
         value={value ?? ''}
         onChange={e => onChange(e.target.value)}
         required={required}
-        readOnly={readOnly}
         disabled={disabled}
         size={size}
         isValid={props.isValid}
@@ -38,6 +35,6 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         {Object.values(enumValues).map(x => (
             <option key={x} value={x}>{resolveText(`${enumName}_${x}`)}</option>
         ))}
-    </FormControl>);
+    </FormSelect>);
 
 }

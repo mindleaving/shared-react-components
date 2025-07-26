@@ -188,3 +188,12 @@ export const getDistinctWithMultiplicity = <T>(collection: T[], itemEqualityComp
     }
     return distincItemsWithMultiplicity;
 }
+export const insertAt = <T>(collection: T[], item: T, insertIndex: number) => {
+    if(insertIndex < 0) {
+        throw new Error("Insert index must be non-negative");
+    }
+    if(insertIndex > collection.length) {
+        throw new Error("Insert index must be less than or equal to collection length");
+    }
+    return collection.slice(0, insertIndex).concat(item).concat(collection.slice(insertIndex));
+}
