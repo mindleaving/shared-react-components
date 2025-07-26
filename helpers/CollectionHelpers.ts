@@ -146,6 +146,18 @@ export const moveItem = (collection: any[], from: number, to: number) => {
         ];
     }
 }
+export const min = (collection: number[]): number | undefined => {
+    if(!collection || collection.length === 0) {
+        return undefined;
+    }
+    let minValue = collection[0];
+    for (const item of collection.slice(1)) {
+        if(item < minValue) {
+            minValue = item;
+        }
+    }
+    return minValue;
+}
 export const max = (collection: number[]): number | undefined => {
     if(!collection || collection.length === 0) {
         return undefined;
@@ -188,12 +200,12 @@ export const getDistinctWithMultiplicity = <T>(collection: T[], itemEqualityComp
     }
     return distincItemsWithMultiplicity;
 }
-export const insertAt = <T>(collection: T[], item: T, insertIndex: number) => {
+export const insertAt = <T>(collection: T[], newItems: T[], insertIndex: number) => {
     if(insertIndex < 0) {
         throw new Error("Insert index must be non-negative");
     }
     if(insertIndex > collection.length) {
         throw new Error("Insert index must be less than or equal to collection length");
     }
-    return collection.slice(0, insertIndex).concat(item).concat(collection.slice(insertIndex));
+    return collection.slice(0, insertIndex).concat(newItems).concat(collection.slice(insertIndex));
 }
