@@ -4,6 +4,7 @@ import { ButtonVariant } from "react-bootstrap/esm/types";
 
 interface CancelButtonProps {
     onClick: () => void;
+    type?: 'button' | 'submit' | 'reset';
     size?: 'sm' | 'lg';
     variant?: ButtonVariant;
     className?: string;
@@ -12,6 +13,7 @@ interface CancelButtonProps {
 
 export const CancelButton = (props: CancelButtonProps) => {
     return (<Button
+        type={props.type}
         onClick={props.onClick}
         size={props.size}
         variant={props.variant ?? 'secondary'}
