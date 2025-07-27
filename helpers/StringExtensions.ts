@@ -37,3 +37,6 @@ export const includesAll = (str: string, searchTerms: string[]) => {
     }
     return true;
 }
+export const insertTextAt = (str: string, insertText: string, position: number) => {
+    return str.slice(0, position) + insertText + str.slice(position);
+}

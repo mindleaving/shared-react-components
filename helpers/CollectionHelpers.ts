@@ -209,3 +209,23 @@ export const insertAt = <T>(collection: T[], newItems: T[], insertIndex: number)
     }
     return collection.slice(0, insertIndex).concat(newItems).concat(collection.slice(insertIndex));
 }
+export const takeWhile = <T>(collection: T[], predicate: (item: T) => boolean) => {
+    let lastMatchingIndex = -1;
+    for (const item of collection) {
+        if(!predicate(item)) {
+            break;
+        }
+        lastMatchingIndex++;
+    }
+    return collection.slice(0, lastMatchingIndex + 1);
+}
+export const skipUntil = <T>(collection: T[], predicate: (item: T) => boolean) => {
+    let firstMatchingIndex = -1;
+    for (const item of collection) {
+        firstMatchingIndex++;
+        if(predicate(item)) {
+            break;
+        }
+    }
+    return collection.slice(firstMatchingIndex);
+}

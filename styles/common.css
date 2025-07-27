@@ -61,3 +61,6 @@
 .text-xxl {
     font-size: xx-large;
 }
+.text-underline {
+    text-decoration: underline;
+}
