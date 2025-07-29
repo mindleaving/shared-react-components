@@ -11,6 +11,7 @@ interface DateFormControlProps {
     disabled?: boolean;
     required?: boolean;
     enableTime?: boolean;
+    defaultHour?: number;
     size?: "sm" | "lg";
     static?: boolean;
 }
@@ -25,6 +26,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                     allowInput: true,
                     enableTime: props.enableTime,
                     time_24hr: true,
+                    defaultHour: props.defaultHour,
                     mode: 'single',
                     static: props.static
                 }}
