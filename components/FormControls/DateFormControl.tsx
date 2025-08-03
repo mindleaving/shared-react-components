@@ -1,7 +1,9 @@
-import Flatpickr from 'react-flatpickr';
-import { toDateOnly } from '../../helpers/DateHelpers';
+import Flatpickr, { OptionsType } from 'react-flatpickr';
+import { isValidDate, toDateOnly } from '../../helpers/DateHelpers';
 import { Row, Col, Button } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
+import { useCallback, useMemo } from 'react';
+import { format } from 'date-fns';
 
 interface DateFormControlProps {
     id?: string;
@@ -17,50 +19,76 @@ interface DateFormControlProps {
 }
 
 export const DateFormControl = (props: DateFormControlProps) => {
+    
+    const { 
+        id,
+        name,
+        value,
+        onChange: onChangeFromProps,
+        disabled,
+        required,
+        enableTime,
+        defaultHour,
+        size
+    } = props;
+
+    const flatpickrOptions = useMemo(() => ({
+        allowInput: true,
+        enableTime: enableTime,
+        time_24hr: true,
+        defaultHour: defaultHour,
+        mode: 'single',
+        static: props.static,
+        locale: {
+            firstDayOfWeek: 1
+        }
+    } as OptionsType), [ enableTime, defaultHour, props.static ]);
+    const parsedValue = useMemo(() => {
+        if(!value) {
+            return undefined;
+        }
+        const date = new Date(value);
+        if(!isValidDate(date)) {
+            return undefined;
+        }
+        return enableTime ? format(date, 'yyyy-MM-dd HH:mm') : format(date, 'yyyy-MM-dd');
+    }, [ value, enableTime ]);
+    const onChange = useCallback((dates: Date[]) => {
+        if(dates.length > 0 && isValidDate(dates[0])) {
+            const date = dates[0];
+            onChangeFromProps(enableTime ? date.toISOString() : toDateOnly(date)); 
+        } else {
+            onChangeFromProps(undefined);
+        }
+    }, [ enableTime, onChangeFromProps ]);
 
     return (
     <Row className='align-items-center'>
         <Col>
             <Flatpickr
-                options={{
-                    allowInput: true,
-                    enableTime: props.enableTime,
-                    time_24hr: true,
-                    defaultHour: props.defaultHour,
-                    mode: 'single',
-                    static: props.static,
-                    locale: {
-                        firstDayOfWeek: 1
-                    }
-                }}
-                id={props.id}
-                name={props.name}
+                options={flatpickrOptions}
+                id={id}
+                name={name}
                 className="form-control"
-                required={props.required}
-                disabled={props.disabled}
-                value={props.value}
-                onChange={(dates) => {
-                    if(dates.length > 0) {
-                        props.onChange(props.enableTime ? dates[0].toISOString() : toDateOnly(dates[0])); 
-                    } else {
-                        props.onChange(undefined);
-                    }
-                }} 
+                required={required}
+                disabled={disabled}
+                value={parsedValue ?? ''}
+                onChange={onChange} 
             />
         </Col>
         <Col xs="auto" className="no-print">
             <Button
                 onClick={() => {
                     const now = new Date();
-                    if(props.enableTime) {
-                        props.onChange(now.toISOString());
+                    if(enableTime) {
+                        onChangeFromProps(now.toISOString());
                     } else {
-                        props.onChange(toDateOnly(now) as any);
+                        onChangeFromProps(toDateOnly(now) as any);
                     }
                 }}
-                size={props.size}
+                size={size}
             >
-                {props.enableTime ? resolveText("Now") : resolveText("Today")}
+                {enableTime ? resolveText("Now") : resolveText("Today")}
             </Button>
         </Col>
     </Row>);

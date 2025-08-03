@@ -20,3 +20,6 @@ export const toDateOnly = (date: Date): string => {
 export const toTimeOnly = (date: Date): string => {
     return format(date, 'HH:mm:ss');
 }
+export const isValidDate = (date: Date) => {
+    return !isNaN(date.getTime());
+}
