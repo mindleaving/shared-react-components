@@ -28,7 +28,10 @@ export const DateFormControl = (props: DateFormControlProps) => {
                     time_24hr: true,
                     defaultHour: props.defaultHour,
                     mode: 'single',
-                    static: props.static
+                    static: props.static,
+                    locale: {
+                        firstDayOfWeek: 1
+                    }
                 }}
                 id={props.id}
                 name={props.name}

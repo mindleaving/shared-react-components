@@ -61,6 +61,15 @@
 .text-xxl {
     font-size: xx-large;
 }
+.text-bold {
+    font-weight: bold;
+}
+.text-bolder {
+    font-weight: bolder;
+}
+.text-lighter {
+    font-weight: lighter;
+}
 .text-underline {
     text-decoration: underline;
 }

@@ -1,5 +1,5 @@
 import { FieldProps } from '@rjsf/utils';
-import { FormCheck, FormGroup } from 'react-bootstrap';
+import { Col, FormCheck, FormGroup, Row } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
 import { uuid } from '../../helpers/uuid';
 
@@ -12,7 +12,8 @@ export const OptionalObjectField = (props: FieldProps) => {
         schema: (props.schema.oneOf as any[])?.find(x => x.type !== 'null') ?? props.schema
     };
     return (
-        <>
+    <Row className='align-items-center'>
+        <Col xs="auto">
             <FormGroup>
                 <FormCheck
                     checked={!!props.formData}
@@ -20,11 +21,22 @@ export const OptionalObjectField = (props: FieldProps) => {
                     label={resolveText("GenericTypeForm_NullableSet")}
                 />
             </FormGroup>
+        </Col>
+        <Col>
             {props.formData
             ? <SchemaField
                 {...notNullProps}
+                uiSchema={{
+                    ...notNullProps.uiSchema,
+                    "ui:options": notNullProps.uiSchema?.['ui:options']
+                    ? {
+                        ...notNullProps.uiSchema['ui:options'],
+                        label: false
+                    }
+                    : { label: false }
+                }}
             /> : null}
-        </>
-    );
+        </Col>
+    </Row>);
 
 }

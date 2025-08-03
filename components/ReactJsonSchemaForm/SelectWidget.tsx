@@ -1,5 +1,5 @@
 import { GlobalUISchemaOptions, WidgetProps } from '@rjsf/utils';
-import { FormControl } from 'react-bootstrap';
+import { FormControl, FormSelect } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
 import { useEffect, useMemo } from 'react';
 
@@ -26,8 +26,7 @@ export const SelectWidget = (props: WidgetProps) => {
     }, []);
 
     return (
-        <FormControl
-            as="select"
+        <FormSelect
             value={value ?? ''}
             onChange={e => props.onChange(e.target.value !== '' ? e.target.value : undefined)}
             required={props.required}
@@ -39,7 +38,7 @@ export const SelectWidget = (props: WidgetProps) => {
                     {options?.enumName ? resolveText(`${options.enumName}_${x.value}`) : x.label}
                 </option>
             ))}
-        </FormControl>
+        </FormSelect>
     );
 
 }

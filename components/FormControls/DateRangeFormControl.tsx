@@ -1,5 +1,6 @@
 import React from 'react';
 import Flatpickr from 'react-flatpickr';
+import { resolveText } from '../../helpers/Globalizer';
 
 interface DateRangeFormControlProps {
     value?: string[];
@@ -22,7 +23,11 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
                 enableTime: props.enableTime,
                 time_24hr: true,
                 mode: 'range',
-                static: props.static
+                static: props.static,
+                locale: {
+                    firstDayOfWeek: 1,
+                    rangeSeparator: ` ${resolveText("Date_Until")} `
+                }
             }}
             className="form-control"
             required={props.required}

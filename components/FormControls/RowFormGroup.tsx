@@ -1,5 +1,5 @@
 import { ElementType, PropsWithChildren } from 'react';
-import { Col, FormCheck, FormControl, FormGroup, FormLabel, Row } from 'react-bootstrap';
+import { Col, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, Row } from 'react-bootstrap';
 import { DateFormControl } from './DateFormControl';
 import PasswordFormControl from './PasswordFormControl';
 
@@ -62,6 +62,19 @@ export const RowFormGroup = (props: PropsWithChildren<RowFormGroupProps>) => {
                     onChange={(e:any) => props.onChange(e.target.value)}
                     disabled={props.disabled}
                 />
+                : props.as === "select"
+                ? <FormSelect
+                    required={props.required}
+                    id={props.id}
+                    name={props.name}
+                    value={props.value}
+                    isValid={props.isValid}
+                    isInvalid={props.isInvalid}
+                    onChange={(e:any) => props.onChange(e.target.value)}
+                    disabled={props.disabled}
+                >
+                    {props.children}
+                </FormSelect>
                 : <FormControl
                     required={props.required}
                     as={props.as}

@@ -1,4 +1,4 @@
-import { FormControl } from "react-bootstrap";
+import { FormSelect } from "react-bootstrap";
 import { Country } from "../../../localComponents/types/enums";
 import { resolveText } from "../../helpers/Globalizer";
 import { CustomFormControlProps } from "../../types/frontendTypes";
@@ -12,13 +12,11 @@ export const CountrySelector = (props: CountrySelectorProps) => {
 
     const { value, onChange, required } = props;
 
-    return (<FormControl
-        as="select"
+    return (<FormSelect
         value={value}
         onChange={e => onChange(e.target.value as Country)}
         required={required}
-        readOnly={props.readOnly}
-        disabled={props.disabled}
+        disabled={props.disabled || props.readOnly}
         size={props.size}
         isValid={props.isValid}
         isInvalid={props.isInvalid}
@@ -27,6 +25,6 @@ export const CountrySelector = (props: CountrySelectorProps) => {
         {Object.values(Country).map(x => (
             <option key={x} value={x}>{x} - {resolveText(`Country_${x}`)}</option>
         ))}
-    </FormControl>);
+    </FormSelect>);
 
 }
