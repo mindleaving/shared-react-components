@@ -4,7 +4,7 @@ import { resolveText } from "../../helpers/Globalizer";
 import { CustomFormControlProps } from "../../types/frontendTypes";
 
 interface CountrySelectorProps extends CustomFormControlProps {
-    value: Country;
+    value?: Country;
     onChange: (country: Country) => void;
 }
 
@@ -13,7 +13,7 @@ export const CountrySelector = (props: CountrySelectorProps) => {
     const { value, onChange, required } = props;
 
     return (<FormSelect
-        value={value}
+        value={value ?? ''}
         onChange={e => onChange(e.target.value as Country)}
         required={required}
         disabled={props.disabled || props.readOnly}
@@ -22,6 +22,7 @@ export const CountrySelector = (props: CountrySelectorProps) => {
         isInvalid={props.isInvalid}
         aria-describedby={props.ariaDescribedBy}
     >
+        <option value="">{resolveText("PleaseSelect...")}</option>
         {Object.values(Country).map(x => (
             <option key={x} value={x}>{x} - {resolveText(`Country_${x}`)}</option>
         ))}
