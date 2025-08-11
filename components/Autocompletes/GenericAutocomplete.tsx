@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
-import { Alert } from 'react-bootstrap';
+import { useMemo } from 'react';
 import { Autocomplete } from './Autocomplete';
 import { AutocompleteRunner } from '../../helpers/AutocompleteRunner';
 import { resolveText } from '../../helpers/Globalizer';
+import { DismissableAlert } from '../DismissableAlert';
 
 export interface GenericAutocompleteImplementationProps<T> {
     isLoading?: boolean;
@@ -50,15 +50,15 @@ export const GenericAutocomplete = <T,>(props: GenericAutocompleteProps<T>) => {
     [ apiPath, orderBy, additionalParameters ]);
 
     if(value || isLoading) {
-        return (<Alert 
-            variant="info"
-            dismissible={!disabled}
-            onClose={() => onChange(undefined)}
+        return (<DismissableAlert
+            variant='info'
+            isDismissable={!disabled}
+            onDismiss={() => onChange(undefined)}
         >
             {isLoading 
             ? resolveText('Loading...') 
             : displayFunc(value!)}
-        </Alert>);
+        </DismissableAlert>);
     }
     return (<Autocomplete
         search={autocompleteRunner.search}

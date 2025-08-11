@@ -73,3 +73,6 @@
 .text-underline {
     text-decoration: underline;
 }
+.text-strikethrough {
+    text-decoration: line-through;
+}
