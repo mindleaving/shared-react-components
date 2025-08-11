@@ -229,3 +229,10 @@ export const skipUntil = <T>(collection: T[], predicate: (item: T) => boolean) =
     }
     return collection.slice(firstMatchingIndex);
 }
+export const replaceItem = <T>(collection: T[], existingItem: T, newItem: T, equalityComparer: (a: T, b: T) => boolean) => {
+    const indexOfExistingItem = collection.findIndex(item => equalityComparer(item, existingItem));
+    if(indexOfExistingItem < 0) {
+        return collection;
+    }
+    return collection.splice(indexOfExistingItem, 1, newItem);
+}
