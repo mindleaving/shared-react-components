@@ -1,8 +1,8 @@
 import Flatpickr, { OptionsType } from 'react-flatpickr';
 import { Row, Col, Button } from "react-bootstrap";
-import { toTimeOnly } from "../../helpers/DateHelpers";
+import { isValidDate, toTimeOnly } from "../../helpers/DateHelpers";
 import { resolveText } from "../../helpers/Globalizer";
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface TimeFormControlProps {
     id?: string;
@@ -20,6 +20,22 @@ export const TimeFormControl = (props: TimeFormControlProps) => {
 
     const { id, name, value, onChange: onChangeFromProps, enableSeconds, required, disabled} = props;
 
+    const [ localValue, setLocalValue ] = useState<string>('');
+
+    useEffect(() => {
+        if(value && /^[0-2]?[0-9]:[0-5][0-9](:[0-5][0-9])?$/.test(value)) {
+            if(!enableSeconds) {
+                const splitted = value.split(':');
+                setLocalValue(`${splitted[0]}:${splitted[1]}`);
+            } else {
+                setLocalValue(value);
+            }
+        } else {
+            setLocalValue('');
+        }
+        setLocalValue(value ?? '');
+    }, [ value, enableSeconds ]);
+
     const flatpickrOptions = useMemo(() => ({
         noCalendar: true,
         allowInput: true,
@@ -31,14 +47,15 @@ export const TimeFormControl = (props: TimeFormControlProps) => {
         static: props.static
     } as OptionsType), [ enableSeconds, props.static ]);
 
-    const onChange = useCallback((dates: Date[], dateString: string) => {
-        if(dates.length > 0) { 
-            onChangeFromProps(toTimeOnly(dates[0]));
+    const onChange = useCallback((dates: Date[]) => {
+        if(dates.length > 0 && isValidDate(dates[0])) {
+            const time = toTimeOnly(dates[0]);
+            onChangeFromProps(time);
         } else {
             onChangeFromProps(undefined);
         }
     }, [ onChangeFromProps ]);
-
+    
     return (
     <Row>
         <Col>
@@ -49,8 +66,9 @@ export const TimeFormControl = (props: TimeFormControlProps) => {
                 className="form-control"
                 required={required}
                 disabled={disabled}
-                value={value}
-                onChange={onChange}
+                value={localValue}
+                onChange={(_dates,_dateStr,instance) => setLocalValue(instance.input.value)}
+                onClose={onChange}
             />
         </Col>
         <Col xs="auto">

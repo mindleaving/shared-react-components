@@ -2,7 +2,7 @@ import Flatpickr, { OptionsType } from 'react-flatpickr';
 import { isValidDate, toDateOnly } from '../../helpers/DateHelpers';
 import { Row, Col, Button } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 
 interface DateFormControlProps {
@@ -32,6 +32,20 @@ export const DateFormControl = (props: DateFormControlProps) => {
         size
     } = props;
 
+    const [ localValue, setLocalValue ] = useState<string>('');
+
+    useEffect(() => {
+        if(!value) {
+            setLocalValue('');
+        } else {
+            if(enableTime) {
+                setLocalValue(format(new Date(value), 'yyyy-MM-dd HH:mm'));
+            } else {
+                setLocalValue(format(new Date(value), 'yyyy-MM-dd'));
+            }
+        }
+    }, [ value, enableTime ]);
+
     const flatpickrOptions = useMemo(() => ({
         allowInput: true,
         enableTime: enableTime,
@@ -43,16 +57,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
             firstDayOfWeek: 1
         }
     } as OptionsType), [ enableTime, defaultHour, props.static ]);
-    const parsedValue = useMemo(() => {
-        if(!value) {
-            return undefined;
-        }
-        const date = new Date(value);
-        if(!isValidDate(date)) {
-            return undefined;
-        }
-        return enableTime ? format(date, 'yyyy-MM-dd HH:mm') : format(date, 'yyyy-MM-dd');
-    }, [ value, enableTime ]);
+
     const onChange = useCallback((dates: Date[]) => {
         if(dates.length > 0 && isValidDate(dates[0])) {
             const date = dates[0];
@@ -72,20 +77,14 @@ export const DateFormControl = (props: DateFormControlProps) => {
                 className="form-control"
                 required={required}
                 disabled={disabled}
-                value={parsedValue ?? ''}
-                onChange={onChange} 
+                value={localValue}
+                onChange={(_dates,_dateStr,instance) => setLocalValue(instance.input.value)}
+                onClose={onChange}
             />
         </Col>
         <Col xs="auto" className="no-print">
             <Button
-                onClick={() => {
-                    const now = new Date();
-                    if(enableTime) {
-                        onChangeFromProps(now.toISOString());
-                    } else {
-                        onChangeFromProps(toDateOnly(now) as any);
-                    }
-                }}
+                onClick={() => onChange([ new Date() ])}
                 size={size}
             >
                 {enableTime ? resolveText("Now") : resolveText("Today")}
