@@ -10,15 +10,14 @@ export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         {props.items.map((item,index) => (
             <Row 
                 key={index} 
-                className='align-items-center'
+                className='align-items-center mb-1 ms-3'
             >
                 <Col>
                     {item.children}
                 </Col>
                 <Col xs="auto">
                     <Button 
-                        variant="danger" 
-                        className="mt-2" 
+                        variant="danger"
                         onClick={() => item.onDropIndexClick(index)()}
                     >
                         <i className='fa fa-trash' /> {resolveText("Delete")}
