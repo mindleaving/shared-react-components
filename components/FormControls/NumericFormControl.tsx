@@ -1,10 +1,10 @@
 import { FormControl } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface NumericFormControlProps extends CustomFormControlProps {
-    value: number;
-    onChange: (value: number) => void;
+    value?: number;
+    onChange: (value: number | undefined) => void;
     autoBlur?: boolean;
     autoBlurDelayInMilliseconds?: number;
     precision?: number;
@@ -37,7 +37,7 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
     } = props;
 
     const ref = useRef<HTMLInputElement>(null);
-    const [ inputValue, setInputValue ] = useState<string>(formatNumber(value, decimals, precision));
+    const [ inputValue, setInputValue ] = useState<string>(value && !isNaN(value) ? formatNumber(value, decimals, precision) : '');
     const [ autoBlurTimeout, setAutoBlurTimeout ] = useState<NodeJS.Timeout>();
 
     const blur = () => {
@@ -46,11 +46,24 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
     }
 
     const commit = () => {
+        if(inputValue.trim().length === 0) {
+            onChange(undefined);
+            return;
+        }
+        const parsedNumber = Number(inputValue);
+        if(isNaN(parsedNumber)) {
+            onChange(undefined);
+            return;
+        }
         onChange(Number(inputValue));
     }
 
     useEffect(() => {
-        setInputValue(formatNumber(value, decimals, precision));
+        if(value && !isNaN(value)) {
+            setInputValue(formatNumber(value, decimals, precision));
+        } else {
+            setInputValue('');
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ value ]);
 

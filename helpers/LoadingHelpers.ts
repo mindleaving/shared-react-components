@@ -30,8 +30,9 @@ export const loadObject = async <T>(
     } catch (error: any) {
         if(onFailure) {
             onFailure(undefined);
+        } else {
+            showErrorAlert(errorText, error.message);
         }
-        showErrorAlert(errorText, error.message);
     } finally {
         if(onFinally) {
             onFinally();

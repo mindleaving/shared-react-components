@@ -12,6 +12,7 @@ import { NoMoreEntriesAlert } from './NoMoreEntriesAlert';
 interface NonExhaustiveTableProps<ItemType> {
     autoScroll?: boolean;
     hover?: boolean;
+    size?: 'sm';
     isLoading: boolean;
     items: ItemType[];
     hasMoreItems: boolean;
@@ -31,6 +32,7 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
     const { 
         autoScroll, 
         hover, 
+        size,
         isLoading, 
         items,
         hasMoreItems,
@@ -46,7 +48,7 @@ export const NonExhaustiveTable = <ItemType extends Models.IId<string>>(props: N
     } = props;
 
     const table = (
-        <Table hover={hover}>
+        <Table hover={hover} size={size}>
             {tableHeaderBuilder ? tableHeaderBuilder() : null}
             <tbody>
                 {items.length > 0
