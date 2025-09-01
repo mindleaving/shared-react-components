@@ -4,6 +4,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
+import { combineCssClasses } from '../../helpers/StylingHelpers';
 
 interface DateFormControlProps {
     id?: string;
@@ -69,12 +70,15 @@ export const DateFormControl = (props: DateFormControlProps) => {
 
     return (
     <Row className='align-items-center'>
-        <Col>
+        <Col className='pe-1'>
             <Flatpickr
                 options={flatpickrOptions}
                 id={id}
                 name={name}
-                className="form-control"
+                className={combineCssClasses([
+                    "form-control",
+                    size ? `form-control-${size}` : undefined
+                ])}
                 required={required}
                 disabled={disabled}
                 value={localValue}
@@ -82,7 +86,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                 onClose={onChange}
             />
         </Col>
-        <Col xs="auto" className="no-print">
+        <Col xs="auto" className="no-print ps-1">
             <Button
                 onClick={() => onChange([ new Date() ])}
                 size={size}

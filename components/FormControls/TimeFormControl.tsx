@@ -3,6 +3,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import { isValidDate, toTimeOnly } from "../../helpers/DateHelpers";
 import { resolveText } from "../../helpers/Globalizer";
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { combineCssClasses } from '../../helpers/StylingHelpers';
 
 interface TimeFormControlProps {
     id?: string;
@@ -18,7 +19,16 @@ interface TimeFormControlProps {
 
 export const TimeFormControl = (props: TimeFormControlProps) => {
 
-    const { id, name, value, onChange: onChangeFromProps, enableSeconds, required, disabled} = props;
+    const { 
+        id, 
+        name, 
+        value, 
+        onChange: onChangeFromProps, 
+        enableSeconds, 
+        required, 
+        disabled, 
+        size 
+    } = props;
 
     const [ localValue, setLocalValue ] = useState<string>('');
 
@@ -57,13 +67,16 @@ export const TimeFormControl = (props: TimeFormControlProps) => {
     }, [ onChangeFromProps ]);
     
     return (
-    <Row>
-        <Col>
+    <Row className='align-items-center'>
+        <Col className='pe-1'>
             <Flatpickr
                 options={flatpickrOptions}
                 id={id}
                 name={name}
-                className="form-control"
+                className={combineCssClasses([
+                    "form-control",
+                    size ? `form-control-${size}` : undefined
+                ])}
                 required={required}
                 disabled={disabled}
                 value={localValue}
@@ -71,9 +84,10 @@ export const TimeFormControl = (props: TimeFormControlProps) => {
                 onClose={onChange}
             />
         </Col>
-        <Col xs="auto">
+        <Col xs="auto" className='no-print ps-1'>
             <Button
                 onClick={() => onChangeFromProps(toTimeOnly(new Date()))}
+                size={size}
             >
                 {resolveText("Now")}
             </Button>

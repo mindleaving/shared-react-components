@@ -3,6 +3,7 @@ import Flatpickr, { OptionsType } from 'react-flatpickr';
 import { resolveText } from '../../helpers/Globalizer';
 import { isValidDate } from '../../helpers/DateHelpers';
 import { format } from 'date-fns';
+import { combineCssClasses } from '../../helpers/StylingHelpers';
 
 interface DateRangeFormControlProps {
     value?: string[];
@@ -13,6 +14,7 @@ interface DateRangeFormControlProps {
     noCalendar?: boolean;
     triggerOnChangeForUndefinedRange?: boolean;
     static?: boolean;
+    size?: 'sm' | 'lg';
 }
 
 export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
@@ -24,7 +26,8 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
         required,
         enableTime,
         noCalendar,
-        triggerOnChangeForUndefinedRange
+        triggerOnChangeForUndefinedRange,
+        size
     } = props;
 
     const flatpickrOptions = useMemo(() => ({
@@ -72,7 +75,10 @@ export const DateRangeFormControl = (props: DateRangeFormControlProps) => {
     return (
         <Flatpickr
             options={flatpickrOptions}
-            className="form-control"
+            className={combineCssClasses([
+                "form-control",
+                size ? `form-control-${size}` : undefined
+            ])}
             required={required}
             disabled={disabled}
             value={parsedValue ?? ''}
