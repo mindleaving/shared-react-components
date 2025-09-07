@@ -9,7 +9,7 @@ interface AsyncButtonProps {
     size?: "sm" | "lg";
     isExecuting?: boolean;
     activeText: ReactNode;
-    executingText: ReactNode;
+    executingText?: ReactNode;
     className?: string;
     disabled?: boolean;
     title?: string;
@@ -29,7 +29,7 @@ export const AsyncButton = (props: AsyncButtonProps) => {
         >
             {!props.isExecuting
                 ? <>{props.activeText}</>
-                : <><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" /> {props.executingText}</>
+                : <><span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" /> {props.executingText ?? props.activeText}</>
             }
         </Button>
     )
