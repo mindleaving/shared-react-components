@@ -79,3 +79,12 @@ export interface TimeCluster<T> {
     endTime: Date;
     items: T[];
 }
+export interface ConfirmAlertOptions {
+    title: string;
+    message: string;
+    closeOnClickOutside?: boolean;
+    buttons: {
+        label: string;
+        onClick?: () => void;
+    }[];
+}

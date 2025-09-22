@@ -2,14 +2,18 @@ import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import { resolveText } from "./Globalizer";
 import { ToastContent } from "../components/ToastContent";
+import { ConfirmAlertOptions } from "../types/frontendTypes";
 
+export const openConfirmAlert = (options: ConfirmAlertOptions) => {
+    confirmAlert(options);
+}
 export const openConfirmDeleteAlert = (
     nameOfObjectToBeDeleted: string, 
     title: string, 
     message: string, 
     yesCallback: () => void, 
     noCallback: () => void = () => {}) => {        
-    confirmAlert({
+    openConfirmAlert({
         title: title,
         message: message.replace('{0}', nameOfObjectToBeDeleted),
         closeOnClickOutside: true,
