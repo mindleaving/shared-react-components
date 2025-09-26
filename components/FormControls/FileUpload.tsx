@@ -1,8 +1,7 @@
 import React, {CSSProperties, useMemo} from 'react';
-import {useDropzone} from 'react-dropzone';
+import {DropzoneOptions, useDropzone} from 'react-dropzone';
 
-interface FileUploadProps {
-    onDrop: (files: File[]) => void;
+interface FileUploadProps extends DropzoneOptions {
 }
 
 const baseStyle: CSSProperties = {
@@ -41,9 +40,7 @@ export const FileUpload = (props: FileUploadProps) => {
         isDragActive,
         isDragAccept,
         isDragReject
-    } = useDropzone({
-        onDrop: props.onDrop
-    });
+    } = useDropzone(props);
 
   const style = useMemo(() => ({
     ...baseStyle,
