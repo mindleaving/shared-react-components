@@ -38,7 +38,7 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
 
     const ref = useRef<HTMLInputElement>(null);
     const [ inputValue, setInputValue ] = useState<string>(value && !isNaN(value) ? formatNumber(value, decimals, precision) : '');
-    const [ autoBlurTimeout, setAutoBlurTimeout ] = useState<NodeJS.Timeout>();
+    const [ autoBlurTimeout, setAutoBlurTimeout ] = useState<number>();
 
     const blur = () => {
         ref.current?.blur();

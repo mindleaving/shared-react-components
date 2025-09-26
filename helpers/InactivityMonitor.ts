@@ -1,5 +1,5 @@
 export class InactivityMonitor {
-    timeoutHandle?: NodeJS.Timeout;
+    timeoutHandle?: number;
     inactivityTimeoutInSeconds: number;
     inactivityCallbacks: Array<() => void>;
 

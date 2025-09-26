@@ -42,7 +42,7 @@ export const Autocomplete = <T,>(props: AutocompleteProps<T>) => {
         highlightFirstSuggestion,
         size
     } = props;
-    const [ searchTimer, setSearchTimer ] = useState<NodeJS.Timeout>();
+    const [ searchTimer, setSearchTimer ] = useState<number>();
     const [ searchText, setSearchText ] = useState<string>(defaultValue ?? '');
     const [ suggestions, setSuggestions ] = useState<T[]>([]);
 
