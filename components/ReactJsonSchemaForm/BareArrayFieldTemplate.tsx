@@ -1,12 +1,32 @@
+import { ReactNode } from 'react';
 import { ArrayFieldTemplateProps } from '@rjsf/utils';
 import { Button, Col, FormGroup, FormLabel, Row } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
 
+export interface BareArrayFieldTemplateOptions {
+    buttons?: ReactNode;
+    overListNode?: ReactNode;
+    underListNode?: ReactNode;
+}
 export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
+
+    const options = props.uiSchema?.["ui:options"] as BareArrayFieldTemplateOptions;
+    const buttons = options?.buttons;
 
     return (
     <FormGroup>
-        <FormLabel>{props.title}</FormLabel>
+        <Row>
+            <Col>
+                <FormLabel>
+                    <h5>{props.title}</h5>
+                </FormLabel>
+            </Col>
+            {buttons
+            ? <Col xs="auto">
+                {buttons}
+            </Col> : null}
+        </Row>
+        {options?.overListNode}
         {props.items.map((item,index) => (
             <Row 
                 key={index} 
@@ -33,6 +53,7 @@ export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
         >
             {resolveText("Add")}
         </Button> : null}
+        {options?.underListNode}
     </FormGroup>);
 
 }

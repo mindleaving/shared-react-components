@@ -18,15 +18,17 @@ export const AccordionArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
     return (<>
     <hr />
     <FormGroup>
-        <FormLabel>
-            <Row>
-                <Col><h5>{props.title}</h5></Col>
-                {buttons
-                ? <Col xs="auto">
-                    {buttons}
-                </Col> : null}
-            </Row>
-        </FormLabel>
+        <Row>
+            <Col>
+                <FormLabel>
+                    <h5>{props.title}</h5>
+                </FormLabel>
+            </Col>
+            {buttons
+            ? <Col xs="auto">
+                {buttons}
+            </Col> : null}
+        </Row>
         {options?.overAccordionNode}
         <Accordion className="accordion-card" key={props.formData.id}>
             {props.items.map((item,index) => {
