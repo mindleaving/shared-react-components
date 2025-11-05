@@ -1,5 +1,5 @@
 import { GlobalUISchemaOptions, WidgetProps } from '@rjsf/utils';
-import { FormControl, FormSelect } from 'react-bootstrap';
+import { FormSelect } from 'react-bootstrap';
 import { resolveText } from '../../helpers/Globalizer';
 import { useEffect, useMemo } from 'react';
 

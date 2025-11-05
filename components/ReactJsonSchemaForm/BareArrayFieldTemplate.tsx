@@ -27,24 +27,7 @@ export const BareArrayFieldTemplate = (props: ArrayFieldTemplateProps) => {
             </Col> : null}
         </Row>
         {options?.overListNode}
-        {props.items.map((item,index) => (
-            <Row 
-                key={index} 
-                className='align-items-center mb-1 ms-3'
-            >
-                <Col>
-                    {item.children}
-                </Col>
-                <Col xs="auto">
-                    <Button 
-                        variant="danger"
-                        onClick={() => item.onDropIndexClick(index)()}
-                    >
-                        <i className='fa fa-trash' /> {resolveText("Delete")}
-                    </Button>
-                </Col>
-            </Row>
-        ))}
+        {props.items}
         {props.canAdd
         ? <Button 
             className='d-block m-2' 

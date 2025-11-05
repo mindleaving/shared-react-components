@@ -1,4 +1,4 @@
-import Form from '@rjsf/bootstrap-4';
+import Form from '@rjsf/react-bootstrap';
 import validator from "@rjsf/validator-ajv8";
 import { IChangeEvent } from '@rjsf/core';
 import { useState, useEffect, PropsWithChildren } from 'react';
@@ -7,6 +7,7 @@ import { resolveText } from '../../helpers/Globalizer';
 import { loadAndTranslateSchema } from '../../helpers/ReactJsonSchemaFormsHelpers';
 import { AsyncButton } from '../AsyncButton';
 import { AccordionArrayFieldTemplate } from './AccordionArrayFieldTemplate';
+import { AccordionCardArrayFieldItemTemplate } from './AccordionCardArrayFieldItemTemplate';
 import { UiSchema } from '@rjsf/utils';
 import { SelectWidget } from './SelectWidget';
 import { LoadingAlert } from '../LoadingAlert';
@@ -75,7 +76,8 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                 OneOfField: OptionalObjectField
             }}
             templates={{
-                ArrayFieldTemplate: AccordionArrayFieldTemplate
+                ArrayFieldTemplate: AccordionArrayFieldTemplate,
+                ArrayFieldItemTemplate: AccordionCardArrayFieldItemTemplate
             }}
             widgets={{
                 SelectWidget: SelectWidget

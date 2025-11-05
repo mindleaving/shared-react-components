@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+import { FieldPathId, FieldPathList, ErrorSchema } from "@rjsf/utils";
 import { resolveText } from "./Globalizer";
 import { loadObject } from "./LoadingHelpers";
 import { translateSchema } from "./SchemaTranslator";
@@ -27,4 +29,13 @@ export const HideLabel = {
     "ui:options": {
         label: false
     }
+}
+export const useRjsfFieldOnChange = <T>(
+    fieldPathId: FieldPathId, 
+    onChange: (newValue: T, path: FieldPathList, es?: ErrorSchema<any> | undefined, id?: string) => void): (newValue: T) => void => {
+        
+    const memorizedOnChangeWithPath = useCallback((newValue: T) => {
+        onChange(newValue, [ ...fieldPathId.path ])
+    }, [ fieldPathId, onChange ]);
+    return memorizedOnChangeWithPath;
 }
