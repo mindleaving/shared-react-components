@@ -1,0 +1,12 @@
+.reorderable-list-item-container {
+    background-color: #fcfcfc;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 3px 0;
+    padding: 2px 5px;
+    cursor: grab;
+}
+
+.drag-handle {
+    cursor: grab;
+}

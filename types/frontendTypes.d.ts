@@ -88,3 +88,14 @@ export interface ConfirmAlertOptions {
         onClick?: () => void;
     }[];
 }
+export interface ReorderableListItem<T> {
+    id: string;
+    item: T;
+    itemType: string;
+    acceptablePartnerTypes: string[];
+}
+export interface ReorderableListItemLight {
+    id: string;
+    itemType: string;
+    currentIndex: number;
+}
