@@ -4,7 +4,7 @@ import { resolveText } from "../../helpers/Globalizer";
 
 export interface AccordionCardArrayFieldItemTemplateUiSchema extends UiSchema {
     "ui:itemTitle"?: string;
-    "ui:options": GlobalUISchemaOptions
+    "ui:options"?: GlobalUISchemaOptions
 }
 
 export const AccordionCardArrayFieldItemTemplate = (props: ArrayFieldItemTemplateProps) => {
