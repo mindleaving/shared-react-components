@@ -1,9 +1,10 @@
-import { ArrayFieldItemTemplateProps, UiSchema } from "@rjsf/utils";
+import { ArrayFieldItemTemplateProps, GlobalUISchemaOptions, UiSchema } from "@rjsf/utils";
 import { Accordion, Row, Col, Button } from "react-bootstrap";
 import { resolveText } from "../../helpers/Globalizer";
 
 export interface AccordionCardArrayFieldItemTemplateUiSchema extends UiSchema {
     "ui:itemTitle"?: string;
+    "ui:options": GlobalUISchemaOptions
 }
 
 export const AccordionCardArrayFieldItemTemplate = (props: ArrayFieldItemTemplateProps) => {
