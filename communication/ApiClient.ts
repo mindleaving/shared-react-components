@@ -96,7 +96,9 @@ export class ApiClient {
         const requestUrl = this.buildUrl(path, params);
         const jsonBody = body && effectiveOptions.stringifyBody ? this._convertToJson(body) : body;
         const headers: HeadersInit = {};
-        if(effectiveOptions.contentType) {
+        if(method === "PATCH") {
+            headers['Content-Type'] = 'application/json-patch+json';
+        } else if(effectiveOptions.contentType) {
             headers['Content-Type'] = effectiveOptions.contentType;
         }
         if(method !== "GET") {
