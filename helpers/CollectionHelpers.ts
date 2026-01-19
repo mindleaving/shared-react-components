@@ -236,3 +236,9 @@ export const replaceItem = <T>(collection: T[], existingItem: T, newItem: T, equ
     }
     return collection.splice(indexOfExistingItem, 1, newItem);
 }
+export const replaceItemAtIndex = <T,>(collection: T[], item: T, index: number) => {
+    return collection.map((existingItem,existingItemIndex) => existingItemIndex === index ? item : existingItem);
+}
+export const removeItemAtIndex = <T,>(collection: T[], index: number) => {
+    return collection.filter((_,i) => i !== index);
+}
