@@ -6,8 +6,8 @@ import { DeleteButton } from "../DeleteButon";
 import { replaceItemAtIndex, removeItemAtIndex } from "../../helpers/CollectionHelpers";
 
 interface BareArrayListFormControlProps<T> {
-    items: T[];
-    itemFormControlBuilder: (item: T, onChange: (item: T | undefined) => void) => ReactNode;
+    items: (T | undefined)[];
+    itemFormControlBuilder: (item: T | undefined, onChange: (item: T | undefined) => void) => ReactNode;
     onChange: (update: Update<(T | undefined)[]>) => void;
 }
 

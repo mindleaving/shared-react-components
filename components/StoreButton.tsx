@@ -4,7 +4,7 @@ import { AsyncButton } from './AsyncButton';
 interface StoreButtonProps {
     type?: "button" | "submit" | "reset";
     form?: string;
-    onClick?: () => void;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
     isStoring: boolean;
     isStored?: boolean;
     disabled?: boolean;
