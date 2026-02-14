@@ -2,6 +2,7 @@ import { addDays } from 'date-fns';
 import { Row, Col, Button } from 'react-bootstrap';
 import { DateFormControl } from './FormControls/DateFormControl';
 import { PropsWithChildren } from 'react';
+import { toDateOnly } from '../helpers/DateHelpers';
 
 interface DateSelectionRowProps extends PropsWithChildren {
     date: string;
@@ -16,7 +17,7 @@ export const DateSelectionRow = (props: DateSelectionRowProps) => {
         <Col>{props.children}</Col>
         <Col xs="auto" className='pe-1'>
             <Button
-                onClick={() => onChange(addDays(new Date(selectedDate), -1).toISOString())}
+                onClick={() => onChange(toDateOnly(addDays(new Date(selectedDate), -1)))}
                 size={size}
             >
                 &lt;
@@ -35,7 +36,7 @@ export const DateSelectionRow = (props: DateSelectionRowProps) => {
         </Col>
         <Col xs="auto" className='ps-1'>
             <Button
-                onClick={() => onChange(addDays(new Date(selectedDate), 1).toISOString())}
+                onClick={() => onChange(toDateOnly(addDays(new Date(selectedDate), 1)))}
                 size={size}
             >
                 &gt;

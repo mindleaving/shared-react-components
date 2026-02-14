@@ -29,7 +29,7 @@ export const UniformGrid = (props: UniformGridProps) => {
         }
     }
     if(currentRowColumns.length > 0) {
-        rows.push(<Row key={rows.length} className='mt-2'>
+        rows.push(<Row key={rows.length}>
             {currentRowColumns}
         </Row>);
     }
