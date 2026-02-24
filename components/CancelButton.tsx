@@ -13,7 +13,7 @@ interface CancelButtonProps {
 
 export const CancelButton = (props: CancelButtonProps) => {
     return (<Button
-        type={props.type}
+        type={props.type ?? 'button'}
         onClick={props.onClick}
         size={props.size}
         variant={props.variant ?? 'secondary'}

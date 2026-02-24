@@ -18,7 +18,7 @@ interface AsyncButtonProps {
 export const AsyncButton = (props: AsyncButtonProps) => {
     return (
         <Button
-            type={props.type}
+            type={props.type ?? 'button'}
             form={props.form}
             className={props.className}
             variant={props.variant}

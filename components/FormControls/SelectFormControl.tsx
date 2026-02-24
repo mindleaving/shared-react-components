@@ -1,4 +1,4 @@
-import { FormControl, FormSelect } from "react-bootstrap";
+import { FormSelect } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
 import { resolveText } from "../../helpers/Globalizer";
 
@@ -23,7 +23,11 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
 
     return (<FormSelect
         value={value ?? ''}
-        onChange={e => onChange(e.target.value)}
+        onChange={e => {
+            if(e.target.value) {
+                onChange(e.target.value);
+            }
+        }}
         required={required}
         disabled={disabled}
         size={size}

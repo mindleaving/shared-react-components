@@ -67,7 +67,7 @@ export const DeleteButton = (props: DeleteButtonProps) => {
                 onClick();
             }}
             size={props.size}
-            type={props.type}
+            type={props.type ?? 'button'}
         />
     );
 

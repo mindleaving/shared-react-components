@@ -26,6 +26,7 @@ export const BareArrayListFormControl = <T,>(props: BareArrayListFormControlProp
                 </Col>
                 <Col xs="auto">
                     <DeleteButton
+                        type="button"
                         onClick={() => onChange(state => removeItemAtIndex(state, itemIndex))}
                         className="m-0"
                     />
@@ -35,6 +36,7 @@ export const BareArrayListFormControl = <T,>(props: BareArrayListFormControlProp
         <Row>
             <Col>
                 <Button
+                    type="button"
                     className="ms-3"
                     size="sm"
                     onClick={() => onChange(state => state.concat([ undefined ]))}
