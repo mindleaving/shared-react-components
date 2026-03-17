@@ -3,6 +3,7 @@ import { Autocomplete } from './Autocomplete';
 import { AutocompleteRunner } from '../../helpers/AutocompleteRunner';
 import { resolveText } from '../../helpers/Globalizer';
 import { DismissableAlert } from '../DismissableAlert';
+import { QueryParameter } from '../../types/frontendTypes';
 
 export interface GenericAutocompleteImplementationProps<T> {
     isLoading?: boolean;
@@ -23,7 +24,7 @@ export interface GenericAutocompleteProps<T> extends GenericAutocompleteImplemen
     apiPath: string;
     displayFunc: (item: T) => string;
     orderBy?: string;
-    additionalParameters?: { [key:string]: string };
+    additionalParameters?: QueryParameter[];
 }
 
 export const GenericAutocomplete = <T,>(props: GenericAutocompleteProps<T>) => {
