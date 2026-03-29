@@ -99,3 +99,7 @@ export interface ReorderableListItemLight {
     itemType: string;
     currentIndex: number;
 }
+export interface ImageUploadResult {
+    status: number;
+    response: any
+};

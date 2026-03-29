@@ -1,5 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
-import { JsonPatchDocument, QueryParameters } from "../types/frontendTypes";
+import { ImageUploadResult, JsonPatchDocument, QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
 import { resolveText } from "./Globalizer";
@@ -115,7 +115,7 @@ export const uploadFile = (
         includeCredentials?: boolean;
         accessToken?: string,
         onProgressChanged?: (progress: number) => void
-    }): Promise<number> => {
+    }): Promise<ImageUploadResult> => {
 
     const xhr = new XMLHttpRequest();
     return new Promise((resolve,reject) => {
@@ -126,7 +126,10 @@ export const uploadFile = (
         });
         xhr.addEventListener("loadend", () => {
             if(xhr.status === 200) {
-                resolve(xhr.status);
+                resolve({
+                    status: xhr.status,
+                    response: xhr.response
+                });
             } else if(xhr.status === 402) {
                 reject(resolveText("StorageQuota_LimitExceeded"));
             } else {
