@@ -37,14 +37,15 @@ export const AccordionArrayFieldTemplate = <T,>(props: ArrayFieldTemplateProps) 
             ? <Col xs="auto">
                 {buttons}
             </Col> : null}
-            <Col xs="auto">
+            {options?.batchMoveItemsOptions
+            ? <Col xs="auto">
                 <Button
                     onClick={() => setShowMoveItemsModal(true)}
                     size='sm'
                 >
                     {resolveText("Move")}...
                 </Button>
-            </Col>
+            </Col> : null}
         </Row>
         {options?.overAccordionNode}
         <Accordion className="accordion-card" key={formData.id}>
