@@ -158,6 +158,21 @@ export const min = (collection: number[]): number | undefined => {
     }
     return minValue;
 }
+export const minBy = <T,>(collection: T[], comparisonFieldSelector: (item: T) => number): T | undefined => {
+    if(!collection || collection.length === 0) {
+        return undefined;
+    }
+    let minValue = comparisonFieldSelector(collection[0]);
+    let minItem = collection[0];
+    for (const item of collection.slice(1)) {
+        const value = comparisonFieldSelector(item);
+        if(value < minValue) {
+            minValue = value;
+            minItem = item;
+        }
+    }
+    return minItem;
+}
 export const max = (collection: number[]): number | undefined => {
     if(!collection || collection.length === 0) {
         return undefined;
@@ -169,6 +184,21 @@ export const max = (collection: number[]): number | undefined => {
         }
     }
     return maxValue;
+}
+export const maxBy = <T,>(collection: T[], comparisonFieldSelector: (item: T) => number): T | undefined => {
+    if(!collection || collection.length === 0) {
+        return undefined;
+    }
+    let maxValue = comparisonFieldSelector(collection[0]);
+    let maxItem = collection[0];
+    for (const item of collection.slice(1)) {
+        const value = comparisonFieldSelector(item);
+        if(value > maxValue) {
+            maxValue = value;
+            maxItem = item;
+        }
+    }
+    return maxItem;
 }
 export const getDistinctWithMultiplicity = <T>(collection: T[], itemEqualityComparer: (a: T, b: T) => boolean) => {
     const distincItemsWithMultiplicity: DistinctItemWithMultiplicity<T>[] = [];
