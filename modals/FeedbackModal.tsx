@@ -69,6 +69,7 @@ export const FeedbackModal = (props: FeedbackModalProps) => {
                             store();
                         }
                     }}
+                    autoFocus
                 />
             </Form>
         </Modal.Body>
