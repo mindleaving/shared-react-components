@@ -272,3 +272,91 @@ export const replaceItemAtIndex = <T,>(collection: T[], item: T, index: number) 
 export const removeItemAtIndex = <T,>(collection: T[], index: number) => {
     return collection.filter((_,i) => i !== index);
 }
+export const lastBeforeOrFirstAfter = <T,>(collection: T[], predicate: (item: T) => boolean): T | undefined => {
+    const itemsBefore = takeWhile(collection, predicate);
+    if(itemsBefore.length > 0) {
+        return last(itemsBefore)!;
+    }
+    return firstOrDefault(collection.filter(item => !predicate(item)));
+}
+export const moveItems = <T,>(
+    collection: T[],
+    indicesOfItemsToBeMoved: number[],
+    indexOperation: (input: number) => number
+): T[] => {
+    if(indicesOfItemsToBeMoved.some(index => index < 0 || index >= collection.length)) {
+        throw new Error("moveItems: One or more itemIndices are out of bounds");
+    }
+    const indexMap = indicesOfItemsToBeMoved.map(itemIndex => {
+        return {
+            item: collection[itemIndex],
+            inputIndex: itemIndex,
+            desiredOutputIndex: indexOperation(itemIndex)
+        };
+    });
+
+    // De-duplicate indices
+    const outputIndexSortedMovedItems = [ ...indexMap ].sort((a,b) => {
+        if(a.desiredOutputIndex === b.desiredOutputIndex) {
+            return a.inputIndex - b.inputIndex;
+        }
+        return a.desiredOutputIndex - b.desiredOutputIndex;
+    });
+    let lastIndex = outputIndexSortedMovedItems[0].desiredOutputIndex;
+    for (const part of outputIndexSortedMovedItems.slice(1)) {
+        if(part.desiredOutputIndex <= lastIndex) {
+            part.desiredOutputIndex = lastIndex + 1;
+        }
+        lastIndex = part.desiredOutputIndex;
+    }
+
+    // Fix negative indices
+    const minimumIndex = min(indexMap.map(x => x.desiredOutputIndex))!;
+    if(minimumIndex < 0) {
+        
+        outputIndexSortedMovedItems[0].desiredOutputIndex = 0;
+        lastIndex = 0;
+        for (const item of outputIndexSortedMovedItems.slice(1)) {
+            if(item.desiredOutputIndex <= lastIndex) {
+                item.desiredOutputIndex = lastIndex + 1;
+                lastIndex = lastIndex + 1;
+            } else {
+                break;
+            }
+        }
+    }
+
+    // Fix indices exceeding length of collection
+    const maximumIndex = max(indexMap.map(x => x.desiredOutputIndex))!;
+    if(maximumIndex >= collection.length) {
+        const outputIndexReverseSortedMovedItems = [ ...indexMap ].sort((a,b) => b.desiredOutputIndex - a.desiredOutputIndex);
+        outputIndexReverseSortedMovedItems[0].desiredOutputIndex = collection.length - 1;
+        lastIndex = collection.length - 1;
+        for (const item of outputIndexReverseSortedMovedItems.slice(1)) {
+            if(item.desiredOutputIndex >= lastIndex) {
+                item.desiredOutputIndex = lastIndex - 1;
+                lastIndex = lastIndex - 1;
+            } else {
+                break;
+            }
+        }
+    }
+
+    // Merge moved and non-moved items
+    const nonMovedItems = collection.filter((_,index) => !indicesOfItemsToBeMoved.includes(index));
+    if(nonMovedItems.length + outputIndexSortedMovedItems.length !== collection.length) {
+        return collection; // Something went wrong...
+    }
+    const rearrangedCollection: T[] = [];
+    for (let outputIndex = 0; outputIndex < collection.length; outputIndex++) {
+        if(outputIndexSortedMovedItems.length > 0
+            && outputIndexSortedMovedItems[0].desiredOutputIndex === outputIndex) {
+            const nextMovedItem = outputIndexSortedMovedItems.shift()!.item;
+            rearrangedCollection.push(nextMovedItem);
+        } else {
+            const nextNonMovedItem = nonMovedItems.shift()!;
+            rearrangedCollection.push(nextNonMovedItem);
+        }
+    }
+    return rearrangedCollection;
+}

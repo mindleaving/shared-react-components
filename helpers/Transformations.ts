@@ -3,6 +3,8 @@ export const toDictionary = <T, TOut>(
     keySelector: (item: T) => string, 
     itemSelector?: (item: T) => TOut)
     : { [key:string]: TOut } => {
+
+    // If a key occurs multiple times, the last item is selected
     return Object.assign(
         {}, 
         ...items.map(item => ({ 
