@@ -23,11 +23,23 @@ interface GenericTypeFormProps extends PropsWithChildren {
     onSubmit: () => Promise<void>;
     onCancel?: () => void;
     validated?: boolean;
+    formId?: string;
+    hideButtons?: boolean;
 }
 
 export const GenericTypeForm = (props: GenericTypeFormProps) => {
 
-    const { typeName, formData, uiSchema, onChange, onSubmit: onSubmitFromProps, onCancel, validated } = props;
+    const { 
+        typeName, 
+        formData, 
+        uiSchema, 
+        onChange, 
+        onSubmit: onSubmitFromProps, 
+        onCancel, 
+        validated,
+        formId,
+        hideButtons
+    } = props;
     const [ schema, setSchema ] = useState<any>();
     const [ isLoadingSchema, setIsLoadingSchema ] = useState<boolean>(true);
     const [ isSubmitting, setIsSubmitting ] = useState<boolean>(false);
@@ -58,6 +70,7 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
 
     return (
         <Form
+            id={formId}
             schema={{
                 ...schema,
                 title: undefined
@@ -83,7 +96,8 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                 SelectWidget: SelectWidget
             }}
         >
-            <Center>
+            {!hideButtons
+            ? <Center>
                 {props.children}
                 {onCancel
                 ? <Button
@@ -101,7 +115,8 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
                     isExecuting={isSubmitting}
                     className='mx-2'
                 />
-            </Center>
+            </Center> 
+            : <div></div>}
         </Form>
     );
 
