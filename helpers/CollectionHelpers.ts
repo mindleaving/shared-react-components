@@ -360,3 +360,10 @@ export const moveItems = <T,>(
     }
     return rearrangedCollection;
 }
+export const isLast = <T,>(collection: T[], itemSelector: (item: T) => boolean): boolean => {
+    const itemIndex = collection.findIndex(itemSelector);
+    if(itemIndex < 0) {
+        throw new Error("isLast: Item not found");
+    }
+    return itemIndex === collection.length - 1;
+}
