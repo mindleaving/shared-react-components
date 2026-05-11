@@ -367,3 +367,9 @@ export const isLast = <T,>(collection: T[], itemSelector: (item: T) => boolean):
     }
     return itemIndex === collection.length - 1;
 }
+export const addOrUpdate = <T,>(collection: T[], newItem: T, itemEqualityComparer: (a: T, b: T) => boolean) => {
+    if(collection.some(existingItem => itemEqualityComparer(existingItem, newItem))) {
+       return collection.map(item => itemEqualityComparer(item, newItem) ? newItem : item);
+    }
+    return collection.concat([ newItem ]);
+}
