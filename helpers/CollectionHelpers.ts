@@ -1,5 +1,6 @@
 import { compareAsc, compareDesc } from "date-fns";
 import { DistinctItemWithMultiplicity, Groups } from "../types/frontendTypes";
+import { toDictionary } from "./Transformations";
 
 export const groupIntoDictionary = <T>(collection: T[], keySelector: (item: T) => string) => {
     const groups: { [k: string]: T[] } = {};
@@ -372,4 +373,16 @@ export const addOrUpdate = <T,>(collection: T[], newItem: T, itemEqualityCompare
        return collection.map(item => itemEqualityComparer(item, newItem) ? newItem : item);
     }
     return collection.concat([ newItem ]);
+}
+export const getSortedItemsByIds = <T extends { id: string},>(ids: string[], items: T[]) => {
+    const sortedItems: T[] = [];
+    const itemLookup = toDictionary(items, x => x.id, x => x);
+    for (const id of ids) {
+        const item = itemLookup[id];
+        if(!item) {
+            continue;
+        }
+        sortedItems.push(item);
+    }
+    return sortedItems;
 }
