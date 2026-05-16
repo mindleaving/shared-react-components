@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { Fragment, ReactNode, useMemo } from "react";
 
 interface KeyboardShortcutProps {
     shortcut: string;
@@ -32,12 +32,12 @@ export const KeyboardShortcut = (props: KeyboardShortcutProps) => {
     }, [ shortcut ]);
 
     return (<div className="d-inline-block my-1">
-        {keys.map((key,keyIndex) => (<>
+        {keys.map((key,keyIndex) => (<Fragment key={key}>
             {keyIndex > 0 ? <span>&nbsp;+&nbsp;</span> : null}
             <div className="d-inline p-2 border border-solid rounded bg-light">
                 {getKeyOrIcon(key)}
             </div>
-        </>))}
+        </Fragment>))}
     </div>);
 
 }
