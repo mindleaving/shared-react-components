@@ -76,3 +76,6 @@
 .text-strikethrough {
     text-decoration: line-through;
 }
+.highlight-on-hover:hover {
+    background-color: #eee;
+}
