@@ -6,7 +6,8 @@ interface SelectFormControlProps extends CustomFormControlProps {
     enumValues: string[];
     enumName: string;
     value?: string;
-    onChange: (value: string) => void;
+    onChange: (value: string | undefined) => void;
+    noSelectionDisplayName?: string;
 }
 
 export const SelectFormControl = (props: SelectFormControlProps) => {
@@ -18,7 +19,8 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         onChange,
         required,
         disabled,
-        size
+        size,
+        noSelectionDisplayName
     } = props;
 
     return (<FormSelect
@@ -26,6 +28,8 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         onChange={e => {
             if(e.target.value) {
                 onChange(e.target.value);
+            } else {
+                onChange(undefined);
             }
         }}
         required={required}
@@ -35,7 +39,7 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         isInvalid={props.isInvalid}
         aria-describedby={props.ariaDescribedBy}
     >
-        <option value="">{resolveText("PleaseSelect...")}</option>
+        <option value="">{noSelectionDisplayName ?? resolveText("PleaseSelect...")}</option>
         {Object.values(enumValues).map(x => (
             <option key={x} value={x}>{resolveText(`${enumName}_${x}`)}</option>
         ))}
