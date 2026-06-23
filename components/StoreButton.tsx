@@ -10,6 +10,7 @@ interface StoreButtonProps {
     disabled?: boolean;
     size?: 'xs' | 'sm' | 'lg';
     className?: string;
+    showIcon?: boolean;
 }
 
 export const StoreButton = (props: StoreButtonProps) => {
@@ -22,7 +23,8 @@ export const StoreButton = (props: StoreButtonProps) => {
         isStored,
         disabled,
         size,
-        className
+        className,
+        showIcon
     } = props;
 
     if(size === 'xs' && !form && (!type || type === 'button')) {
@@ -59,7 +61,10 @@ export const StoreButton = (props: StoreButtonProps) => {
             form={form}
             onClick={onClick}
             className={className ?? 'm-2'}
-            activeText={isStored ? resolveText('Stored') : resolveText('Store')}
+            activeText={<>
+                {showIcon ? <i className='fa fa-floppy-o me-2' /> : null}
+                {isStored ? resolveText('Stored') : resolveText('Store')}
+            </>}
             executingText={resolveText('Storing...')}
             isExecuting={isStoring}
             disabled={disabled || isStored}
