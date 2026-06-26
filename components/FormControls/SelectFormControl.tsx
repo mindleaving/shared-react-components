@@ -1,6 +1,7 @@
 import { FormSelect } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
 import { resolveText } from "../../helpers/Globalizer";
+import { CSSProperties } from "react";
 
 interface SelectFormControlProps extends CustomFormControlProps {
     enumValues: string[];
@@ -8,6 +9,9 @@ interface SelectFormControlProps extends CustomFormControlProps {
     value?: string;
     onChange: (value: string | undefined) => void;
     noSelectionDisplayName?: string;
+    colorMap?: {
+        [enumValue:string]: CSSProperties
+    }
 }
 
 export const SelectFormControl = (props: SelectFormControlProps) => {
@@ -20,7 +24,8 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         required,
         disabled,
         size,
-        noSelectionDisplayName
+        noSelectionDisplayName,
+        colorMap
     } = props;
 
     return (<FormSelect
@@ -38,10 +43,17 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
         isValid={props.isValid}
         isInvalid={props.isInvalid}
         aria-describedby={props.ariaDescribedBy}
+        style={!!colorMap && !!value ? colorMap[value] : undefined}
     >
         <option value="">{noSelectionDisplayName ?? resolveText("PleaseSelect...")}</option>
         {Object.values(enumValues).map(x => (
-            <option key={x} value={x}>{resolveText(`${enumName}_${x}`)}</option>
+            <option 
+                key={x} 
+                value={x}
+                style={!!colorMap ? colorMap[x] : undefined}
+            >
+                {resolveText(`${enumName}_${x}`)}
+            </option>
         ))}
     </FormSelect>);
 
