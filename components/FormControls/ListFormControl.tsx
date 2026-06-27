@@ -7,7 +7,7 @@ interface ListFormControlProps<T> {
     displayFunc: (item: T) => string | ReactNode;
     removeItem: (item: T) => void;
     showAddButton?: boolean;
-    onAdd: () => void;
+    onAdd?: () => void;
 }
 
 export const ListFormControl = <T,>(props: ListFormControlProps<T>) => {
@@ -21,7 +21,7 @@ export const ListFormControl = <T,>(props: ListFormControlProps<T>) => {
                     {displayFunc(item)} <Badge pill bg="danger" onClick={() => removeItem(item)}>X</Badge> 
                 </Badge>
             )}
-            {showAddButton
+            {showAddButton && onAdd
             ? <i
                 onClick={onAdd}
                 className='fa fa-plus green clickable ms-2'
