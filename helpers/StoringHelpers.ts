@@ -1,5 +1,5 @@
 import { apiClient } from "../communication/ApiClient";
-import { ImageUploadResult, JsonPatchDocument, QueryParameters } from "../types/frontendTypes";
+import { FileUploadResult, JsonPatchDocument, QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
 import { resolveText } from "./Globalizer";
@@ -115,7 +115,7 @@ export const uploadFile = (
         includeCredentials?: boolean;
         accessToken?: string,
         onProgressChanged?: (progress: number) => void
-    }): Promise<ImageUploadResult> => {
+    }): Promise<FileUploadResult> => {
 
     const xhr = new XMLHttpRequest();
     return new Promise((resolve,reject) => {
@@ -138,6 +138,9 @@ export const uploadFile = (
         })
         xhr.open(options?.method ?? "POST", url, true);
         xhr.setRequestHeader("Content-Type", options?.contentType ?? "application/octet-stream");
+        if(!!file.name) {
+            xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.name}"`);
+        }
         if(options?.csrfTokenHeaderName && options?.csrfToken) {
             xhr.setRequestHeader(options.csrfTokenHeaderName, options.csrfToken);
         }

@@ -51,6 +51,7 @@ export interface CustomFormControlProps {
     isValid?: boolean;
     isInvalid?: boolean;
     size?: "sm" | "lg";
+    placeholder?: string;
 }
 export interface DistinctItemWithMultiplicity<T> {
     item: T;
@@ -99,7 +100,7 @@ export interface ReorderableListItemLight {
     itemType: string;
     currentIndex: number;
 }
-export interface ImageUploadResult {
+export interface FileUploadResult {
     status: number;
     response: any
 };

@@ -1,6 +1,7 @@
 import { confirmAlert } from 'react-confirm-alert';
 import { resolveText } from '../helpers/Globalizer';
 import { AsyncButton } from './AsyncButton';
+import { combineCssClasses } from '../helpers/StylingHelpers';
 
 interface DeleteButtonProps {
     isDeleting?: boolean;
@@ -11,6 +12,7 @@ interface DeleteButtonProps {
     className?: string;
     size?: "xs" | "sm" | "lg";
     type?: "button" | "submit" | "reset";
+    disabled?: boolean;
 }
 
 export const DeleteButton = (props: DeleteButtonProps) => {
@@ -47,7 +49,11 @@ export const DeleteButton = (props: DeleteButtonProps) => {
 
     if(props.size === "xs") {
         return (<i
-            className={`fa fa-trash red clickable ${props.className}`}
+            className={combineCssClasses([
+                'fa fa-trash',
+                props.disabled ? 'text-secondary' : 'red clickable',
+                props.className
+            ])}
             onClick={e => {
                 e.stopPropagation();
                 onClick();
@@ -68,6 +74,7 @@ export const DeleteButton = (props: DeleteButtonProps) => {
             }}
             size={props.size}
             type={props.type ?? 'button'}
+            disabled={props.disabled}
         />
     );
 
