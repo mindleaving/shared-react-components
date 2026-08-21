@@ -3,7 +3,7 @@ import { resolveText } from "../helpers/Globalizer";
 
 interface ResetButtonProps {
     type?: "button" | "reset";
-    onClick: () => void;
+    onClick?: () => void;
     size?: "sm" | "lg";
     className?: string;
 }

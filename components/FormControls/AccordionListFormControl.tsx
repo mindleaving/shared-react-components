@@ -10,7 +10,7 @@ interface AccordionListFormControlProps<T> {
     items: T[];
     titleFormatter: (item: T) => string | undefined;
     isValid: (item: T) => boolean;
-    itemFormControlBuilder: (item: T, onChange: (update: Update<T>) => void) => ReactNode;
+    itemFormControlBuilder: (item: T, onChange: (update: Update<T>) => void, itemIndex: number) => ReactNode;
     onChange: (update: Update<T[]>) => void;
     itemCreator?: () => T;
 }
@@ -75,7 +75,7 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
                     </Row>}
                     headerClassName="py-2"
                 >
-                    {itemFormControlBuilder(item, update => onChange(state => replaceItemAtIndex(state, update(state[itemIndex]), itemIndex)))}
+                    {itemFormControlBuilder(item, update => onChange(state => replaceItemAtIndex(state, update(state[itemIndex]), itemIndex)), itemIndex)}
                     <Row>
                         <Col></Col>
                         <Col xs="auto">

@@ -7,7 +7,7 @@ import { replaceItemAtIndex, removeItemAtIndex } from "../../helpers/CollectionH
 
 interface BareArrayListFormControlProps<T> {
     items: (T | undefined)[];
-    itemFormControlBuilder: (item: T | undefined, onChange: (item: T | undefined) => void) => ReactNode;
+    itemFormControlBuilder: (item: T | undefined, onChange: (item: T | undefined) => void, itemIndex: number) => ReactNode;
     onChange: (update: Update<(T | undefined)[]>) => void;
 }
 
@@ -22,7 +22,7 @@ export const BareArrayListFormControl = <T,>(props: BareArrayListFormControlProp
                 className="align-items-center ms-3 mb-2"
             >
                 <Col>
-                    {itemFormControlBuilder(item, newItem => onChange(state => replaceItemAtIndex(state, newItem, itemIndex)))}
+                    {itemFormControlBuilder(item, newItem => onChange(state => replaceItemAtIndex(state, newItem, itemIndex)), itemIndex)}
                 </Col>
                 <Col xs="auto">
                     <DeleteButton
