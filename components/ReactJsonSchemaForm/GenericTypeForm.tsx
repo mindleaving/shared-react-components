@@ -11,7 +11,7 @@ import { AccordionCardArrayFieldItemTemplate } from './AccordionCardArrayFieldIt
 import { UiSchema } from '@rjsf/utils';
 import { SelectWidget } from './SelectWidget';
 import { LoadingAlert } from '../LoadingAlert';
-import { Alert, Button } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { OptionalObjectField } from './OptionalObjectField';
 import { Center } from '../Center';
 import { CancelButton } from '../CancelButton';

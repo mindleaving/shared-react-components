@@ -8,7 +8,7 @@ interface MoveArrayItemsModalProps<T> {
     show: boolean;
     onClose: () => void;
     items: T[];
-    formatItem: (item: T) => string;
+    formatItem: (item: T, itemIndex: number) => string;
     onChange: (update: Update<T[]>) => void;
 }
 
@@ -66,7 +66,7 @@ export const MoveArrayItemsModal = <T,>(props: MoveArrayItemsModalProps<T>) => {
                         key={elementIndex}
                         checked={selectedElementIndices.includes(elementIndex)}
                         onChange={() => toggleElement(elementIndex)}
-                        label={formatItem(element)}
+                        label={formatItem(element,elementIndex)}
                         disabled={targetIndex === elementIndex}
                     />
                 ))}
@@ -84,7 +84,7 @@ export const MoveArrayItemsModal = <T,>(props: MoveArrayItemsModalProps<T>) => {
                                 value={elementIndex}
                                 disabled={selectedElementIndices.includes(elementIndex)}
                             >
-                                {formatItem(element)}
+                                {formatItem(element,elementIndex)}
                             </option>
                         ))}
                     </FormSelect>

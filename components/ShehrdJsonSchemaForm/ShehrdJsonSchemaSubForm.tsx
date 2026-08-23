@@ -32,9 +32,17 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
         if(!typeDefinition) {
             return [];
         }
-        return Object.keys(typeDefinition.properties);
+        return Object.keys(typeDefinition.properties ?? {});
     }, [ typeDefinition ]);
-    const mandatoryPropertyNames = useMemo(() => typeDefinition?.required ?? [], [ typeDefinition ]);
+    const mandatoryPropertyNames = useMemo(() => {
+        const schemaRequired = typeDefinition?.required ?? [];
+        const customizationRequired = customizations?.properties
+            ? Object.entries(customizations.properties)
+                .filter(([_,propertyCustomization]) => propertyCustomization.required ?? false)
+                .map(([propertyName]) => propertyName)
+            : [];
+        return distinct(schemaRequired.concat(customizationRequired));
+    }, [ typeDefinition, customizations ]);
     const optionalPropertyNames = useMemo(() => 
         allPropertyNames.filter(propertyName => !mandatoryPropertyNames.includes(propertyName)), 
     [ allPropertyNames, mandatoryPropertyNames ]);
@@ -43,11 +51,11 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
             return {};
         }
         return toDictionary(
-            typeDefinition.required ?? [],
+            mandatoryPropertyNames,
             propertyName => propertyName,
             propertyName => typeDefinition.properties[propertyName]
         );
-    }, [ typeDefinition ]);
+    }, [ typeDefinition, mandatoryPropertyNames ]);
     const [ activeOptionalPropertyNames, setActiveOptionalPropertyNames ] = useState<string[]>(() => {
         const nonEmptyValues = optionalPropertyNames.filter(propertyName => !!(value as IndexableObject)[propertyName]);
         return distinct(nonEmptyValues.concat(customizations?.initiallyActiveOptionalProperties ?? []));
@@ -91,7 +99,7 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
                     [propertyName]: update((state as any)[propertyName])
                 }))}
                 validator={validator}
-                customizations={customizations ? customizations[propertyName] as ShehrdJsonSchemaCustomizations : undefined}
+                customizations={customizations?.properties ? customizations.properties[propertyName] : undefined}
             />
         ))}
         {inactivePropertyNames.length > 0

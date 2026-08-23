@@ -77,10 +77,10 @@ export const buildIdAutocomplete = (idAutocomplete: (props: IdAutocompleteProps)
     return (props: ShehrdJsonSchemaCustomFormControlProps) => ShehrdJsonSchemaIdAutocompleteWrapper({ props, idAutocomplete });
 }
 export const isHidden = (propertyName: string, customizations: ShehrdJsonSchemaCustomizations | undefined) => {
-    if(!customizations) {
+    if(!customizations?.properties) {
         return false;
     }
-    const propertyCustomization = customizations[propertyName];
+    const propertyCustomization = customizations.properties[propertyName];
     if(!propertyCustomization) {
         return false;
     }

@@ -52,18 +52,31 @@ export interface NumericJsonSchemaTypeDefinition {
     exclusiveMaximum?: number;
 }
 export interface ShehrdJsonSchemaCustomizations {
-    [propertyName: string]: unknown;
+
+    // Nested property customizations
+    properties?: Dictionary<ShehrdJsonSchemaCustomizations>;
+
+    // Flags
     hide?: boolean;
     required?: boolean;
     disabled?: boolean;
     as?: "textarea";
     autofocus?: boolean;
     size?: "sm" | "lg";
+    initiallyActiveOptionalProperties?: string[];
+
+    // Customn form control
     formControl?: (props: ShehrdJsonSchemaCustomFormControlProps) => JSX.Element;
     formControlOptions?: ShehrdJsonSchemaFormControlOptions;
+
+    // Array customizations
     arrayStyle?: ShehrdJsonSchemaFormArrayStyle;
-    itemTitleFormatter?: (item: any) => string;
-    initiallyActiveOptionalProperties?: string[];
+    itemTitleFormatter?: (item: any) => string | undefined;
+    items?: ShehrdJsonSchemaCustomizations;
+    arrayActionButtons?: ReactNode[];
+    
+
+    // Enum customizations
     enumName?: string;
 }
 export interface ShehrdJsonSchemaSharedFormControlProps {
