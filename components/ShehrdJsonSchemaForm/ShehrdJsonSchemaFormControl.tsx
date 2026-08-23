@@ -1,45 +1,40 @@
 import { Card, FormControl } from "react-bootstrap";
-import { JsonSchemaPrimitiveType } from "../../types/shehrdJsonSchemaFormEnums";
-import { JsonSchemaTypeDefintion, ArrayJsonSchemaTypeDefintion, ObjectJsonSchemaTypeDefintion, StringJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations } from "../../types/shehrdJsonSchemaFormTypes";
+import { JsonSchemaPrimitiveType, ShehrdJsonSchemaFormArrayStyle } from "../../types/shehrdJsonSchemaFormEnums";
+import { ArrayJsonSchemaTypeDefintion, ObjectJsonSchemaTypeDefintion, StringJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaSharedFormControlProps } from "../../types/shehrdJsonSchemaFormTypes";
 import { AccordionListFormControl } from "../FormControls/AccordionListFormControl";
 import { BareArrayListFormControl } from "../FormControls/BareArrayListFormControl";
 import { NumericFormControl } from "../FormControls/NumericFormControl";
-import { Dictionary, Update } from "../../types/frontendTypes";
 import { useMemo } from "react";
-import { getFirstNonNullType } from "../../helpers/ShehrdJsonSchemaFormHelpers";
+import { getFirstNonNullType, resolveJsonTypeDefinition } from "../../helpers/ShehrdJsonSchemaFormHelpers";
 import { ShehrdJsonSchemaSubForm } from "./ShehrdJsonSchemaSubForm";
 import { DateFormControl } from "../FormControls/DateFormControl";
 import { toDateOnly } from "../../helpers/DateHelpers";
 import { TimeFormControl } from "../FormControls/TimeFormControl";
 
-interface ShehrdJsonSchemaFormControlProps {
-    propertyName: string;
-    property: JsonSchemaTypeDefintion;
-    otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>;
-    value?: any; 
-    onChange: (update: Update<any>) => void;
-    validator: (typeName: string, item: any) => boolean;
-    required?: boolean;
+interface ShehrdJsonSchemaFormControlProps extends ShehrdJsonSchemaSharedFormControlProps {
     customizations?: ShehrdJsonSchemaCustomizations;
 }
 
 export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlProps) => {
 
-    const { 
+    const {
         propertyName, 
         property, 
         otherTypeDefinitions, 
         value, 
         onChange, 
         validator, 
-        required,
+        required: requiredFromSchema,
         customizations 
     } = props;
 
-    const propertyType = useMemo(() => getFirstNonNullType(property.type), [ property ]);
+    const propertyType = useMemo(() => getFirstNonNullType(property.type, otherTypeDefinitions), [ property ]);
+    const required = customizations?.required ?? requiredFromSchema;
+    const disabled = customizations?.disabled;
+    const customFormControlProps = useMemo(() => ({ ...props, ...customizations?.formControlOptions }), [ props, customizations?.formControlOptions])
 
     if(customizations?.formControl) {
-        return customizations.formControl(value, onChange, customizations.options);
+        return customizations.formControl(customFormControlProps);
     }
 
     if(!propertyType) {
@@ -65,6 +60,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                                 onChange(() => dateOnly);
                             }
                         }}
+                        disabled={disabled}
                     />);
                 }
                 case "date-time":
@@ -74,6 +70,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                         required={required}
                         value={stringValue}
                         onChange={date => onChange(() => date)}
+                        disabled={disabled}
                     />);
                 }
                 case "time":
@@ -82,6 +79,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                         required={required}
                         value={stringValue}
                         onChange={time => onChange(() => time)}
+                        disabled={disabled}
                     />);
                 }
                 // case "duration":
@@ -95,61 +93,74 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                 {
                     return (<FormControl
                         required={required}
-                        value={stringValue ?? ''}
-                        onChange={e => onChange(() => e.target.value as any)}
+                        as={customizations?.as}
+                        defaultValue={stringValue ?? ''}
+                        onBlur={e => onChange(() => e.target.value as any)}
+                        disabled={disabled}
                     />);
                 }
             }
         }
         case JsonSchemaPrimitiveType.number:
+        case JsonSchemaPrimitiveType.integer:
         {
             const numericValue = value as number | null | undefined;
             return (<NumericFormControl
                 required={required}
                 value={numericValue ?? undefined}
-                onChange={newValue => onChange(newValue as any)}
+                onChange={newValue => onChange(() => newValue as any)}
+                disabled={disabled}
             />);
         }
         case JsonSchemaPrimitiveType.array:
         {
             const arrayDefinition = property as ArrayJsonSchemaTypeDefintion;
-            const itemType = getFirstNonNullType(arrayDefinition.items.type);
+            const itemType = resolveJsonTypeDefinition(arrayDefinition.items, otherTypeDefinitions);
+            const itemCustomization = customizations ? customizations["items"] as ShehrdJsonSchemaCustomizations : undefined;
             const arrayItems = (value ?? []) as any[];
-            if(itemType === JsonSchemaPrimitiveType.object) {
+            const useAccordion = !!customizations?.arrayStyle
+                ? customizations.arrayStyle === ShehrdJsonSchemaFormArrayStyle.Accordion
+                : itemType.type === JsonSchemaPrimitiveType.object;
+            if(useAccordion) {
                 return (<AccordionListFormControl
                     items={arrayItems}
-                    titleFormatter={x => x + ''}
-                    itemCreator={() => {}}
+                    titleFormatter={customizations?.itemTitleFormatter ?? (x => x + '')}
+                    itemCreator={() => ({})}
                     itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl 
+                        key={itemIndex}
                         required
                         propertyName={`${propertyName}-${itemIndex}`}
-                        property={arrayDefinition.items}
+                        property={itemType}
                         otherTypeDefinitions={otherTypeDefinitions}
                         value={item}
                         onChange={itemOnChange}
                         validator={validator}
+                        customizations={itemCustomization}
                     />)}
-                    onChange={update => onChange(state => update(state ?? []))}
+                    onChange={update => onChange(state => update(state as any[] ?? []))}
                     isValid={item => validator(itemType, item)}
                 />)
             } else {
                 return (<BareArrayListFormControl
                     items={arrayItems}
-                    itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl 
+                    itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl
+                        key={itemIndex}
                         required
                         propertyName={`${propertyName}-${itemIndex}`}
-                        property={arrayDefinition.items}
+                        property={itemType}
                         otherTypeDefinitions={otherTypeDefinitions}
                         value={item}
-                        onChange={itemOnChange}
+                        onChange={update => itemOnChange(update(item))}
                         validator={validator}
+                        customizations={itemCustomization}
                     />)}
-                    onChange={update => onChange(state => update(state ?? []))}
+                    onChange={update => onChange(state => update(state as any[] ?? []))}
                 />)
             }
         }
         case JsonSchemaPrimitiveType.object:
         {
+            const objectValue = value ?? {};
             return (<Card>
                 <Card.Header>
                     <Card.Title>{property.title ?? propertyName}{required ? '*' : ''}</Card.Title>
@@ -158,9 +169,10 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                     <ShehrdJsonSchemaSubForm
                         typeDefinition={property as ObjectJsonSchemaTypeDefintion}
                         otherTypeDefinitions={props.otherTypeDefinitions}
-                        value={value}
-                        onChange={onChange}
+                        value={objectValue}
+                        onChange={update => onChange(state => update(state as any ?? {}))}
                         validator={validator}
+                        customizations={customizations}
                     />
                 </Card.Body>
             </Card>);

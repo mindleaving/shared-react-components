@@ -1,21 +1,21 @@
 import { useMemo, useState } from "react";
 import { Dictionary, Update } from "../../types/frontendTypes";
-import { JsonSchemaTypeDefintion, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations } from "../../types/shehrdJsonSchemaFormTypes";
+import { JsonSchemaTypeDefintion, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { resolveText } from "../../helpers/Globalizer";
 import { toDictionary } from "../../helpers/Transformations";
 import { ShehrdJsonSchemaFormFormGroup } from "./ShehrdJsonSchemaFormFormGroup";
 
-interface ShehrdJsonSchemaSubFormProps {
+interface ShehrdJsonSchemaSubFormProps<T> {
     typeDefinition: ObjectJsonSchemaTypeDefintion;
     otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>;
-    value: any;
-    onChange: (update: Update<any>) => void;
-    validator: (typeName: string, item: any) => boolean;
+    value: T;
+    onChange: (update: Update<T>) => void;
+    validator: ShehrdJsonSchemaFormValidator;
     customizations?: ShehrdJsonSchemaCustomizations;
 }
 
-export const ShehrdJsonSchemaSubForm = (props: ShehrdJsonSchemaSubFormProps) => {
+export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<T>) => {
 
     const {
         typeDefinition,
@@ -64,6 +64,13 @@ export const ShehrdJsonSchemaSubForm = (props: ShehrdJsonSchemaSubFormProps) => 
     const inactivePropertyNames = useMemo(() => 
         optionalPropertyNames.filter(x => !activeOptionalPropertyNames.includes(x)),
     [ optionalPropertyNames, activeOptionalPropertyNames ]);
+    const inactiveProperties = useMemo(() => {
+        return toDictionary(
+            inactivePropertyNames,
+            propertyName => propertyName,
+            propertyName => typeDefinition.properties[propertyName]
+        );
+    }, [ inactivePropertyNames, typeDefinition ])
 
     return (<>
         {Object.entries(activeProperties).map(([propertyName, property]) => (
@@ -73,13 +80,13 @@ export const ShehrdJsonSchemaSubForm = (props: ShehrdJsonSchemaSubFormProps) => 
                 property={property}
                 otherTypeDefinitions={otherTypeDefinitions}
                 required={mandatoryPropertyNames.includes(propertyName)}
-                value={value[propertyName]}
+                value={(value as any)[propertyName]}
                 onChange={update => onChange(state => ({
                     ...state,
-                    [propertyName]: update(state[propertyName])
+                    [propertyName]: update((state as any)[propertyName])
                 }))}
                 validator={validator}
-                customizations={customizations ? customizations[propertyName] : undefined}
+                customizations={customizations ? customizations[propertyName] as ShehrdJsonSchemaCustomizations : undefined}
             />
         ))}
         {inactivePropertyNames.length > 0
@@ -92,7 +99,7 @@ export const ShehrdJsonSchemaSubForm = (props: ShehrdJsonSchemaSubFormProps) => 
                     key={propertyName}
                     onClick={() => setActiveOptionalPropertyNames(state => state.concat(propertyName))}
                 >
-                    {propertyName}
+                    {inactiveProperties[propertyName]?.title ?? propertyName}
                 </Dropdown.Item>
             ))}
         </DropdownButton> : null}

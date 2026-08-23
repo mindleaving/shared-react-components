@@ -1,25 +1,38 @@
 import { FormGroup, FormLabel } from "react-bootstrap";
-import { JsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations } from "../../types/shehrdJsonSchemaFormTypes";
+import { JsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
 import { Dictionary, Update } from "../../types/frontendTypes";
 import { ShehrdJsonSchemaFormControl } from "./ShehrdJsonSchemaFormControl";
+import { useMemo } from "react";
+import { uuid } from "../../helpers/uuid";
 
 interface ShehrdJsonSchemaFormFormGroupProps {
     propertyName: string;
     property: JsonSchemaTypeDefintion;
     otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>;
-    value?: any; 
-    onChange: (update: Update<any>) => void;
-    validator: (typeName: string, item: any) => boolean;
+    value?: unknown; 
+    onChange: (update: Update<unknown | undefined>) => void;
+    validator: ShehrdJsonSchemaFormValidator;
     required?: boolean;
     customizations?: ShehrdJsonSchemaCustomizations;
 }
 
 export const ShehrdJsonSchemaFormFormGroup = (props: ShehrdJsonSchemaFormFormGroupProps) => {
 
-    const { propertyName, property, required } = props;
+    const { propertyName, property, required: requiredFromSchema, customizations } = props;
 
-    return (<FormGroup>
-        <FormLabel>{property.title ?? propertyName}{required ? '*' : ''}</FormLabel>
+    const id = useMemo(() => uuid(), []);
+    const required = customizations?.required ?? requiredFromSchema;
+
+    if(customizations?.hide) {
+        return null;
+    }
+
+    return (<FormGroup className="mb-2" controlId={id}>
+        <FormLabel
+            className="mb-0"
+        >
+            {property.title ?? propertyName}{required ? '*' : ''}
+        </FormLabel>
         <ShehrdJsonSchemaFormControl
             {...props}
         />

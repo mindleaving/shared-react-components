@@ -1,5 +1,5 @@
 import { Col, Form, Row } from "react-bootstrap";
-import { JsonSchema, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations } from "../../types/shehrdJsonSchemaFormTypes";
+import { JsonSchema, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { ResetButton } from "../ResetButton";
 import { AsyncButton } from "../AsyncButton";
@@ -10,15 +10,15 @@ import { CouldNotLoadAlert } from "../CouldNotLoadAlert";
 import { ShehrdJsonSchemaSubForm } from "./ShehrdJsonSchemaSubForm";
 import { buildLoadObjectFunc } from "../../helpers/LoadingHelpers";
 import { translateSchema } from "../../helpers/SchemaTranslator";
+import { Update } from "../../types/frontendTypes";
 
-type ShehrdJsonSchemaFormData = { [propertyName:string]: any };
-interface ShehrdJsonSchemaFormProps {
+interface ShehrdJsonSchemaFormProps<T> {
     typeName: string;
     validated?: boolean;
-    formData: ShehrdJsonSchemaFormData;
-    onChange: (formData: ShehrdJsonSchemaFormData) => void;
+    formData: T;
+    onChange: (update: Update<T>) => void;
     onSubmit: () => Promise<void>;
-    validator: (typeName: string, item: any) => boolean;
+    validator: ShehrdJsonSchemaFormValidator;
     customizations?: ShehrdJsonSchemaCustomizations;
 
     formId?: string;
@@ -27,7 +27,7 @@ interface ShehrdJsonSchemaFormProps {
     isSubmitting?: boolean;
 }
 
-export const ShehrdJsonSchemaForm = (props: ShehrdJsonSchemaFormProps) => {
+export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) => {
 
     const { 
         typeName,
@@ -102,7 +102,7 @@ export const ShehrdJsonSchemaForm = (props: ShehrdJsonSchemaFormProps) => {
             customizations={customizations}
         />
         {!props.hideSubmitButton
-        ? <Row>
+        ? <Row className="mt-3">
             <Col></Col>
             {props.showResetButton
             ? <Col xs="auto">
@@ -113,6 +113,7 @@ export const ShehrdJsonSchemaForm = (props: ShehrdJsonSchemaFormProps) => {
                     type="submit"
                     isExecuting={props.isSubmitting}
                     activeText={resolveText("Submit")}
+                    size="lg"
                 />
             </Col>
             <Col></Col>

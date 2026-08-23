@@ -16,6 +16,9 @@ interface JsonWebToken {
     aud: string;
     [key: string]: string
 }
+export interface IndexableObject {
+    [key:string]: unknown;
+}
 export interface RouteDefinition {
     path: string;
     element: ReactNode;
@@ -40,6 +43,7 @@ export interface FormStep<T> {
     hideNavigation?: (formData: T) => boolean;
 }
 export interface CustomFormControlProps {
+    id?: string;
     required?: boolean;
     readOnly?: boolean;
     disabled?: boolean;

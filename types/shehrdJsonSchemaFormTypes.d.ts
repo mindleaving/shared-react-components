@@ -1,16 +1,20 @@
 import { JSX, ReactNode } from "react";
-import { Dictionary, Update } from "./frontendTypes";
-import { JsonSchemaPrimitiveType } from './shehrdJsonSchemaFormEnums';
+import { Dictionary, IdAutocompleteProps, Update } from "./frontendTypes";
+import { JsonSchemaPrimitiveType, ShehrdJsonSchemaFormArrayStyle } from './shehrdJsonSchemaFormEnums';
 
 export interface JsonSchema {
     $id?: string;
     $schema?: string;
     title: string;
     definitions?: Dictionary<JsonSchemaTypeDefintion>;
-    allOf?: JsonSchemaTypeDefintion[];
+    allOf?: JsonSchemaType[];
+}
+export type JsonSchemaType = JsonSchemaPrimitiveType | JsonSchemaTypeDefintion | TypeReferenceJsonSchemaTypeDefintion;
+export interface TypeReferenceJsonSchemaTypeDefintion {
+    $ref: string;
 }
 export interface JsonSchemaTypeDefintion {
-    type: JsonSchemaPrimitiveType | JsonSchemaPrimitiveType[];
+    type: JsonSchemaType | JsonSchemaType[];
     title?: string;
 }
 export interface ObjectJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
@@ -18,9 +22,6 @@ export interface ObjectJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     "x-abstract"?: boolean;
     required?: string[];
     properties: Dictionary<JsonSchemaTypeDefintion>;
-}
-export interface TypeReferenceJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
-    $ref: string;
 }
 export interface ArrayJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     type: "array";
@@ -50,14 +51,28 @@ export interface NumericJsonSchemaTypeDefinition {
     exclusiveMaximum?: number;
 }
 export interface ShehrdJsonSchemaCustomizations {
-    [propertyName: string]: ShehrdJsonSchemaCustomizations;
-    formControl?: <T,>(
-        value: T | undefined, 
-        onChange: (newValue: T | undefined) => void, 
-        options?: ShehrdJsonSchemaFormControlOptions
-    ) => JSX.Element;
-    options?: ShehrdJsonSchemaFormControlOptions;
+    [propertyName: string]: unknown;
+    hide?: boolean;
+    required?: boolean;
+    disabled?: boolean;
+    as?: "textarea";
+    formControl?: (props: ShehrdJsonSchemaCustomFormControlProps) => JSX.Element;
+    formControlOptions?: ShehrdJsonSchemaFormControlOptions;
+    arrayStyle?: ShehrdJsonSchemaFormArrayStyle;
+    itemTitleFormatter?: (item: any) => string;
+}
+export interface ShehrdJsonSchemaSharedFormControlProps {
+    propertyName: string;
+    property: JsonSchemaTypeDefintion;
+    otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>;
+    value?: unknown; 
+    onChange: (update: Update<unknown | undefined>) => void;
+    validator: ShehrdJsonSchemaFormValidator;
+    required?: boolean; // The only customization that should be on this props (because it is derived from JSON schema)
+}
+export interface ShehrdJsonSchemaCustomFormControlProps extends ShehrdJsonSchemaSharedFormControlProps, ShehrdJsonSchemaFormControlOptions {
 }
 export interface ShehrdJsonSchemaFormControlOptions {
     [key: string]: any;
 }
+export type ShehrdJsonSchemaFormValidator = (type: JsonSchemaPrimitiveType | JsonSchemaTypeDefintion, item: any) => boolean;

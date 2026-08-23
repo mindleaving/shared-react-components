@@ -27,6 +27,7 @@ const formatNumber = (value: number, decimals?: number, precision?: number) => {
 export const NumericFormControl = (props: NumericFormControlProps) => {
 
     const { 
+        id,
         value, 
         onChange, 
         autoBlur, 
@@ -71,6 +72,7 @@ export const NumericFormControl = (props: NumericFormControlProps) => {
     <FormControl
         ref={ref}
         type="text"
+        id={id}
         value={inputValue}
         onChange={e => setInputValue(e.target.value.replaceAll(',', '.'))}
         onBlur={() => {
