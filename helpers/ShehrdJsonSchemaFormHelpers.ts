@@ -1,7 +1,7 @@
 import { JSX } from "react/jsx-runtime";
 import { Dictionary, IdAutocompleteProps } from "../types/frontendTypes";
 import { JsonSchemaPrimitiveType } from "../types/shehrdJsonSchemaFormEnums";
-import { ObjectJsonSchemaTypeDefintion, JsonSchemaTypeDefintion, TypeReferenceJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomFormControlProps, JsonSchemaType } from "../types/shehrdJsonSchemaFormTypes";
+import { ObjectJsonSchemaTypeDefintion, JsonSchemaTypeDefintion, TypeReferenceJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomFormControlProps, JsonSchemaType, ShehrdJsonSchemaCustomizations } from "../types/shehrdJsonSchemaFormTypes";
 import { distinct } from "./CollectionHelpers";
 import { ShehrdJsonSchemaIdAutocompleteWrapper } from "../components/ShehrdJsonSchemaForm/ShehrdJsonSchemaIdAutocompleteWrapper";
 
@@ -22,7 +22,7 @@ export const mergeJsonSchemaTypeDefinitions = (typeDefinitions: JsonSchemaTypeDe
         properties: {}
     };
     for (const typeDefinition of typeDefinitions) {
-        const resolvedTypeDefinition = resolveJsonTypeDefinition(typeDefinition, definitions ?? {});
+        const [ resolvedTypeDefinition ] = resolveJsonTypeDefinition(typeDefinition, definitions ?? {});
         const objectTypeDefinition = resolvedTypeDefinition as ObjectJsonSchemaTypeDefintion;
         if(!!objectTypeDefinition.type && objectTypeDefinition.type === "object") {
             mergedTypeDefinition = mergeObjectJsonSchemaTypeDefinitions(mergedTypeDefinition, objectTypeDefinition);
@@ -33,39 +33,40 @@ export const mergeJsonSchemaTypeDefinitions = (typeDefinitions: JsonSchemaTypeDe
     return mergedTypeDefinition;
 }
 export const resolveJsonTypeDefinition = (
-    typeDefinition: TypeReferenceJsonSchemaTypeDefintion | JsonSchemaTypeDefintion,
-    otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>): JsonSchemaTypeDefintion => {
+    typeDefinition: JsonSchemaTypeDefintion,
+    otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>): [ typeDefinition: JsonSchemaTypeDefintion, typeName?: string ] => {
 
     const typeReferenceDefinition = typeDefinition as TypeReferenceJsonSchemaTypeDefintion;
     if(!typeReferenceDefinition.$ref) {
-       return typeDefinition as JsonSchemaTypeDefintion; 
+       return [ typeDefinition as JsonSchemaTypeDefintion ]; 
     }
     const referencedTypeName = typeReferenceDefinition.$ref.substring('#/definitions/'.length);
     const referencedType = otherTypeDefinitions[referencedTypeName];
     if(!referencedType) {
         throw new Error(`Could not find referenced JSON schema type '${referencedTypeName}'`);
     }
-    return referencedType;
+    const [ nestedReferencedType, nestedTypeName ] = resolveJsonTypeDefinition(referencedType, otherTypeDefinitions);
+    return [ nestedReferencedType, nestedTypeName ?? referencedTypeName ];
 }
 export const getFirstNonNullType = (
-    typeOrTypeArray: JsonSchemaType | JsonSchemaType[],
-    otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>
-): JsonSchemaPrimitiveType | JsonSchemaTypeDefintion | undefined => {
+    property: JsonSchemaTypeDefintion
+): JsonSchemaType | undefined => {
+    const typeOrTypeArray = property.type;
+    if(!typeOrTypeArray) {
+        return undefined;
+    }
     if(typeof typeOrTypeArray === "object") {
-        let type: JsonSchemaPrimitiveType | JsonSchemaType | undefined;
+        let type: JsonSchemaType | undefined;
         if(Array.isArray(typeOrTypeArray)) {
             const typeArray = typeOrTypeArray as JsonSchemaType[];
             type = typeArray.find(x => x != JsonSchemaPrimitiveType.null);
-            if(type) {
+            if(!type) {
                 return undefined;
             }
         } else {
             type = typeOrTypeArray;
         }
-        if(typeof type === "string") {
-            return type as JsonSchemaPrimitiveType;
-        }
-        return resolveJsonTypeDefinition(type as TypeReferenceJsonSchemaTypeDefintion | JsonSchemaTypeDefintion, otherTypeDefinitions);
+        return type;
     }
     if(typeof typeOrTypeArray === "string") {
         return typeOrTypeArray;
@@ -75,3 +76,14 @@ export const getFirstNonNullType = (
 export const buildIdAutocomplete = (idAutocomplete: (props: IdAutocompleteProps) => JSX.Element) => {
     return (props: ShehrdJsonSchemaCustomFormControlProps) => ShehrdJsonSchemaIdAutocompleteWrapper({ props, idAutocomplete });
 }
+export const isHidden = (propertyName: string, customizations: ShehrdJsonSchemaCustomizations | undefined) => {
+    if(!customizations) {
+        return false;
+    }
+    const propertyCustomization = customizations[propertyName];
+    if(!propertyCustomization) {
+        return false;
+    }
+    return (propertyCustomization as ShehrdJsonSchemaCustomizations).hide;
+}
+export const HideJsonSchemaProperty: ShehrdJsonSchemaCustomizations = { hide: true };

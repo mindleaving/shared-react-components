@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
-import { Dictionary, Update } from "../../types/frontendTypes";
+import { Dictionary, IndexableObject, Update } from "../../types/frontendTypes";
 import { JsonSchemaTypeDefintion, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { resolveText } from "../../helpers/Globalizer";
 import { toDictionary } from "../../helpers/Transformations";
 import { ShehrdJsonSchemaFormFormGroup } from "./ShehrdJsonSchemaFormFormGroup";
+import { isHidden } from "../../helpers/ShehrdJsonSchemaFormHelpers";
+import { distinct } from "../../helpers/CollectionHelpers";
 
 interface ShehrdJsonSchemaSubFormProps<T> {
     typeDefinition: ObjectJsonSchemaTypeDefintion;
@@ -46,7 +48,10 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
             propertyName => typeDefinition.properties[propertyName]
         );
     }, [ typeDefinition ]);
-    const [ activeOptionalPropertyNames, setActiveOptionalPropertyNames ] = useState<string[]>([]);
+    const [ activeOptionalPropertyNames, setActiveOptionalPropertyNames ] = useState<string[]>(() => {
+        const nonEmptyValues = optionalPropertyNames.filter(propertyName => !!(value as IndexableObject)[propertyName]);
+        return distinct(nonEmptyValues.concat(customizations?.initiallyActiveOptionalProperties ?? []));
+    });
     const activeProperties = useMemo(() => {
         if(!typeDefinition) {
             return mandatoryProperties;
@@ -62,8 +67,8 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
         };
     }, [ typeDefinition, mandatoryProperties, activeOptionalPropertyNames ]);
     const inactivePropertyNames = useMemo(() => 
-        optionalPropertyNames.filter(x => !activeOptionalPropertyNames.includes(x)),
-    [ optionalPropertyNames, activeOptionalPropertyNames ]);
+        optionalPropertyNames.filter(propertyName => !activeOptionalPropertyNames.includes(propertyName) && !isHidden(propertyName, customizations)),
+    [ optionalPropertyNames, activeOptionalPropertyNames, customizations ]);
     const inactiveProperties = useMemo(() => {
         return toDictionary(
             inactivePropertyNames,

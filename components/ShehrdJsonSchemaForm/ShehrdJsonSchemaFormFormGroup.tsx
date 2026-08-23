@@ -4,6 +4,7 @@ import { Dictionary, Update } from "../../types/frontendTypes";
 import { ShehrdJsonSchemaFormControl } from "./ShehrdJsonSchemaFormControl";
 import { useMemo } from "react";
 import { uuid } from "../../helpers/uuid";
+import { JsonSchemaPrimitiveType } from "../../types/shehrdJsonSchemaFormEnums";
 
 interface ShehrdJsonSchemaFormFormGroupProps {
     propertyName: string;
@@ -28,11 +29,12 @@ export const ShehrdJsonSchemaFormFormGroup = (props: ShehrdJsonSchemaFormFormGro
     }
 
     return (<FormGroup className="mb-2" controlId={id}>
-        <FormLabel
+        {property.type !== JsonSchemaPrimitiveType.boolean
+        ? <FormLabel
             className="mb-0"
         >
             {property.title ?? propertyName}{required ? '*' : ''}
-        </FormLabel>
+        </FormLabel> : null}
         <ShehrdJsonSchemaFormControl
             {...props}
         />

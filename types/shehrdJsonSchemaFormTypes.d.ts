@@ -7,15 +7,15 @@ export interface JsonSchema {
     $schema?: string;
     title: string;
     definitions?: Dictionary<JsonSchemaTypeDefintion>;
-    allOf?: JsonSchemaType[];
+    allOf?: JsonSchemaTypeDefintion[];
 }
-export type JsonSchemaType = JsonSchemaPrimitiveType | JsonSchemaTypeDefintion | TypeReferenceJsonSchemaTypeDefintion;
-export interface TypeReferenceJsonSchemaTypeDefintion {
-    $ref: string;
-}
+export type JsonSchemaType = JsonSchemaPrimitiveType | JsonSchemaTypeDefintion;
 export interface JsonSchemaTypeDefintion {
-    type: JsonSchemaType | JsonSchemaType[];
+    type?: JsonSchemaType | JsonSchemaType[];
     title?: string;
+}
+export interface TypeReferenceJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
+    $ref: string;
 }
 export interface ObjectJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     type: "object";
@@ -42,6 +42,7 @@ export interface StringJsonSchemaTypeDefintion {
     minLength?: number;
     maxLength?: number;
     pattern?: string;
+    enum?: string[];
 }
 export interface NumericJsonSchemaTypeDefinition {
     type: "integer" | "number";
@@ -56,10 +57,14 @@ export interface ShehrdJsonSchemaCustomizations {
     required?: boolean;
     disabled?: boolean;
     as?: "textarea";
+    autofocus?: boolean;
+    size?: "sm" | "lg";
     formControl?: (props: ShehrdJsonSchemaCustomFormControlProps) => JSX.Element;
     formControlOptions?: ShehrdJsonSchemaFormControlOptions;
     arrayStyle?: ShehrdJsonSchemaFormArrayStyle;
     itemTitleFormatter?: (item: any) => string;
+    initiallyActiveOptionalProperties?: string[];
+    enumName?: string;
 }
 export interface ShehrdJsonSchemaSharedFormControlProps {
     propertyName: string;

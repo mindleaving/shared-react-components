@@ -14,6 +14,7 @@ import { LoadingAlert } from '../LoadingAlert';
 import { Alert, Button } from 'react-bootstrap';
 import { OptionalObjectField } from './OptionalObjectField';
 import { Center } from '../Center';
+import { CancelButton } from '../CancelButton';
 
 interface GenericTypeFormProps extends PropsWithChildren {
     typeName: string;
@@ -100,14 +101,11 @@ export const GenericTypeForm = (props: GenericTypeFormProps) => {
             ? <Center>
                 {props.children}
                 {onCancel
-                ? <Button
-                    type="button"
+                ? <CancelButton
                     onClick={onCancel}
                     variant='secondary'
                     className='mx-2'
-                >
-                    {resolveText("Cancel")}
-                </Button> : null}
+                /> : null}
                 <AsyncButton
                     type='submit'
                     activeText={resolveText("Submit")}

@@ -1,6 +1,6 @@
 import { Col, Form, Row } from "react-bootstrap";
 import { JsonSchema, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ResetButton } from "../ResetButton";
 import { AsyncButton } from "../AsyncButton";
 import { resolveText } from "../../helpers/Globalizer";
@@ -11,6 +11,7 @@ import { ShehrdJsonSchemaSubForm } from "./ShehrdJsonSchemaSubForm";
 import { buildLoadObjectFunc } from "../../helpers/LoadingHelpers";
 import { translateSchema } from "../../helpers/SchemaTranslator";
 import { Update } from "../../types/frontendTypes";
+import { CancelButton } from "../CancelButton";
 
 interface ShehrdJsonSchemaFormProps<T> {
     typeName: string;
@@ -18,11 +19,13 @@ interface ShehrdJsonSchemaFormProps<T> {
     formData: T;
     onChange: (update: Update<T>) => void;
     onSubmit: () => Promise<void>;
+    onCancel?: () => void;
     validator: ShehrdJsonSchemaFormValidator;
     customizations?: ShehrdJsonSchemaCustomizations;
+    additionalButtons?: ReactNode[];
 
     formId?: string;
-    hideSubmitButton?: boolean;
+    hideButtons?: boolean;
     showResetButton?: boolean;
     isSubmitting?: boolean;
 }
@@ -34,6 +37,7 @@ export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) =>
         validated,
         formData, 
         onChange,
+        onCancel,
         validator,
         customizations
     } = props;
@@ -101,9 +105,17 @@ export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) =>
             validator={validator}
             customizations={customizations}
         />
-        {!props.hideSubmitButton
-        ? <Row className="mt-3">
+        {!props.hideButtons
+        ? <Row className="align-items-center mt-3">
             <Col></Col>
+            {onCancel
+            ? <Col xs="auto">
+                <CancelButton
+                    onClick={onCancel}
+                    variant='secondary'
+                    className='mx-2'
+                />
+            </Col> : null}
             {props.showResetButton
             ? <Col xs="auto">
                 <ResetButton type="reset" />
@@ -116,6 +128,11 @@ export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) =>
                     size="lg"
                 />
             </Col>
+            {props.additionalButtons?.map((button, buttonIndex) => (
+                <Col key={buttonIndex} xs="auto">
+                    {button}
+                </Col>
+            ))}
             <Col></Col>
         </Row> : null}
     </Form>);

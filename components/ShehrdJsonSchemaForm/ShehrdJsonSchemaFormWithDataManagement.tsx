@@ -3,7 +3,7 @@ import { ShehrdJsonSchemaForm } from "./ShehrdJsonSchemaForm";
 import { useParams } from "react-router-dom";
 import { showErrorAlert } from "../../helpers/AlertHelpers";
 import { LoadingAlert } from "../LoadingAlert";
-import { ShehrdJsonSchemaCustomizations } from "../../types/shehrdJsonSchemaFormTypes";
+import { ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
 import { CouldNotLoadAlert } from "../CouldNotLoadAlert";
 import { resolveText } from "../../helpers/Globalizer";
 
@@ -14,7 +14,7 @@ interface ShehrdJsonSchemaFormWithDataManagementProps<T> {
     loader: (id: string) => Promise<T | undefined>;
     submit: (item: T) => Promise<T>;
     onSubmitted?: (item: T) => void;
-    validator: (typeName: string, item: T) => boolean;
+    validator: ShehrdJsonSchemaFormValidator;
     customizations?: ShehrdJsonSchemaCustomizations;
 
     formId?: string;
@@ -80,7 +80,7 @@ export const ShehrdJsonSchemaFormWithDataManagement = <T,>(props: ShehrdJsonSche
         onSubmit={submit}
         formId={props.formId}
         isSubmitting={isSubmitting}
-        hideSubmitButton={props.hideSubmitButton}
+        hideButtons={props.hideSubmitButton}
         showResetButton={props.showResetButton}
         validator={props.validator}
         customizations={props.customizations}
