@@ -185,7 +185,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                     <AccordionListFormControl
                         label={label}
                         items={arrayItems}
-                        titleFormatter={customizations?.itemTitleFormatter ?? (x => x + '')}
+                        titleFormatter={customizations?.itemTitleFormatter ?? (() => undefined)}
                         itemCreator={customizations?.itemCreator ?? (() => ({}))}
                         itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl 
                             key={itemIndex}

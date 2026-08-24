@@ -1,4 +1,4 @@
-import { Col, Form, Row } from "react-bootstrap";
+import { Alert, Col, Form, Row } from "react-bootstrap";
 import { JsonSchema, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
 import { FormEvent, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ResetButton } from "../ResetButton";
@@ -12,6 +12,7 @@ import { buildLoadObjectFunc } from "../../helpers/LoadingHelpers";
 import { translateSchema } from "../../helpers/SchemaTranslator";
 import { Update } from "../../types/frontendTypes";
 import { CancelButton } from "../CancelButton";
+import { JsonSchemaPrimitiveType } from "../../types/shehrdJsonSchemaFormEnums";
 
 interface ShehrdJsonSchemaFormProps<T> {
     typeName: string;
@@ -92,13 +93,17 @@ export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) =>
         return (<CouldNotLoadAlert />);
     }
 
+    if(!rootTypeDefinition || rootTypeDefinition.type !== JsonSchemaPrimitiveType.object) {
+        return (<Alert variant="danger">Schema is not of type 'object'</Alert>);
+    }
+
     return (<Form
         id={props.formId}
         validated={validated}
         onSubmit={onSubmit}
     >
         <ShehrdJsonSchemaSubForm
-            typeDefinition={rootTypeDefinition!}
+            typeDefinition={rootTypeDefinition as ObjectJsonSchemaTypeDefintion}
             otherTypeDefinitions={otherTypeDefinitions}
             value={formData}
             onChange={onChange}
