@@ -13,8 +13,9 @@ interface AccordionListFormControlProps<T> {
     isValid: (item: T) => boolean;
     itemFormControlBuilder: (item: T, onChange: (update: Update<T>) => void, itemIndex: number) => ReactNode;
     onChange: (update: Update<T[]>) => void;
-    itemCreator?: () => T;
+    itemCreator: () => T;
     additionalActionButtons?: ReactNode[];
+    label?: string;
 }
 
 export const AccordionListFormControl = <T,>(props: AccordionListFormControlProps<T>) => {
@@ -45,8 +46,8 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
     }, [ items.length ]);
 
     return (<>
-        <Row className="align-items-center">
-            <Col></Col>
+        <Row className="align-items-center mb-1">
+            <Col>{props.label}</Col>
             {additionalActionButtons?.map((button,buttonIndex) => (
                 <Col key={buttonIndex} xs="auto">
                     {button}
@@ -116,11 +117,11 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
             ))}
         </Accordion>
         {itemCreator
-        ? <Row className="ms-3 mt-1 mb-2">
+        ? <Row className="mt-1 mb-2">
             <Col>
                 <Button
                     type="button"
-                    className="ms-2"
+                    className="ms-3"
                     size="sm"
                     onClick={() => onChange(state => state.concat([ itemCreator() ]))}
                 >

@@ -43,6 +43,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
     const customFormControlProps = useMemo(() => 
         ({ ...props, ...customizations?.formControlOptions }), 
     [ props, customizations?.formControlOptions]);
+    const label = useMemo(() => `${property.title ?? propertyName}${(required ? '*' : '')}`, [ property.title, propertyName ]);
 
     if(!!customizations?.formControl) {
         return customizations.formControl(customFormControlProps);
@@ -180,37 +181,40 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                 ? customizations.arrayStyle === ShehrdJsonSchemaFormArrayStyle.Accordion
                 : itemType.type === JsonSchemaPrimitiveType.object;
             if(useAccordion) {
-                return (<AccordionListFormControl
-                    items={arrayItems}
-                    titleFormatter={customizations?.itemTitleFormatter ?? (x => x + '')}
-                    itemCreator={() => ({})}
-                    itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl 
-                        key={itemIndex}
-                        required
-                        propertyName={`${propertyName}-${itemIndex}`}
-                        property={itemType}
-                        otherTypeDefinitions={otherTypeDefinitions}
-                        value={item}
-                        onChange={itemOnChange}
-                        validator={validator}
-                        customizations={itemCustomization}
-                        isArrayItem
-                    />)}
-                    onChange={update => onChange(state => update(state as any[] ?? []))}
-                    isValid={item => validator(itemType, item)}
-                    additionalActionButtons={customizations?.arrayActionButtons}
-                />)
+                return (<>
+                    <AccordionListFormControl
+                        label={label}
+                        items={arrayItems}
+                        titleFormatter={customizations?.itemTitleFormatter ?? (x => x + '')}
+                        itemCreator={customizations?.itemCreator ?? (() => ({}))}
+                        itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl 
+                            key={itemIndex}
+                            required
+                            propertyName={`${propertyName}-${itemIndex}`}
+                            property={itemType}
+                            otherTypeDefinitions={otherTypeDefinitions}
+                            value={item}
+                            onChange={itemOnChange}
+                            validator={validator}
+                            customizations={itemCustomization}
+                            isArrayItem
+                        />)}
+                        onChange={update => onChange(state => update(state as any[] ?? []))}
+                        isValid={item => validator(itemType, item)}
+                        additionalActionButtons={customizations?.arrayActionButtons}
+                    />
+                    <hr />
+                </>);
             } else {
                 return (<>
-                    {customizations?.arrayActionButtons
-                    ? <Row className="align-items-center">
-                        <Col></Col>
-                        {customizations.arrayActionButtons.map((button,buttonIndex) => (
+                    <Row className="align-items-center">
+                        <Col>{label}</Col>
+                        {(customizations?.arrayActionButtons ?? []).map((button,buttonIndex) => (
                             <Col key={buttonIndex} xs="auto">
                                 {button}
                             </Col>
                         ))}
-                    </Row> : null}
+                    </Row>
                     <BareArrayListFormControl
                         items={arrayItems}
                         itemFormControlBuilder={(item,itemOnChange,itemIndex) => (<ShehrdJsonSchemaFormControl
@@ -225,7 +229,9 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                             customizations={itemCustomization}
                         />)}
                         onChange={update => onChange(state => update(state as any[] ?? []))}
+                        itemCreator={customizations?.itemCreator ?? (() => undefined)}
                     />
+                    <hr />
                 </>);
             }
         }

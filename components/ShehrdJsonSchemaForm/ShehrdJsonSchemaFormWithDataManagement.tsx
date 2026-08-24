@@ -40,8 +40,8 @@ export const ShehrdJsonSchemaFormWithDataManagement = <T,>(props: ShehrdJsonSche
             try {
                 const item = await props.loader(id);
                 setFormData(item);
-            } catch {
-                showErrorAlert("GenericTypeCreateEditPage_CoultNotLoadItem");
+            } catch(error: any) {
+                showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotLoadItem"), error.message);
             } finally {
                 setIsLoading(false);
             }
@@ -57,8 +57,8 @@ export const ShehrdJsonSchemaFormWithDataManagement = <T,>(props: ShehrdJsonSche
             if(!!props.onSubmitted) {
                 props.onSubmitted(storedItem);
             }
-        } catch {
-            showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotSubmit"));
+        } catch(error: any) {
+            showErrorAlert(resolveText("GenericTypeCreateEditPage_CoultNotSubmit"), error.message);
         } finally {
             setIsSubmitting(false);
         }

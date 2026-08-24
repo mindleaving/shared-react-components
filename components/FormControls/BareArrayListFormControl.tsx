@@ -9,11 +9,12 @@ interface BareArrayListFormControlProps<T> {
     items: (T | undefined)[];
     itemFormControlBuilder: (item: T | undefined, onChange: (item: T | undefined) => void, itemIndex: number) => ReactNode;
     onChange: (update: Update<(T | undefined)[]>) => void;
+    itemCreator: () => T;
 }
 
 export const BareArrayListFormControl = <T,>(props: BareArrayListFormControlProps<T>) => {
 
-    const { items, itemFormControlBuilder, onChange } = props;
+    const { items, itemFormControlBuilder, onChange, itemCreator } = props;
 
     return (<>
         {items.map((item,itemIndex) => (
@@ -39,7 +40,7 @@ export const BareArrayListFormControl = <T,>(props: BareArrayListFormControlProp
                     type="button"
                     className="ms-3"
                     size="sm"
-                    onClick={() => onChange(state => state.concat([ undefined ]))}
+                    onClick={() => onChange(state => state.concat([ itemCreator() ]))}
                 >
                     + {resolveText("Add")}
                 </Button>

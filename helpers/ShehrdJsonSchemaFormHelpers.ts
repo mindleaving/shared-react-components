@@ -1,7 +1,7 @@
 import { JSX } from "react/jsx-runtime";
 import { Dictionary, IdAutocompleteProps } from "../types/frontendTypes";
 import { JsonSchemaPrimitiveType } from "../types/shehrdJsonSchemaFormEnums";
-import { ObjectJsonSchemaTypeDefintion, JsonSchemaTypeDefintion, TypeReferenceJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomFormControlProps, JsonSchemaType, ShehrdJsonSchemaCustomizations } from "../types/shehrdJsonSchemaFormTypes";
+import { ObjectJsonSchemaTypeDefintion, JsonSchemaTypeDefintion, TypeReferenceJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomFormControlProps, JsonSchemaType, ShehrdJsonSchemaCustomizations, CompositeJsonSchemaTypeDefintion } from "../types/shehrdJsonSchemaFormTypes";
 import { distinct } from "./CollectionHelpers";
 import { ShehrdJsonSchemaIdAutocompleteWrapper } from "../components/ShehrdJsonSchemaForm/ShehrdJsonSchemaIdAutocompleteWrapper";
 
@@ -15,7 +15,16 @@ const mergeObjectJsonSchemaTypeDefinitions = (a: ObjectJsonSchemaTypeDefintion, 
         }
     }
 }
-export const mergeJsonSchemaTypeDefinitions = (typeDefinitions: JsonSchemaTypeDefintion[], definitions?: Dictionary<JsonSchemaTypeDefintion>) => {
+export const mergeJsonSchemaTypeDefinitions = (
+    typeDefinitions: JsonSchemaTypeDefintion[], 
+    definitions?: Dictionary<JsonSchemaTypeDefintion>): JsonSchemaTypeDefintion => {
+    if(typeDefinitions.length === 0) {
+        throw new Error("Cannot merge empty JSON schema type definition array");
+    }
+    if(typeDefinitions.length === 1) {
+        const [ resolvedTypeDefinition ] = resolveJsonTypeDefinition(typeDefinitions[0], definitions ?? {});
+        return resolvedTypeDefinition;
+    }
     let mergedTypeDefinition: ObjectJsonSchemaTypeDefintion = {
         type: "object",
         required: [],
@@ -30,11 +39,16 @@ export const mergeJsonSchemaTypeDefinitions = (typeDefinitions: JsonSchemaTypeDe
         }
         throw new Error("Unmergable type definition detected");
     }
-    return mergedTypeDefinition;
+    return mergedTypeDefinition as JsonSchemaTypeDefintion;
 }
 export const resolveJsonTypeDefinition = (
     typeDefinition: JsonSchemaTypeDefintion,
     otherTypeDefinitions: Dictionary<JsonSchemaTypeDefintion>): [ typeDefinition: JsonSchemaTypeDefintion, typeName?: string ] => {
+
+    const compositeTypeDefintion = typeDefinition as CompositeJsonSchemaTypeDefintion;
+    if(!!compositeTypeDefintion.allOf) {
+        return [ mergeJsonSchemaTypeDefinitions(compositeTypeDefintion.allOf, otherTypeDefinitions) ];
+    }
 
     const typeReferenceDefinition = typeDefinition as TypeReferenceJsonSchemaTypeDefintion;
     if(!typeReferenceDefinition.$ref) {

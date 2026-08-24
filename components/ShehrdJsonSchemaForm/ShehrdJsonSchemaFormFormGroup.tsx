@@ -5,6 +5,7 @@ import { ShehrdJsonSchemaFormControl } from "./ShehrdJsonSchemaFormControl";
 import { useMemo } from "react";
 import { uuid } from "../../helpers/uuid";
 import { JsonSchemaPrimitiveType } from "../../types/shehrdJsonSchemaFormEnums";
+import { getFirstNonNullType } from "../../helpers/ShehrdJsonSchemaFormHelpers";
 
 interface ShehrdJsonSchemaFormFormGroupProps {
     propertyName: string;
@@ -23,13 +24,14 @@ export const ShehrdJsonSchemaFormFormGroup = (props: ShehrdJsonSchemaFormFormGro
 
     const id = useMemo(() => uuid(), []);
     const required = customizations?.required ?? requiredFromSchema;
+    const propertyType = useMemo(() => getFirstNonNullType(property), [ property ]);
 
     if(customizations?.hide) {
         return null;
     }
 
     return (<FormGroup className="mb-2" controlId={id}>
-        {property.type !== JsonSchemaPrimitiveType.boolean
+        {propertyType !== JsonSchemaPrimitiveType.boolean && propertyType !== JsonSchemaPrimitiveType.array
         ? <FormLabel
             className="mb-0"
         >

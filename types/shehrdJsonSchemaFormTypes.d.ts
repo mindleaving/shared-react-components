@@ -17,6 +17,9 @@ export interface JsonSchemaTypeDefintion {
 export interface TypeReferenceJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     $ref: string;
 }
+export interface CompositeJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
+    allOf: JsonSchemaTypeDefintion[];
+}
 export interface ObjectJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     type: "object";
     "x-abstract"?: boolean;
@@ -73,6 +76,7 @@ export interface ShehrdJsonSchemaCustomizations {
     arrayStyle?: ShehrdJsonSchemaFormArrayStyle;
     itemTitleFormatter?: (item: any) => string | undefined;
     items?: ShehrdJsonSchemaCustomizations;
+    itemCreator?: () => any;
     arrayActionButtons?: ReactNode[];
     
 
