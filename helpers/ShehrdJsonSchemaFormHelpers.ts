@@ -1,7 +1,7 @@
 import { JSX } from "react/jsx-runtime";
 import { Dictionary, IdAutocompleteProps } from "../types/frontendTypes";
 import { JsonSchemaPrimitiveType } from "../types/shehrdJsonSchemaFormEnums";
-import { ObjectJsonSchemaTypeDefintion, JsonSchemaTypeDefintion, TypeReferenceJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomFormControlProps, JsonSchemaType, ShehrdJsonSchemaCustomizations, CompositeJsonSchemaTypeDefintion } from "../types/shehrdJsonSchemaFormTypes";
+import { ObjectJsonSchemaTypeDefintion, JsonSchemaTypeDefintion, TypeReferenceJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomFormControlProps, JsonSchemaType, ShehrdJsonSchemaCustomizations, CompositeJsonSchemaTypeDefintion, AnyOfJsonSchemaTypeDefinition as OneOfJsonSchemaTypeDefinition } from "../types/shehrdJsonSchemaFormTypes";
 import { distinct } from "./CollectionHelpers";
 import { ShehrdJsonSchemaIdAutocompleteWrapper } from "../components/ShehrdJsonSchemaForm/ShehrdJsonSchemaIdAutocompleteWrapper";
 
@@ -48,6 +48,15 @@ export const resolveJsonTypeDefinition = (
     const compositeTypeDefintion = typeDefinition as CompositeJsonSchemaTypeDefintion;
     if(!!compositeTypeDefintion.allOf) {
         return [ mergeJsonSchemaTypeDefinitions(compositeTypeDefintion.allOf, otherTypeDefinitions) ];
+    }
+
+    const oneOfTypeDefinition = typeDefinition as OneOfJsonSchemaTypeDefinition;
+    if(!!oneOfTypeDefinition.oneOf) {
+        const nonNullTypeDefinition = oneOfTypeDefinition.oneOf.find(x => x.type !== JsonSchemaPrimitiveType.null);
+        if(!nonNullTypeDefinition) {
+            return [ { type: JsonSchemaPrimitiveType.string } ];
+        }
+        return resolveJsonTypeDefinition(nonNullTypeDefinition, otherTypeDefinitions);
     }
 
     const typeReferenceDefinition = typeDefinition as TypeReferenceJsonSchemaTypeDefintion;

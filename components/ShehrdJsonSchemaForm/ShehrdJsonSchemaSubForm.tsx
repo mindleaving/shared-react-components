@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Dictionary, IndexableObject, Update } from "../../types/frontendTypes";
 import { JsonSchemaTypeDefintion, ObjectJsonSchemaTypeDefintion, ShehrdJsonSchemaCustomizations, ShehrdJsonSchemaFormValidator } from "../../types/shehrdJsonSchemaFormTypes";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import { Col, Dropdown, DropdownButton, Row } from "react-bootstrap";
 import { resolveText } from "../../helpers/Globalizer";
 import { toDictionary } from "../../helpers/Transformations";
 import { ShehrdJsonSchemaFormFormGroup } from "./ShehrdJsonSchemaFormFormGroup";
@@ -15,6 +15,7 @@ interface ShehrdJsonSchemaSubFormProps<T> {
     onChange: (update: Update<T>) => void;
     validator: ShehrdJsonSchemaFormValidator;
     customizations?: ShehrdJsonSchemaCustomizations;
+    isRootForm?: boolean;
 }
 
 export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<T>) => {
@@ -60,20 +61,19 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
         const nonEmptyValues = optionalPropertyNames.filter(propertyName => !!(value as IndexableObject)[propertyName]);
         return distinct(nonEmptyValues.concat(customizations?.initiallyActiveOptionalProperties ?? []));
     });
-    const activeProperties = useMemo(() => {
-        if(!typeDefinition) {
-            return mandatoryProperties;
-        }
-        const activeOptionalProperties = toDictionary(
+    const activeOptionalProperties = useMemo(() =>
+        toDictionary(
             activeOptionalPropertyNames,
             propertyName => propertyName,
             propertyName => typeDefinition.properties[propertyName]
-        );
+        ),
+    [ activeOptionalPropertyNames, typeDefinition ]);
+    const activeProperties = useMemo(() => {
         return {
             ...mandatoryProperties,
             ...activeOptionalProperties
         };
-    }, [ typeDefinition, mandatoryProperties, activeOptionalPropertyNames ]);
+    }, [ typeDefinition, mandatoryProperties, activeOptionalProperties ]);
     const inactivePropertyNames = useMemo(() => 
         optionalPropertyNames.filter(propertyName => !activeOptionalPropertyNames.includes(propertyName) && !isHidden(propertyName, customizations)),
     [ optionalPropertyNames, activeOptionalPropertyNames, customizations ]);
@@ -83,30 +83,36 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
             propertyName => propertyName,
             propertyName => typeDefinition.properties[propertyName]
         );
-    }, [ inactivePropertyNames, typeDefinition ])
+    }, [ inactivePropertyNames, typeDefinition ]);
 
-    return (<>
-        {Object.entries(activeProperties).map(([propertyName, property]) => (
-            <ShehrdJsonSchemaFormFormGroup
-                key={propertyName}
-                propertyName={propertyName}
-                property={property}
-                otherTypeDefinitions={otherTypeDefinitions}
-                required={mandatoryPropertyNames.includes(propertyName)}
-                value={(value as any)[propertyName]}
-                onChange={update => onChange(state => ({
-                    ...state,
-                    [propertyName]: update((state as any)[propertyName])
-                }))}
-                validator={validator}
-                customizations={customizations?.properties ? customizations.properties[propertyName] : undefined}
-            />
-        ))}
-        {inactivePropertyNames.length > 0
+    const renderFormGroups = ([ propertyName, property]: [ string, JsonSchemaTypeDefintion ]) => (
+        <ShehrdJsonSchemaFormFormGroup
+            key={propertyName}
+            propertyName={propertyName}
+            property={property}
+            otherTypeDefinitions={otherTypeDefinitions}
+            required={mandatoryPropertyNames.includes(propertyName)}
+            value={(value as any)[propertyName]}
+            onChange={update => onChange(state => ({
+                ...state,
+                [propertyName]: update((state as any)[propertyName])
+            }))}
+            validator={validator}
+            customizations={customizations?.properties ? customizations.properties[propertyName] : undefined}
+        />
+    );
+
+    const optionalParameterActivationDropdownButton = inactivePropertyNames.length > 0
         ? <DropdownButton
             title={resolveText("MoreOptions")}
             variant="link"
         >
+            <Dropdown.Item
+                onClick={() => setActiveOptionalPropertyNames(optionalPropertyNames)}
+            >
+                {resolveText("ShowAll")}
+            </Dropdown.Item>
+            <Dropdown.Divider />
             {inactivePropertyNames.map(propertyName => (
                 <Dropdown.Item 
                     key={propertyName}
@@ -115,7 +121,27 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
                     {inactiveProperties[propertyName]?.title ?? propertyName}
                 </Dropdown.Item>
             ))}
-        </DropdownButton> : null}
+        </DropdownButton> : null;
+
+    if(props.isRootForm) {
+        return (<>
+            <Row>
+                <Col>
+                    <h3>Mandatory fields</h3>
+                    {Object.entries(mandatoryProperties).map(renderFormGroups)}
+                </Col>
+                <Col xl>
+                    <h3>Optional fields</h3>
+                    {Object.entries(activeOptionalProperties).map(renderFormGroups)}
+                    {optionalParameterActivationDropdownButton}
+                </Col>
+            </Row>
+        </>);
+    }
+
+    return (<>
+        {Object.entries(activeProperties).map(renderFormGroups)}
+        {optionalParameterActivationDropdownButton}
     </>);
 
 }

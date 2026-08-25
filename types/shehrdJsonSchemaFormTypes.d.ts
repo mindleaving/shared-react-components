@@ -20,6 +20,9 @@ export interface TypeReferenceJsonSchemaTypeDefintion extends JsonSchemaTypeDefi
 export interface CompositeJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     allOf: JsonSchemaTypeDefintion[];
 }
+export interface AnyOfJsonSchemaTypeDefinition extends JsonSchemaTypeDefintion {
+    oneOf: JsonSchemaTypeDefintion[];
+}
 export interface ObjectJsonSchemaTypeDefintion extends JsonSchemaTypeDefintion {
     type: "object";
     "x-abstract"?: boolean;

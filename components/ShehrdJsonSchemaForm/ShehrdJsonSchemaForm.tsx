@@ -109,6 +109,7 @@ export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) =>
             onChange={onChange}
             validator={validator}
             customizations={customizations}
+            isRootForm
         />
         {!props.hideButtons
         ? <Row className="align-items-center mt-3">
