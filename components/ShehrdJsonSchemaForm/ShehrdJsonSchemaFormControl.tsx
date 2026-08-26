@@ -11,6 +11,7 @@ import { DateFormControl } from "../FormControls/DateFormControl";
 import { toDateOnly } from "../../helpers/DateHelpers";
 import { TimeFormControl } from "../FormControls/TimeFormControl";
 import { SelectFormControl } from "../FormControls/SelectFormControl";
+import { resolveText } from "../../helpers/Globalizer";
 
 interface ShehrdJsonSchemaFormControlProps extends ShehrdJsonSchemaSharedFormControlProps {
     customizations?: ShehrdJsonSchemaCustomizations;
@@ -78,6 +79,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                         onChange={e => onChange(() => e.target.value)}
                         {...customizations?.formControlOptions}
                     >
+                        <option value="">{resolveText("PleaseSelect...")}</option>
                         {stringProperty.enum.map(enumValue => (
                             <option key={enumValue} value={enumValue}>{enumValue}</option>
                         ))}

@@ -29,6 +29,7 @@ interface ShehrdJsonSchemaFormProps<T> {
     hideButtons?: boolean;
     showResetButton?: boolean;
     isSubmitting?: boolean;
+    doNotSplitMandatoryAndOptional?: boolean;
 }
 
 export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) => {
@@ -110,6 +111,7 @@ export const ShehrdJsonSchemaForm = <T,>(props: ShehrdJsonSchemaFormProps<T>) =>
             validator={validator}
             customizations={customizations}
             isRootForm
+            doNotSplitMandatoryAndOptional={props.doNotSplitMandatoryAndOptional}
         />
         {!props.hideButtons
         ? <Row className="align-items-center mt-3">

@@ -6,7 +6,7 @@ import { resolveText } from "../../helpers/Globalizer";
 import { toDictionary } from "../../helpers/Transformations";
 import { ShehrdJsonSchemaFormFormGroup } from "./ShehrdJsonSchemaFormFormGroup";
 import { isHidden } from "../../helpers/ShehrdJsonSchemaFormHelpers";
-import { distinct } from "../../helpers/CollectionHelpers";
+import { distinct, intersect } from "../../helpers/CollectionHelpers";
 
 interface ShehrdJsonSchemaSubFormProps<T> {
     typeDefinition: ObjectJsonSchemaTypeDefintion;
@@ -16,8 +16,18 @@ interface ShehrdJsonSchemaSubFormProps<T> {
     validator: ShehrdJsonSchemaFormValidator;
     customizations?: ShehrdJsonSchemaCustomizations;
     isRootForm?: boolean;
+    doNotSplitMandatoryAndOptional?: boolean;
 }
 
+const isNonEmptyValue = (value: any) => {
+    if(!value) {
+        return false;
+    }
+    if(Array.isArray(value)) {
+        return (value as any[]).length > 0;
+    }
+    return true;
+}
 export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<T>) => {
 
     const {
@@ -42,11 +52,8 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
                 .filter(([_,propertyCustomization]) => propertyCustomization.required ?? false)
                 .map(([propertyName]) => propertyName)
             : [];
-        return distinct(schemaRequired.concat(customizationRequired));
+        return intersect(allPropertyNames, schemaRequired.concat(customizationRequired), (a,b) => a === b);
     }, [ typeDefinition, customizations ]);
-    const optionalPropertyNames = useMemo(() => 
-        allPropertyNames.filter(propertyName => !mandatoryPropertyNames.includes(propertyName)), 
-    [ allPropertyNames, mandatoryPropertyNames ]);
     const mandatoryProperties = useMemo(() => {
         if(!typeDefinition) {
             return {};
@@ -57,9 +64,13 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
             propertyName => typeDefinition.properties[propertyName]
         );
     }, [ typeDefinition, mandatoryPropertyNames ]);
+    const optionalPropertyNames = useMemo(() => 
+        allPropertyNames.filter(propertyName => !mandatoryPropertyNames.includes(propertyName)), 
+    [ allPropertyNames, mandatoryPropertyNames ]);
     const [ activeOptionalPropertyNames, setActiveOptionalPropertyNames ] = useState<string[]>(() => {
-        const nonEmptyValues = optionalPropertyNames.filter(propertyName => !!(value as IndexableObject)[propertyName]);
-        return distinct(nonEmptyValues.concat(customizations?.initiallyActiveOptionalProperties ?? []));
+        const nonEmptyValues = optionalPropertyNames.filter(propertyName => isNonEmptyValue((value as IndexableObject)[propertyName]));
+        const initiallyActiveOptionalPropertyNames = intersect(allPropertyNames, customizations?.initiallyActiveOptionalProperties ?? [], (a,b) => a === b);
+        return distinct(nonEmptyValues.concat(initiallyActiveOptionalPropertyNames));
     });
     const activeOptionalProperties = useMemo(() =>
         toDictionary(
@@ -123,15 +134,15 @@ export const ShehrdJsonSchemaSubForm = <T,>(props: ShehrdJsonSchemaSubFormProps<
             ))}
         </DropdownButton> : null;
 
-    if(props.isRootForm) {
+    if(props.isRootForm && !props.doNotSplitMandatoryAndOptional) {
         return (<>
             <Row>
                 <Col>
-                    <h3>Mandatory fields</h3>
+                    <h3>{resolveText("ShehrdJsonSchemaForm_MandatoryFields")}</h3>
                     {Object.entries(mandatoryProperties).map(renderFormGroups)}
                 </Col>
                 <Col xl>
-                    <h3>Optional fields</h3>
+                    <h3>{resolveText("ShehrdJsonSchemaForm_OptionalFields")}</h3>
                     {Object.entries(activeOptionalProperties).map(renderFormGroups)}
                     {optionalParameterActivationDropdownButton}
                 </Col>
