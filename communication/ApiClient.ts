@@ -11,6 +11,8 @@ export interface ApiClientOptions {
     stringifyBody?: boolean;
     csrfHeaderName?: string;
 }
+
+export const DefaultCsrfTokenHeaderKey = "X-XSRF-TOKEN";
 export class ApiClient {
     isLoggedIn: boolean;
     serverAddress: string;
@@ -29,7 +31,7 @@ export class ApiClient {
             handleError: true, 
             contentType: 'application/json',
             stringifyBody: true,
-            csrfHeaderName: "X-XSRF-TOKEN"
+            csrfHeaderName: DefaultCsrfTokenHeaderKey
         };
     }
 
@@ -102,7 +104,7 @@ export class ApiClient {
             headers['Content-Type'] = effectiveOptions.contentType;
         }
         if(method !== "GET") {
-            headers[effectiveOptions.csrfHeaderName ?? "X-XSRF-TOKEN"] = this.csrfToken ?? "1";
+            headers[effectiveOptions.csrfHeaderName ?? DefaultCsrfTokenHeaderKey] = this.csrfToken ?? "1";
         }
         if(this.accessToken) {
             headers['Authorization'] = `Bearer ${this.accessToken}`;
