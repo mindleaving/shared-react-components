@@ -4,9 +4,14 @@ import { removeSurroundingQuotes } from "../helpers/StringExtensions";
 import { showErrorAlert } from "../helpers/AlertHelpers";
 import { QueryParameters } from "../types/frontendTypes";
 
-export const downloadFile = async (url: string, params?: QueryParameters) => {
+export const downloadFile = async (url: string, params?: QueryParameters, body?: any, options?: { method: "GET" | "POST" }) => {
     try {
-        const response = await apiClient.instance!.get(url, params);
+        let response: Response;
+        if(options?.method === "POST") {
+            response = await apiClient.instance!.post(url, params, body);
+        } else {
+            response = await apiClient.instance!.get(url, params);
+        }
         const result = await response.blob();
         const contentDispositionHeader = response.headers.get("content-disposition");
         const filenameFromHeader = removeSurroundingQuotes(contentDispositionHeader
