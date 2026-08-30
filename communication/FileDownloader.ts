@@ -8,7 +8,7 @@ export const downloadFile = async (url: string, params?: QueryParameters, body?:
     try {
         let response: Response;
         if(options?.method === "POST") {
-            response = await apiClient.instance!.post(url, params, body);
+            response = await apiClient.instance!.post(url, body, params);
         } else {
             response = await apiClient.instance!.get(url, params);
         }
