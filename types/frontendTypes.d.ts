@@ -26,7 +26,7 @@ export interface RouteDefinition {
 };
 export interface IdAutocompleteProps {
     value?: string | null;
-    onChange: (value: string | undefined) => void;
+    onChange: (id: string | undefined, item?: unknown) => void;
     disabled?: boolean;
     required?: boolean;
     placeholder?: string;

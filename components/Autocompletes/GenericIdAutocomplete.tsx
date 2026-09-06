@@ -27,7 +27,7 @@ export const GenericIdAutocomplete = <T extends Models.IId<string>>(props: Gener
         if(item?.id === value) {
             return;
         }
-        onChange(item?.id);
+        onChange(item?.id, item);
     }, [ item ]);
 
     useEffect(() => {
