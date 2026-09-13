@@ -109,4 +109,4 @@ export const isHidden = (propertyName: string, customizations: ShehrdJsonSchemaC
     }
     return (propertyCustomization as ShehrdJsonSchemaCustomizations).hide;
 }
-export const HideJsonSchemaProperty: ShehrdJsonSchemaCustomizations = { hide: true };
+export const Hide: ShehrdJsonSchemaCustomizations = { hide: true };
