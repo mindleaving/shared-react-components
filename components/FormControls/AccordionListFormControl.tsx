@@ -1,23 +1,36 @@
 import { Accordion, Button, Col, Row } from "react-bootstrap";
 import { resolveText } from "../../helpers/Globalizer";
-import { ReactNode, useCallback } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { Update } from "../../types/frontendTypes";
 import { AccordionCard } from "../AccordionCard";
 import { moveItem, removeItemAtIndex, replaceItemAtIndex } from "../../helpers/CollectionHelpers";
 import { DeleteButton } from "../DeleteButon";
+import { MoveArrayItemsModal } from "../../modals/MoveArrayItemsModal";
 
 interface AccordionListFormControlProps<T> {
     items: T[];
     titleFormatter: (item: T) => string | undefined;
     isValid: (item: T) => boolean;
-    itemFormControlBuilder: (item: T, onChange: (update: Update<T>) => void) => ReactNode;
+    itemFormControlBuilder: (item: T, onChange: (update: Update<T>) => void, itemIndex: number) => ReactNode;
     onChange: (update: Update<T[]>) => void;
-    itemCreator?: () => T;
+    itemCreator: () => T;
+    additionalActionButtons?: ReactNode[];
+    label?: string;
 }
 
 export const AccordionListFormControl = <T,>(props: AccordionListFormControlProps<T>) => {
 
-    const { items, titleFormatter, isValid, itemFormControlBuilder, onChange, itemCreator } = props;
+    const { 
+        items, 
+        titleFormatter, 
+        isValid, 
+        itemFormControlBuilder, 
+        onChange, 
+        itemCreator, 
+        additionalActionButtons 
+    } = props;
+
+    const [ showMoveItemsModal, setShowMoveItemsModal ] = useState<boolean>(false);
 
     const onMoveUpItem = useCallback((itemIndex: number) => {
         if(itemIndex - 1 < 0) {
@@ -33,6 +46,22 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
     }, [ items.length ]);
 
     return (<>
+        <Row className="align-items-center mb-1">
+            <Col>{props.label}</Col>
+            {additionalActionButtons?.map((button,buttonIndex) => (
+                <Col key={buttonIndex} xs="auto">
+                    {button}
+                </Col>
+            ))}
+            <Col xs="auto">
+                <Button
+                    onClick={() => setShowMoveItemsModal(true)}
+                    size='sm'
+                >
+                    {resolveText("Move")}...
+                </Button>
+            </Col>
+        </Row>
         <Accordion className="ms-3">
             {items.map((item,itemIndex) => (
                 <AccordionCard
@@ -75,7 +104,7 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
                     </Row>}
                     headerClassName="py-2"
                 >
-                    {itemFormControlBuilder(item, update => onChange(state => replaceItemAtIndex(state, update(state[itemIndex]), itemIndex)))}
+                    {itemFormControlBuilder(item, update => onChange(state => replaceItemAtIndex(state, update(state[itemIndex]), itemIndex)), itemIndex)}
                     <Row>
                         <Col></Col>
                         <Col xs="auto">
@@ -88,11 +117,11 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
             ))}
         </Accordion>
         {itemCreator
-        ? <Row className="ms-3 mt-1 mb-2">
+        ? <Row className="mt-1 mb-2">
             <Col>
                 <Button
                     type="button"
-                    className="ms-2"
+                    className="ms-3"
                     size="sm"
                     onClick={() => onChange(state => state.concat([ itemCreator() ]))}
                 >
@@ -100,6 +129,13 @@ export const AccordionListFormControl = <T,>(props: AccordionListFormControlProp
                 </Button>
             </Col>
         </Row> : null}
+        <MoveArrayItemsModal
+            show={showMoveItemsModal}
+            onClose={() => setShowMoveItemsModal(false)}
+            items={items}
+            formatItem={(item,itemIndex) => titleFormatter(item) ?? resolveText("ItemX").replace('{0}', (itemIndex + 1) + '')}
+            onChange={onChange}
+        />
     </>);
 
 }

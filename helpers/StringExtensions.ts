@@ -23,7 +23,7 @@ export const removeSurroundingQuotes = (str: string | null | undefined) => {
     }
     return str;
 }
-export const isNullOrEmpty = (word: string) => {
+export const isNullOrEmpty = (word: string | null | undefined) => {
     return word === undefined || word === null || word === '';
 }
 export const truncateText = (str: string, maxLength: number) => {

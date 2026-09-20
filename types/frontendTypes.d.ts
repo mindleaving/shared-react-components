@@ -16,6 +16,9 @@ interface JsonWebToken {
     aud: string;
     [key: string]: string
 }
+export interface IndexableObject {
+    [key:string]: unknown;
+}
 export interface RouteDefinition {
     path: string;
     element: ReactNode;
@@ -23,7 +26,7 @@ export interface RouteDefinition {
 };
 export interface IdAutocompleteProps {
     value?: string | null;
-    onChange: (value: string | undefined) => void;
+    onChange: (id: string | undefined, item?: unknown) => void;
     disabled?: boolean;
     required?: boolean;
     placeholder?: string;
@@ -40,6 +43,7 @@ export interface FormStep<T> {
     hideNavigation?: (formData: T) => boolean;
 }
 export interface CustomFormControlProps {
+    id?: string;
     required?: boolean;
     readOnly?: boolean;
     disabled?: boolean;

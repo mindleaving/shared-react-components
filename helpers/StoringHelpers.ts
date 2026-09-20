@@ -1,4 +1,4 @@
-import { apiClient } from "../communication/ApiClient";
+import { apiClient, DefaultCsrfTokenHeaderKey } from "../communication/ApiClient";
 import { FileUploadResult, JsonPatchDocument, QueryParameters } from "../types/frontendTypes";
 import { showSuccessAlert, showErrorAlert } from "./AlertHelpers";
 import { handleResponse } from "./ApiResponseHandler";
@@ -141,8 +141,8 @@ export const uploadFile = (
         if(!!file.name) {
             xhr.setRequestHeader('Content-Disposition', `attachment; filename="${file.name}"`);
         }
-        if(options?.csrfTokenHeaderName && options?.csrfToken) {
-            xhr.setRequestHeader(options.csrfTokenHeaderName, options.csrfToken);
+        if(!!options?.csrfToken) {
+            xhr.setRequestHeader(options?.csrfTokenHeaderName ?? DefaultCsrfTokenHeaderKey, options.csrfToken);
         }
         if(options?.includeCredentials) {
             xhr.withCredentials = true;
