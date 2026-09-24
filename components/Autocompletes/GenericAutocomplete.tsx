@@ -19,6 +19,7 @@ export interface GenericAutocompleteImplementationProps<T> {
     className?: string;
     autoFocus?: boolean;
     autoSelectSingleItem?: boolean;
+    size?: "sm" | "lg";
 }
 export interface GenericAutocompleteProps<T> extends GenericAutocompleteImplementationProps<T> {
     apiPath: string;
@@ -41,6 +42,7 @@ export const GenericAutocomplete = <T,>(props: GenericAutocompleteProps<T>) => {
         searchDelayInMilliseconds,
         minSearchTextLength,
         autoSelectSingleItem,
+        size,
         displayFunc,
         apiPath,
         orderBy, 
@@ -70,6 +72,7 @@ export const GenericAutocomplete = <T,>(props: GenericAutocompleteProps<T>) => {
         placeholder={placeholder}
         disabled={disabled}
         required={required}
+        size={size}
         className={className}
         autoFocus={autoFocus}
         autoSelectSingleItem={autoSelectSingleItem}
