@@ -8,13 +8,14 @@ interface DateSelectionRowProps extends PropsWithChildren {
     date: string;
     onChange: (date: string) => void;
     size?: 'sm' | 'lg';
+    itemAlignment?: 'start' | 'center' | 'end';
 }
 export const DateSelectionRow = (props: DateSelectionRowProps) => {
 
-    const { date: selectedDate, onChange, size } = props;
+    const { date: selectedDate, onChange, size, itemAlignment } = props;
 
-    return (<Row className='align-items-center'>
-        <Col>{props.children}</Col>
+    return (<Row className={`g-2 align-items-${itemAlignment ?? 'center'}`}>
+        <Col md>{props.children}</Col>
         <Col xs="auto" className='pe-1'>
             <Button
                 onClick={() => onChange(toDateOnly(addDays(new Date(selectedDate), -1)))}
