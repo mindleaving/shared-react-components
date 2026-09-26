@@ -59,12 +59,13 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
         {
             const stringProperty = resolvedTypeDefinition as StringJsonSchemaTypeDefintion;
             const stringValue = (value as string | null | undefined) ?? undefined;
-            if(stringProperty.enum) {
+            const enumValues = stringProperty["x-enumNames"] ?? stringProperty.enum;
+            if(!!enumValues) {
                 const enumName = typeName ?? customizations?.enumName;
                 if(!!enumName) {
                     return (<SelectFormControl
                         enumName={enumName}
-                        enumValues={stringProperty.enum}
+                        enumValues={enumValues}
                         required={required}
                         disabled={disabled}
                         value={stringValue}
@@ -80,7 +81,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
                         {...customizations?.formControlOptions}
                     >
                         <option value="">{resolveText("PleaseSelect...")}</option>
-                        {stringProperty.enum.map(enumValue => (
+                        {enumValues.map(enumValue => (
                             <option key={enumValue} value={enumValue}>{enumValue}</option>
                         ))}
                     </FormSelect>);

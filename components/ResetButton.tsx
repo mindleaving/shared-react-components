@@ -13,7 +13,7 @@ export const ResetButton = (props: ResetButtonProps) => {
     const { type, onClick, size, className } = props;
 
     return (<Button
-        type={type}
+        type={type ?? "button"}
         variant="secondary"
         onClick={onClick}
         size={size}

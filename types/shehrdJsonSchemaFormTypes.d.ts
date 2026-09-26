@@ -49,6 +49,7 @@ export interface StringJsonSchemaTypeDefintion {
     maxLength?: number;
     pattern?: string;
     enum?: string[];
+    "x-enumNames": string[];
 }
 export interface NumericJsonSchemaTypeDefinition {
     type: "integer" | "number";
