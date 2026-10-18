@@ -30,6 +30,7 @@ interface SortableTableProps<T> {
     responsive?: string | boolean;
     striped?: boolean | string;
     hover?: boolean;
+    stickyHeader?: boolean;
     variant?: string;
     className?: string;
 }
@@ -51,6 +52,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         responsive,
         striped,
         hover,
+        stickyHeader,
         variant,
         className
     } = props;
@@ -199,7 +201,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         variant={variant}
         className={className}
     >
-        <thead>
+        <thead style={stickyHeader ? { 'position': 'sticky', top: 60 } : undefined}>
             {headerRows}
         </thead>
         <tbody>
