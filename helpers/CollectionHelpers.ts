@@ -108,6 +108,29 @@ export const range = (start: number, end: number) => {
     }
     return Array.from({ length: end - start + 1}, (_,i) => start + i);
 }
+export function* sequence(start: number, end: number, increment: number) {
+    if(increment === 0) {
+        throw new Error("Invalid increment");
+    }
+    if(end > start && increment <= 0) {
+        throw new Error("Invalid increment");
+    }
+    if(start > end && increment >= 0) {
+        throw new Error("Invalid increment");
+    }
+    let i = start;
+    if(start < end) {
+        while(i <= end) {
+            yield i;
+            i += increment;
+        }
+    } else {
+        while(i >= end) {
+            yield i;
+            i += increment;
+        }
+    }
+}
 export const sortByTimeAscending = <T>(entries: T[], timeFieldSelector: (item: T) => Date): T[] => {
     return [...entries].sort((a,b) => compareAsc(timeFieldSelector(a), timeFieldSelector(b)));
 }

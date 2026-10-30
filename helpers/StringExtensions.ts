@@ -46,3 +46,13 @@ export const includesAll = (str: string, searchTerms: string[]) => {
 export const insertTextAt = (str: string, insertText: string, position: number) => {
     return str.slice(0, position) + insertText + str.slice(position);
 }
+export const toPrecisionNonScientific = (value: number, precision: number): string => {
+    if(value === 0) {
+        return '0';
+    }
+    if(value >= Math.pow(10, precision)) {
+        return value.toFixed(0);
+    }
+    const firstNonNullDigitPosition = Math.ceil(Math.log10(value));
+    return value.toFixed(precision - firstNonNullDigitPosition);
+}

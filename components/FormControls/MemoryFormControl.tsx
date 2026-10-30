@@ -27,6 +27,7 @@ export const MemoryFormControl = (props: MemoryFormControlProps) => {
             onSearchTextChange={props.onChange}
             placeholder={props.placeholder}
             minSearchTextLength={props.minSearchTextLength}
+            required={props.required && !props.defaultValue}
             disabled={props.disabled}
             size={props.size}
         />
