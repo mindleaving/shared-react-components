@@ -18,6 +18,7 @@ interface DateFormControlProps {
     size?: "sm" | "lg";
     static?: boolean;
     autoFocus?: boolean;
+    placeholder?: string;
 }
 
 export const DateFormControl = (props: DateFormControlProps) => {
@@ -32,7 +33,8 @@ export const DateFormControl = (props: DateFormControlProps) => {
         enableTime,
         defaultHour,
         size,
-        autoFocus
+        autoFocus,
+        placeholder
     } = props;
 
     const [ localValue, setLocalValue ] = useState<string>('');
@@ -87,6 +89,7 @@ export const DateFormControl = (props: DateFormControlProps) => {
                 onChange={(_dates,_dateStr,instance) => setLocalValue(instance.input.value)}
                 onClose={onChange}
                 autoFocus={autoFocus}
+                placeholder={placeholder}
             />
         </Col>
         <Col xs="auto" className="no-print ps-1">
