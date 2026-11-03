@@ -1,11 +1,15 @@
 .sortable {
     cursor: pointer;
+    position: relative;
+}
+.sortable .th-title {
+    position: relative;
 }
 .sortable .sort-direction-indicator {
     opacity: 30%;
     position: absolute;
-    top: 0px;
-    right: 0px;
+    bottom: 0px;
+    right: 10px;
 }
 .sortable:hover .sort-direction-indicator {
     opacity: 100%;

@@ -31,6 +31,7 @@ interface SortableTableProps<T> {
     striped?: boolean | string;
     hover?: boolean;
     stickyHeader?: boolean;
+    stickyHeaderOffset?: number;
     variant?: string;
     className?: string;
 }
@@ -53,6 +54,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         striped,
         hover,
         stickyHeader,
+        stickyHeaderOffset,
         variant,
         className
     } = props;
@@ -116,7 +118,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             onClick={() => toggleSearchDirection(columnIndex)}
             title={headerCell?.title}
         >
-            <div className='position-relative'>
+            <div className='th-title'>
                 <div 
                     className={combineCssClasses([ 
                         headerCell?.center ? 'text-center' : undefined, 
@@ -125,11 +127,11 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
                 >
                     {headerCell?.content}
                 </div>
-                <div className="sort-direction-indicator">
-                    {columnIndex !== sortInfo.columnIndex ? <i className="fa fa-sort" />
-                    : sortInfo.sortOrder === OrderDirection.Ascending ? <i className="fa fa-sort-asc" />
-                    : <i className="fa fa-sort-desc" />}
-                </div>
+            </div>
+            <div className="sort-direction-indicator">
+                {columnIndex !== sortInfo.columnIndex ? <i className="fa fa-sort" />
+                : sortInfo.sortOrder === OrderDirection.Ascending ? <i className="fa fa-sort-asc" />
+                : <i className="fa fa-sort-desc" />}
             </div>
         </th>);
     }, [ toggleSearchDirection ]);
@@ -147,7 +149,9 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             ])}
             title={headerCell?.title}
         >
-            {headerCell?.content}
+            <div className='th-title'>
+                {headerCell?.content}
+            </div>
         </th>);
     }, []);
 
@@ -201,7 +205,12 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         variant={variant}
         className={className}
     >
-        <thead style={stickyHeader ? { 'position': 'sticky', top: 60 } : undefined}>
+        <thead
+            style={stickyHeader ? { 
+                'position': 'sticky', 
+                top: stickyHeaderOffset ? `${stickyHeaderOffset}px` : undefined 
+            } : undefined}
+        >
             {headerRows}
         </thead>
         <tbody>
