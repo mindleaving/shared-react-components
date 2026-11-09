@@ -1,6 +1,6 @@
 import { FormSelect } from "react-bootstrap";
 import { Country } from "../../../localComponents/types/enums";
-import { resolveText } from "../../helpers/Globalizer";
+import { resolveEnum, resolveText } from "../../helpers/Globalizer";
 import { CustomFormControlProps } from "../../types/frontendTypes";
 
 interface CountrySelectorProps extends CustomFormControlProps {
@@ -24,7 +24,7 @@ export const CountrySelector = (props: CountrySelectorProps) => {
     >
         <option value="">{resolveText("PleaseSelect...")}</option>
         {Object.values(Country).map(x => (
-            <option key={x} value={x}>{x} - {resolveText(`Country_${x}`)}</option>
+            <option key={x} value={x}>{x} - {resolveEnum("Country", x)}</option>
         ))}
     </FormSelect>);
 

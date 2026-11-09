@@ -55,7 +55,10 @@ export class Globalizer {
         if(defaultTranslation && defaultTranslation[resourceId]) {
             return defaultTranslation[resourceId];
         }
-        throw new Error(`Cannot resolve resource '${resourceId}'`);
+        if(window.location.hostname === "localhost") {
+            throw new Error(`Cannot resolve resource '${resourceId}'`);
+        }
+        return resourceId;
     }
 
     tryGetResourceDictionary = (language: string): { [key: string]: string } | undefined => {
@@ -78,6 +81,10 @@ export function canResolveText(resourceId: string): boolean {
 }
 export function resolveText(resourceId: string): string {
     return defaultGlobalizer.instance!.resolveText(resourceId);
+}
+export function resolveEnum(enumName: string, enumValue: string): string {
+    const normalizedEnumValue = enumValue.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+    return defaultGlobalizer.instance!.resolveText(`${enumName}_${normalizedEnumValue}`);
 }
 export function replaceResolvableText(str: string) {
     const resourceReferences = str.match(/resolveText:[a-zA-Z0-9_]+/g);

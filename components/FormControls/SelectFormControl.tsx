@@ -1,6 +1,6 @@
 import { FormSelect } from "react-bootstrap";
 import { CustomFormControlProps } from "../../types/frontendTypes";
-import { resolveText } from "../../helpers/Globalizer";
+import { resolveEnum, resolveText } from "../../helpers/Globalizer";
 import { CSSProperties } from "react";
 
 interface SelectFormControlProps extends CustomFormControlProps {
@@ -52,7 +52,7 @@ export const SelectFormControl = (props: SelectFormControlProps) => {
                 value={x}
                 style={!!colorMap ? colorMap[x] : undefined}
             >
-                {resolveText(`${enumName}_${x}`)}
+                {resolveEnum(enumName, x)}
             </option>
         ))}
     </FormSelect>);
