@@ -1,3 +1,4 @@
+import { normalizeEnumValue } from "./EnumHelpers";
 import { toDictionary } from "./Transformations";
 
 interface Translation {
@@ -83,7 +84,7 @@ export function resolveText(resourceId: string): string {
     return defaultGlobalizer.instance!.resolveText(resourceId);
 }
 export function resolveEnum(enumName: string, enumValue: string): string {
-    const normalizedEnumValue = enumValue.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
+    const normalizedEnumValue = normalizeEnumValue(enumValue);
     return defaultGlobalizer.instance!.resolveText(`${enumName}_${normalizedEnumValue}`);
 }
 export function replaceResolvableText(str: string) {
