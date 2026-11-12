@@ -1,5 +1,4 @@
-export const accessTokenSessionStorageKey = "accessToken";
-export const accessTokenExpirationSessionStorageKey = "accessTokenExpiration";
+export const authSessionStorageKey = "authSession";
 export const csrfTokenSessionStorageKey = "csrfToken";
-export const userSessionStorageKey = "session";
+export const userSessionStorageKey = "userViewModel";
 export const featuresSessionStorageKey = "features";

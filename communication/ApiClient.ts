@@ -1,5 +1,5 @@
 import type { OidcClient, SigninResponse } from 'oidc-client-ts';
-import { userSessionStorageKey } from '../helpers/Constants';
+import { authSessionStorageKey } from '../helpers/Constants';
 import { buildUrl } from '../helpers/UrlBuilder';
 import type { JsonPatchDocument, QueryParameters } from '../types/frontendTypes';
 import { ApiError } from './ApiError';
@@ -89,7 +89,7 @@ export class ApiClient {
 
     restoreSession = () => {
         try {
-            const json = sessionStorage.getItem(userSessionStorageKey);
+            const json = sessionStorage.getItem(authSessionStorageKey);
             const storedSession = json ? JSON.parse(json) as Partial<AuthSession> : null;
             const isExpired = !!storedSession?.expiresAt && storedSession.expiresAt <= Date.now() / 1000;
             if(isValidStoredSession(storedSession) && (!isExpired || storedSession.refreshToken)) {
@@ -357,7 +357,6 @@ export class ApiClient {
         if(!isCallback || !hasAuthorizationResult) {
             throw new ApiError(401, 'The authorization endpoint did not return an authorization code (login required)');
         }
-        console.log("_fetchAuthorizationCallbackUrl", { authorizeUrl, finalUrl, redirectUri, isCallback });
         return finalUrl.toString();
     }
 
@@ -399,9 +398,9 @@ export class ApiClient {
         this.loginExpirationTime = session?.expiresAt ? new Date(session.expiresAt * 1000).toISOString() : undefined;
         try {
             if(session) {
-                sessionStorage.setItem(userSessionStorageKey, JSON.stringify(session));
+                sessionStorage.setItem(authSessionStorageKey, JSON.stringify(session));
             } else {
-                sessionStorage.removeItem(userSessionStorageKey);
+                sessionStorage.removeItem(authSessionStorageKey);
             }
         } catch {
             return;
