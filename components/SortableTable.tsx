@@ -5,6 +5,7 @@ import { Col, Row, Table } from "react-bootstrap";
 import { NoEntriesTableRow } from "./NoEntriesTableRow";
 import { OrderDirection } from "../types/enums";
 import { combineCssClasses } from '../helpers/StylingHelpers';
+import { compareEnum } from '../helpers/EnumHelpers';
 
 export interface SortableTableHeaderCell {
     colSpan?: number;
@@ -76,7 +77,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         if(!sortValueComparer) {
             throw new Error(`Column ${sortInfo.columnIndex} is sortable but has not sort value comparer`);
         }
-        if(sortInfo.sortOrder === OrderDirection.Descending) {
+        if(compareEnum(sortInfo.sortOrder, OrderDirection.Descending)) {
             return [...items].sort((a,b) => sortValueComparer(sortValueSelector(b), sortValueSelector(a)));
         } else {
             return [...items].sort((a,b) => sortValueComparer(sortValueSelector(a), sortValueSelector(b)));
@@ -88,7 +89,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             if(columnIndex === state.columnIndex) {
                 return {
                     ...state,
-                    sortOrder: state.sortOrder === OrderDirection.Ascending ? OrderDirection.Descending : OrderDirection.Ascending
+                    sortOrder: compareEnum(state.sortOrder, OrderDirection.Ascending) ? OrderDirection.Descending : OrderDirection.Ascending
                 };
             } else {
                 return {
@@ -130,7 +131,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             </div>
             <div className="sort-direction-indicator">
                 {columnIndex !== sortInfo.columnIndex ? <i className="fa fa-sort" />
-                : sortInfo.sortOrder === OrderDirection.Ascending ? <i className="fa fa-sort-asc" />
+                : compareEnum(sortInfo.sortOrder, OrderDirection.Ascending) ? <i className="fa fa-sort-asc" />
                 : <i className="fa fa-sort-desc" />}
             </div>
         </th>);

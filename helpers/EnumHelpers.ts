@@ -1,4 +1,10 @@
-export const compareEnum = (a: string, b: string) => {
+export const compareEnum = (a: string | null | undefined, b: string | null | undefined) => {
+    if(!a && !b) {
+        return true;
+    }
+    if(!a || !b) {
+        return false;
+    }
     return normalizeEnumValue(a) === normalizeEnumValue(b);
 }
 export const isEnumInSet = (enumValue: string, set: string[]) => {
