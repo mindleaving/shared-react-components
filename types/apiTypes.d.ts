@@ -34,3 +34,8 @@ interface TokenEndpointResponse {
   error_description?: string;
   errorCode: string;
 }
+
+export interface ApiClientState {
+    status: ApiClientStatus;
+    session: AuthSession | undefined;
+}

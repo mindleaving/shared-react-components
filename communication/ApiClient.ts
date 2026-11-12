@@ -2,6 +2,8 @@ import type { OidcClient, SigninResponse } from 'oidc-client-ts';
 import { authSessionStorageKey } from '../helpers/Constants';
 import { buildUrl } from '../helpers/UrlBuilder';
 import type { JsonPatchDocument, QueryParameters } from '../types/frontendTypes';
+import type { ApiClientState, AuthSession, TokenEndpointResponse } from '../types/apiTypes';
+import { ApiClientStatus } from '../types/enums';
 import { ApiError } from './ApiError';
 import { createOidcClient } from './oidcClient';
 
@@ -32,6 +34,8 @@ export const AnonymousCsrfToken = '1';
 const TokenExchangeGrantType = 'urn:ietf:params:oauth:grant-type:token-exchange';
 const AccessTokenTypeIdentifier = 'urn:ietf:params:oauth:token-type:access_token';
 const RefreshMarginInSeconds = 30;
+const DefaultReconnectIntervalInMilliseconds = 5000;
+const ServerUnavailableStatusCodes = [502, 503, 504];
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -44,6 +48,19 @@ const isExpiring = (session: AuthSession): boolean =>
 const isValidStoredSession = (session: Partial<AuthSession> | null): session is AuthSession =>
     !!session && !!session.accessToken && !!session.csrfToken && !!session.name;
 
+const computeState = (session: AuthSession | undefined, isServerReachable: boolean): ApiClientState => {
+    if(!isServerReachable) {
+        return { status: ApiClientStatus.ServerUnavailable, session };
+    }
+    if(!session) {
+        return { status: ApiClientStatus.NotLoggedIn, session };
+    }
+    if(!session.account) {
+        return { status: ApiClientStatus.LoginOnly, session };
+    }
+    return { status: ApiClientStatus.LoggedIntoAccount, session };
+};
+
 export class ApiClient {
     isLoggedIn: boolean;
     serverAddress: string;
@@ -55,13 +72,31 @@ export class ApiClient {
     defaultOptions: ApiClientOptions;
     oidcOptions: ApiClientOidcOptions | undefined;
     onSessionEnded: (() => void) | undefined;
+    isServerReachable: boolean;
+    reconnectIntervalInMilliseconds: number;
     private oidcClient: OidcClient | undefined;
     private refreshPromise: Promise<AuthSession | undefined> | undefined;
+    private state: ApiClientState;
+    private listeners: Set<() => void>;
+    private reconnectTimer: number | undefined;
+    private authSessionStore: Storage;
 
-    constructor(serverAddress: string, port: number, oidcOptions?: ApiClientOidcOptions) {
+    constructor(
+        serverAddress: string, 
+        port: number, 
+        authSessionStore: Storage,
+        oidcOptions?: ApiClientOidcOptions) {
+        this.isServerReachable = true;
+        this.reconnectIntervalInMilliseconds = DefaultReconnectIntervalInMilliseconds;
+        this.listeners = new Set();
+        this.reconnectTimer = undefined;
+        this.state = computeState(undefined, true);
+        window.addEventListener('online', this._handleOnline);
+        window.addEventListener('offline', this._handleOffline);
         this.isLoggedIn = false;
         this.serverAddress = serverAddress;
         this.port = port;
+        this.authSessionStore = authSessionStore;
         this.accessToken = undefined;
         this.csrfToken = undefined;
         this.loginExpirationTime = undefined;
@@ -87,9 +122,35 @@ export class ApiClient {
         });
     }
 
+    subscribe = (listener: () => void) => {
+        this.listeners.add(listener);
+        return () => {
+            this.listeners.delete(listener);
+        };
+    }
+
+    getState = (): ApiClientState => this.state;
+
+    dispose = () => {
+        window.removeEventListener('online', this._handleOnline);
+        window.removeEventListener('offline', this._handleOffline);
+        this._stopReconnecting();
+        this.listeners.clear();
+    }
+
+    checkServerReachability = async (): Promise<boolean> => {
+        const probePath = this.oidcOptions ? `${this.oidcOptions.authorityPath}/.well-known/openid-configuration` : '';
+        try {
+            await this._fetchTracked(this.buildUrl(probePath), { method: 'GET', credentials: 'omit' });
+        } catch {
+            return false;
+        }
+        return this.isServerReachable;
+    }
+
     restoreSession = () => {
         try {
-            const json = sessionStorage.getItem(authSessionStorageKey);
+            const json = this.authSessionStore.getItem(authSessionStorageKey);
             const storedSession = json ? JSON.parse(json) as Partial<AuthSession> : null;
             const isExpired = !!storedSession?.expiresAt && storedSession.expiresAt <= Date.now() / 1000;
             if(isValidStoredSession(storedSession) && (!isExpired || storedSession.refreshToken)) {
@@ -263,7 +324,7 @@ export class ApiClient {
         if(session) {
             headers['Authorization'] = `Bearer ${session.accessToken}`;
         }
-        return await fetch(requestUrl, {
+        return await this._fetchTracked(requestUrl, {
             method: method,
             body: jsonBody,
             headers: headers,
@@ -321,15 +382,17 @@ export class ApiClient {
             };
             this._setSession(refreshedSession);
             return refreshedSession;
-        } catch {
-            this._endSession(true);
+        } catch(refreshError) {
+            if(refreshError instanceof ApiError) {
+                this._endSession(true);
+            }
             return undefined;
         }
     }
 
     _postToTokenEndpoint = async (endpointPath: string, parameters: Record<string, string>): Promise<TokenEndpointResponse> => {
         const oidcOptions = this._getOidcOptions();
-        const response = await fetch(this.buildUrl(`${oidcOptions.authorityPath}/${endpointPath}`), {
+        const response = await this._fetchTracked(this.buildUrl(`${oidcOptions.authorityPath}/${endpointPath}`), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -349,7 +412,7 @@ export class ApiClient {
     }
 
     _fetchAuthorizationCallbackUrl = async (authorizeUrl: string): Promise<string> => {
-        const response = await fetch(authorizeUrl, { credentials: 'include' });
+        const response = await this._fetchTracked(authorizeUrl, { credentials: 'include' });
         const finalUrl = new URL(response.url);
         const redirectUri = new URL(`${window.location.origin}${this._getOidcOptions().redirectPath}`);
         const isCallback = finalUrl.origin === redirectUri.origin && finalUrl.pathname === redirectUri.pathname;
@@ -398,13 +461,73 @@ export class ApiClient {
         this.loginExpirationTime = session?.expiresAt ? new Date(session.expiresAt * 1000).toISOString() : undefined;
         try {
             if(session) {
-                sessionStorage.setItem(authSessionStorageKey, JSON.stringify(session));
+                this.authSessionStore.setItem(authSessionStorageKey, JSON.stringify(session));
             } else {
-                sessionStorage.removeItem(authSessionStorageKey);
+                this.authSessionStore.removeItem(authSessionStorageKey);
             }
         } catch {
             return;
+        } finally {
+            this._notify();
         }
+    }
+
+    _fetchTracked = async (url: string, init: RequestInit): Promise<Response> => {
+        try {
+            const response = await fetch(url, init);
+            this._setServerReachable(!ServerUnavailableStatusCodes.includes(response.status));
+            return response;
+        } catch(fetchError) {
+            if(fetchError instanceof TypeError) {
+                this._setServerReachable(false);
+            }
+            throw fetchError;
+        }
+    }
+
+    _setServerReachable = (isServerReachable: boolean) => {
+        if(this.isServerReachable === isServerReachable) {
+            return;
+        }
+        this.isServerReachable = isServerReachable;
+        if(isServerReachable) {
+            this._stopReconnecting();
+        } else {
+            this._startReconnecting();
+        }
+        this._notify();
+    }
+
+    _startReconnecting = () => {
+        if(this.reconnectTimer !== undefined) {
+            return;
+        }
+        this.reconnectTimer = window.setInterval(() => void this.checkServerReachability(), this.reconnectIntervalInMilliseconds);
+    }
+
+    _stopReconnecting = () => {
+        if(this.reconnectTimer === undefined) {
+            return;
+        }
+        window.clearInterval(this.reconnectTimer);
+        this.reconnectTimer = undefined;
+    }
+
+    _handleOnline = () => {
+        void this.checkServerReachability();
+    }
+
+    _handleOffline = () => {
+        this._setServerReachable(false);
+    }
+
+    _notify = () => {
+        const newState = computeState(this.session, this.isServerReachable);
+        if(newState.status === this.state.status && newState.session === this.state.session) {
+            return;
+        }
+        this.state = newState;
+        this.listeners.forEach(listener => listener());
     }
 
     _getOidcClient = (): OidcClient => {
