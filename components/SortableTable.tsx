@@ -1,11 +1,10 @@
 import '../styles/sortable-table.css';
 
 import { ReactNode, useCallback, useMemo, useState } from "react";
-import { Col, Row, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { NoEntriesTableRow } from "./NoEntriesTableRow";
 import { OrderDirection } from "../types/enums";
 import { combineCssClasses } from '../helpers/StylingHelpers';
-import { compareEnum } from '../helpers/EnumHelpers';
 
 export interface SortableTableHeaderCell {
     colSpan?: number;
@@ -77,7 +76,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
         if(!sortValueComparer) {
             throw new Error(`Column ${sortInfo.columnIndex} is sortable but has not sort value comparer`);
         }
-        if(compareEnum(sortInfo.sortOrder, OrderDirection.Descending)) {
+        if(sortInfo.sortOrder === OrderDirection.Descending) {
             return [...items].sort((a,b) => sortValueComparer(sortValueSelector(b), sortValueSelector(a)));
         } else {
             return [...items].sort((a,b) => sortValueComparer(sortValueSelector(a), sortValueSelector(b)));
@@ -89,7 +88,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             if(columnIndex === state.columnIndex) {
                 return {
                     ...state,
-                    sortOrder: compareEnum(state.sortOrder, OrderDirection.Ascending) ? OrderDirection.Descending : OrderDirection.Ascending
+                    sortOrder: state.sortOrder === OrderDirection.Ascending ? OrderDirection.Descending : OrderDirection.Ascending
                 };
             } else {
                 return {
@@ -131,7 +130,7 @@ export const SortableTable = <T,>(props: SortableTableProps<T>) => {
             </div>
             <div className="sort-direction-indicator">
                 {columnIndex !== sortInfo.columnIndex ? <i className="fa fa-sort" />
-                : compareEnum(sortInfo.sortOrder, OrderDirection.Ascending) ? <i className="fa fa-sort-asc" />
+                : sortInfo.sortOrder === OrderDirection.Ascending ? <i className="fa fa-sort-asc" />
                 : <i className="fa fa-sort-desc" />}
             </div>
         </th>);

@@ -12,7 +12,6 @@ import { toDateOnly } from "../../helpers/DateHelpers";
 import { TimeFormControl } from "../FormControls/TimeFormControl";
 import { SelectFormControl } from "../FormControls/SelectFormControl";
 import { resolveText } from "../../helpers/Globalizer";
-import { compareEnum } from "../../helpers/EnumHelpers";
 
 interface ShehrdJsonSchemaFormControlProps extends ShehrdJsonSchemaSharedFormControlProps {
     customizations?: ShehrdJsonSchemaCustomizations;
@@ -60,7 +59,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
         {
             const stringProperty = resolvedTypeDefinition as StringJsonSchemaTypeDefintion;
             const stringValue = (value as string | null | undefined) ?? undefined;
-            const enumValues = stringProperty["x-enumNames"] ?? stringProperty.enum;
+            const enumValues = stringProperty.enum;
             if(!!enumValues) {
                 const enumName = typeName ?? customizations?.enumName;
                 if(!!enumName) {
@@ -182,7 +181,7 @@ export const ShehrdJsonSchemaFormControl = (props: ShehrdJsonSchemaFormControlPr
             const itemCustomization = customizations ? customizations["items"] as ShehrdJsonSchemaCustomizations : undefined;
             const arrayItems = (value ?? []) as any[];
             const useAccordion = !!customizations?.arrayStyle
-                ? compareEnum(customizations.arrayStyle, ShehrdJsonSchemaFormArrayStyle.Accordion)
+                ? customizations.arrayStyle === ShehrdJsonSchemaFormArrayStyle.Accordion
                 : itemType.type === JsonSchemaPrimitiveType.object;
             if(useAccordion) {
                 return (<>
