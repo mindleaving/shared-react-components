@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 export class InactivityMonitor {
     timeoutHandle?: number;
     inactivityTimeoutInSeconds: number;
@@ -60,3 +62,20 @@ export class InactivityMonitor {
 }
 
 export const inactivityMonitor: { instance?: InactivityMonitor } = {};
+
+export const useInactivityMonitor = (onInactive: () => void) => {
+
+    useEffect(() => {
+        inactivityMonitor.instance!.start();
+        return () => {
+            inactivityMonitor.instance!.stop();
+        }
+    }, []);
+
+    useEffect(() => {
+        inactivityMonitor.instance!.registerCallback(onInactive);
+        return () => {
+            inactivityMonitor.instance!.unregisterCallback(onInactive);
+        }
+    }, [ onInactive ]);
+}

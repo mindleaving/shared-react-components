@@ -108,3 +108,7 @@ export interface FileUploadResult {
     status: number;
     response: any
 };
+export interface LogoutActions {
+    preLogout?: () => void | Promise<void>;
+    postLogout?: (logoutResult: LogoutResult) => void | Promise<void>;
+}

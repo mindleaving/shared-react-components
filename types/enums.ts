@@ -15,3 +15,7 @@ export enum MenschIdLoginStep {
     Expired = 'expired',
     Invalid = 'invalid',
 }
+export enum LogoutScope {
+    CurrentSession = 'currentSession',
+    Everywhere = 'everywhere',
+}
