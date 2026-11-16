@@ -20,7 +20,7 @@ export const VerticalTabs = (props: VerticalTabsProps) => {
                         {tabSelectorButtons}
                     </div>
                 </Col>
-                <Col>
+                <Col className="ms-2">
                     {props.children}
                 </Col>
             </Row>

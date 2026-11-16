@@ -8,3 +8,10 @@ export enum ApiClientStatus {
   LoggedIntoAccount = "LoggedIntoAccount",
   ServerUnavailable = "ServerUnavailable"
 }
+export enum MenschIdLoginStep {
+    EnterMenschId = 'enterMenschId',
+    Challenge = 'challenge',
+    Rejected = 'rejected',
+    Expired = 'expired',
+    Invalid = 'invalid',
+}
