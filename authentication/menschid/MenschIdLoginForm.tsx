@@ -7,7 +7,6 @@ import { MenschIdChallengeOutcome } from './MenschIdChallengeOutcome';
 import { MenschIdChallengePanel } from './MenschIdChallengePanel';
 import { MenschIdEntry } from './MenschIdEntry';
 import { formatMenschIdLoginError, getMenschIdChallengePath } from '../../helpers/MenschIdHelpers';
-import { sendPostRequest } from '../../helpers/StoringHelpers';
 import { getMenschIdChallengeStatus, startMenschIdChallenge } from './menschIdLoginApi';
 import { useMenschIdChallengeSubscription } from './useMenschIdChallengeSubscription';
 import { MenschIdLoginStep } from '../../types/enums';
@@ -15,7 +14,6 @@ import { MenschIdLoginStep } from '../../types/enums';
 interface MenschIdLoginFormProps {
     apiBasePath: string;
     hubPath: string;
-    authorizeUrl?: string;
     onLoginCompleted: () => void;
     formatError?: (error: unknown) => string;
 }
@@ -24,7 +22,6 @@ export const MenschIdLoginForm = (props: MenschIdLoginFormProps) => {
     const {
         apiBasePath,
         hubPath,
-        authorizeUrl,
         onLoginCompleted,
         formatError = formatMenschIdLoginError,
     } = props;
@@ -45,19 +42,6 @@ export const MenschIdLoginForm = (props: MenschIdLoginFormProps) => {
         }
         isCompletingRef.current = true;
         const loginPath = getMenschIdChallengePath(apiBasePath, challengeId, 'login');
-        if (authorizeUrl) {
-            await sendPostRequest(
-                loginPath, {},
-                resolveText('MenschIdLogin_SignInFailed'),
-                null,
-                async () => window.location.assign(authorizeUrl),
-                async (loginError) => {
-                    isCompletingRef.current = false;
-                    setError(formatError(loginError));
-                },
-            );
-            return;
-        }
         try {
             await apiClient.instance!.signIn(loginPath, {});
             onLoginCompleted();
@@ -65,7 +49,7 @@ export const MenschIdLoginForm = (props: MenschIdLoginFormProps) => {
             isCompletingRef.current = false;
             setError(formatError(signInError));
         }
-    }, [apiBasePath, authorizeUrl, formatError, onLoginCompleted]);
+    }, [apiBasePath, formatError, onLoginCompleted]);
 
     const checkChallengeStatus = useCallback(async (challengeId: string, isManualCheck: boolean) => {
         setError(null);
