@@ -1,4 +1,4 @@
-import { getMonth, getDate, getYear, isSameDay, isLeapYear, format } from "date-fns";
+import { getMonth, getDate, getYear, isSameDay, isLeapYear, format, parse } from "date-fns";
 
 export const isBirthday = (date: Date, birthDate: Date) => {
     const isSameDateAndMonth = getMonth(date) === getMonth(birthDate) && getDate(date) === getDate(birthDate);
@@ -22,4 +22,54 @@ export const toTimeOnly = (date: Date): string => {
 }
 export const isValidDate = (date: Date) => {
     return !isNaN(date.getTime());
+}
+export const getLocaleDatePattern = (locale: string): string => {
+    const parts = new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit' })
+        .formatToParts(new Date(2000, 10, 22));
+    return parts.map(part => {
+        switch(part.type) {
+            case 'day':
+            {
+                return 'dd';
+            }
+            case 'month':
+            {
+                return 'MM';
+            }
+            case 'year':
+            {
+                return 'yyyy';
+            }
+            default:
+            {
+                return part.value;
+            }
+        }
+    }).join('');
+}
+export const parseDateInput = (input: string, locale: string, enableTime?: boolean): Date | undefined => {
+    const trimmedInput = input.trim();
+    if(!trimmedInput) {
+        return undefined;
+    }
+    const locales = [ locale, ...(typeof navigator !== 'undefined' ? navigator.languages : []) ];
+    const localeDatePatterns = locales.map(x => {
+        try {
+            return getLocaleDatePattern(x).replace('dd', 'd').replace('MM', 'M');
+        } catch {
+            return undefined;
+        }
+    }).filter(x => !!x) as string[];
+    const datePatterns = [ ...new Set([ 'yyyy-M-d', ...localeDatePatterns, 'd.M.yyyy' ]) ];
+    const patterns = enableTime
+        ? datePatterns.flatMap(datePattern => [ `${datePattern} H:mm`, `${datePattern}, H:mm`, datePattern ])
+        : datePatterns;
+    const referenceDate = new Date();
+    for (const pattern of patterns) {
+        const parsedDate = parse(trimmedInput, pattern, referenceDate);
+        if(isValidDate(parsedDate)) {
+            return parsedDate;
+        }
+    }
+    return undefined;
 }
