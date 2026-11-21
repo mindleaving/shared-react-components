@@ -171,7 +171,10 @@ export class ApiClient {
     signIn = async (loginPath: string, body?: unknown): Promise<Response> => {
         const oidcClient = this._getOidcClient();
         this._setSession(undefined);
-        const loginResponse = await this.post(loginPath, body ?? null);
+        const loginResponse = await this.post(loginPath, body ?? null, undefined, { handleError: false });
+        if(!loginResponse.ok) {
+            return loginResponse;
+        }
         const signinRequest = await oidcClient.createSigninRequest({});
         const callbackUrl = await this._fetchAuthorizationCallbackUrl(signinRequest.url);
         await this.completeSignIn(callbackUrl);
