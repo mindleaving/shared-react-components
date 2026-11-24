@@ -8,6 +8,11 @@ export enum ApiClientStatus {
   LoggedIntoAccount = "LoggedIntoAccount",
   ServerUnavailable = "ServerUnavailable"
 }
+export enum LoginCheckResult {
+    LoggedIn = "LoggedIn",
+    NotLoggedIn = "NotLoggedIn",
+    Unknown = "Unknown"
+}
 export enum MenschIdLoginStep {
     EnterMenschId = 'enterMenschId',
     Challenge = 'challenge',

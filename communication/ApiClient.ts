@@ -3,7 +3,7 @@ import { authSessionStorageKey } from '../helpers/Constants';
 import { buildUrl } from '../helpers/UrlBuilder';
 import type { JsonPatchDocument, QueryParameters } from '../types/frontendTypes';
 import type { ApiClientState, AuthSession, TokenEndpointResponse } from '../types/apiTypes';
-import { ApiClientStatus } from '../types/enums';
+import { ApiClientStatus, LoginCheckResult } from '../types/enums';
 import { ApiError } from './ApiError';
 import { createOidcClient } from './oidcClient';
 
@@ -36,6 +36,8 @@ const AccessTokenTypeIdentifier = 'urn:ietf:params:oauth:token-type:access_token
 const RefreshMarginInSeconds = 30;
 const DefaultReconnectIntervalInMilliseconds = 5000;
 const ServerUnavailableStatusCodes = [502, 503, 504];
+const LoginCheckPath = 'api/logins/is-logged-in';
+const LoginVerificationIntervalInMilliseconds = 15000;
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -45,7 +47,15 @@ const getExpiresAt = (expiresInSeconds: number | undefined): number | undefined 
 const isExpiring = (session: AuthSession): boolean =>
     session.expiresAt !== undefined && session.expiresAt - RefreshMarginInSeconds <= Date.now() / 1000;
 
-const isValidStoredSession = (session: Partial<AuthSession> | null): session is AuthSession =>
+const parseTokenEndpointResponse = (responseText: string): TokenEndpointResponse => {
+    try {
+        return JSON.parse(responseText) as TokenEndpointResponse;
+    } catch {
+        return { error_description: responseText || undefined } as TokenEndpointResponse;
+    }
+};
+
+const isValidStoredSession =(session: Partial<AuthSession> | null): session is AuthSession =>
     !!session && !!session.accessToken && !!session.csrfToken && !!session.name;
 
 const computeState = (session: AuthSession | undefined, isServerReachable: boolean): ApiClientState => {
@@ -76,6 +86,8 @@ export class ApiClient {
     reconnectIntervalInMilliseconds: number;
     private oidcClient: OidcClient | undefined;
     private refreshPromise: Promise<AuthSession | undefined> | undefined;
+    private loginVerificationPromise: Promise<void> | undefined;
+    private lastLoginVerificationTime: number | undefined;
     private state: ApiClientState;
     private listeners: Set<() => void>;
     private reconnectTimer: number | undefined;
@@ -281,28 +293,71 @@ export class ApiClient {
         const effectiveOptions = Object.assign({}, this.defaultOptions, options ?? {});
         const session = await this.getValidSession();
         const response = await this._fetch(method, path, params, body, effectiveOptions, session);
-        const finalResponse = response.status === 401 && session
-            ? await this._retryAfterRefresh(method, path, params, body, effectiveOptions)
-            : response;
+        let finalResponse = response;
+        if(response.status === 401 && session) {
+            const renewedSession = await this._handleUnauthorized(session);
+            if(renewedSession) {
+                finalResponse = await this._fetch(method, path, params, body, effectiveOptions, renewedSession);
+            }
+        }
         if(effectiveOptions.handleError && !finalResponse.ok) {
             return await this._handleError(finalResponse);
         }
         return finalResponse;
     }
 
-    _retryAfterRefresh = async (
-        method: HttpMethod,
-        path: string,
-        params: QueryParameters | undefined,
-        body: any,
-        options: ApiClientOptions) => {
+    _handleUnauthorized = async (failedSession: AuthSession): Promise<AuthSession | undefined> => {
+        if(this.session && this.session.accessToken !== failedSession.accessToken) {
+            return this.session;
+        }
+        if(!this.loginVerificationPromise) {
+            const isRecentlyVerified = this.lastLoginVerificationTime !== undefined
+                && Date.now() - this.lastLoginVerificationTime < LoginVerificationIntervalInMilliseconds;
+            if(isRecentlyVerified) {
+                return undefined;
+            }
+            this.loginVerificationPromise = this._verifyOrRenewSession().finally(() => {
+                this.loginVerificationPromise = undefined;
+            });
+        }
+        await this.loginVerificationPromise;
+        const currentSession = this.session;
+        return currentSession && currentSession.accessToken !== failedSession.accessToken ? currentSession : undefined;
+    }
 
+    _verifyOrRenewSession = async (): Promise<void> => {
+        this.lastLoginVerificationTime = Date.now();
+        const loginCheckResult = await this._checkLogin(this.session);
+        if(loginCheckResult !== LoginCheckResult.NotLoggedIn) {
+            return;
+        }
         const refreshedSession = await this.refreshSession();
-        const response = await this._fetch(method, path, params, body, options, refreshedSession);
-        if(response.status === 401 && refreshedSession) {
+        if(!refreshedSession) {
+            return;
+        }
+        const loginCheckResultAfterRefresh = await this._checkLogin(refreshedSession);
+        if(loginCheckResultAfterRefresh === LoginCheckResult.NotLoggedIn) {
             this._endSession(true);
         }
-        return response;
+    }
+
+    _checkLogin = async (session: AuthSession | undefined): Promise<LoginCheckResult> => {
+        if(!session) {
+            return LoginCheckResult.NotLoggedIn;
+        }
+        try {
+            const response = await this._fetchTracked(this.buildUrl(LoginCheckPath), {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${session.accessToken}` },
+                credentials: 'omit'
+            });
+            if(response.ok) {
+                return LoginCheckResult.LoggedIn;
+            }
+            return response.status === 401 ? LoginCheckResult.NotLoggedIn : LoginCheckResult.Unknown;
+        } catch {
+            return LoginCheckResult.Unknown;
+        }
     }
 
     _fetch = async (
@@ -386,7 +441,8 @@ export class ApiClient {
             this._setSession(refreshedSession);
             return refreshedSession;
         } catch(refreshError) {
-            if(refreshError instanceof ApiError) {
+            const isServerUnreachable = refreshError instanceof TypeError;
+            if(!isServerUnreachable) {
                 this._endSession(true);
             }
             return undefined;
@@ -404,7 +460,8 @@ export class ApiClient {
             body: new URLSearchParams({ client_id: oidcOptions.clientId, ...parameters }),
             credentials: this.defaultOptions.includeCredentials ? 'include' : 'omit'
         });
-        const tokenResponse = await response.json() as TokenEndpointResponse;
+        const responseText = await response.text();
+        const tokenResponse = parseTokenEndpointResponse(responseText);
         if(!response.ok || !tokenResponse.access_token) {
             throw new ApiError(
                 response.status,
@@ -450,6 +507,7 @@ export class ApiClient {
 
     _endSession = (notify: boolean) => {
         const hadSession = !!this.session;
+        this.lastLoginVerificationTime = undefined;
         this._setSession(undefined);
         if(notify && hadSession && this.onSessionEnded) {
             this.onSessionEnded();
